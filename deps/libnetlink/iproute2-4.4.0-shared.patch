@@ -1,0 +1,44 @@
+--- a/lib/Makefile	2016-01-11 18:33:03.000000000 +0200
++++ b/lib/Makefile	2019-01-23 22:05:49.953251669 +0200
+@@ -5,6 +5,7 @@
+ endif
+ 
+ CFLAGS += -fPIC
++CFLAGS += -URESOLVE_HOSTNAMES
+ 
+ UTILOBJ = utils.o rt_names.o ll_types.o ll_proto.o ll_addr.o \
+ 	inet_proto.o namespace.o json_writer.o \
+@@ -12,11 +13,14 @@
+ 
+ NLOBJ=libgenl.o ll_map.o libnetlink.o
+ 
+-all: libnetlink.a libutil.a
++all: libnetlink.so libnetlink.a libutil.a
+ 
+ libnetlink.a: $(NLOBJ)
+ 	$(AR) rcs $@ $(NLOBJ)
+ 
++libnetlink.so: $(NLOBJ) $(UTILOBJ) $(ADDLIB)
++	$(CC) -Os -shared -o libnetlink.so $(NLOBJ) $(UTILOBJ) $(ADDLIB)
++
+ libutil.a: $(UTILOBJ) $(ADDLIB)
+ 	$(AR) rcs $@ $(UTILOBJ) $(ADDLIB)
+ 
+@@ -24,4 +28,3 @@
+ 
+ clean:
+ 	rm -f $(NLOBJ) $(UTILOBJ) $(ADDLIB) libnetlink.a libutil.a
+-
+
+--- a/Makefile	2016-01-11 18:33:03.000000000 +0200
++++ b/Makefile	2019-01-24 07:27:37.040905779 +0200
+@@ -41,7 +41,7 @@
+ CFLAGS := $(WFLAGS) $(CCOPTS) -I../include $(DEFINES) $(CFLAGS)
+ YACCFLAGS = -d -t -v
+ 
+-SUBDIRS=lib ip tc bridge misc netem genl tipc man
++SUBDIRS=lib
+ 
+ LIBNETLINK=../lib/libnetlink.a ../lib/libutil.a
+ LDLIBS += $(LIBNETLINK)
+
