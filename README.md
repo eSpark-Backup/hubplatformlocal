@@ -1,16 +1,7 @@
-General
-==============
-
-[Code Style](https://ezloproject.atlassian.net/wiki/spaces/PM/pages/217940280/Code+style+recommendations)
-
-[Git Workflow](https://confluence.mios.com/display/ELFD/Git+Workflow)
-
-[HubPlatform Build Manual](https://confluence.mios.com/display/ELFD/HubPlatform+Build+Manual)
-
 Get Sources
 ==============
 
-    git clone git@github.com:ezloteam/hubPlatform.git --recurse-submodules
+    git clone git@github.com:eSpark-Consultants/hubPlatformlocal.git --recurse-submodules
 
 If you didn't have submodules in your source folder before, need to execute:
 
