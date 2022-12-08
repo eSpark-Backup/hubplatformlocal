@@ -59,6 +59,11 @@ Other flags:
 | **`HUB_FIRMWARE_LOGS_LEVEL`**     | STRING     | `DEBUG`       | Firmware log level to use by default. One of: `ERROR`, `WARNING`, `INFO`, `DEBUG`, `TRACE` |
 | **`LOGGER_LOG_THREAD_ID`**        | BOOL       | `OFF`         | Print a tid (thread id) for each log message line
 
+Run Make Command
+================
+
+make -j7
+
 Run unit tests
 ==============
 
