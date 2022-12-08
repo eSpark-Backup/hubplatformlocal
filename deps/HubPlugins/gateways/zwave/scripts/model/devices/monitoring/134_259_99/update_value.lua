@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, value, target_value, duration = ...
+
+self:_super_call("default", "update_value", node_id, 0, class_id, value, target_value, duration)

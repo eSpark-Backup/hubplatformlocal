@@ -1,0 +1,2 @@
+#!/bin/bash
+STAGING_DIR=${STAGING_DIR:-/missing} /usr/local/toolchains/gcc4.8-linaro-mipsel-v1.9/bin/mipsel-openwrt-linux-uclibc-g++ "$@"

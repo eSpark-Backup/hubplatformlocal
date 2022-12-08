@@ -1,0 +1,255 @@
+{
+    "CentraLite_3310-G": {
+        "mfg_code" : 4174,
+        "mfg_clusters" : [ {"endpoint_id" : 1, "cluster_id" : 64581} ],
+        "cluster_infos" : [
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 0,
+                "attributes_to_request" : [4, 5],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1,
+                "attributes_to_request" : [32, 49, 51],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 3,
+                "ignore" : true
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 25,
+                "ignore" : true
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 32,
+                "attributes_to_request" : [0],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1026,
+                "attributes_to_request" : [0, 1, 2, 3],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 2821,
+                "ignore" : true
+            },
+             {
+                "endpoint_id" : 1,
+                "cluster_id" : 64581,
+                "attributes_to_request" : [],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            }
+        ]
+    },
+    "CentraLite_3310-Geu": "CentraLite_3310-G",
+    "CentraLite_3300-Geu": {
+        "cluster_infos" : [
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 0,
+                "attributes_to_request" : [4, 5],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1,
+                "attributes_to_request" : [32, 49, 51],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 25, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 32,
+                "attributes_to_request" : [0],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1026,
+                "attributes_to_request" : [0, 1, 2, 3],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1280,
+                "attributes_to_request" : [1, 2],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 2821, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 0, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 1, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 15, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 2821, "ignore" : true
+            }
+        ]
+    },
+    "CentraLite_3323-D": "CentraLite_3300-Geu",
+    "CentraLite_3323-G": "CentraLite_3300-Geu",
+    "CentraLite_3305-Geu": {
+        "cluster_infos" : [
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 0,
+                "attributes_to_request" : [4, 5],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1,
+                "attributes_to_request" : [32, 49, 51],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 25, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 32,
+                "attributes_to_request" : [0],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1026,
+                "attributes_to_request" : [0, 1, 2, 3],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1280,
+                "attributes_to_request" : [1, 2],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 2821, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 0, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 1, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2,
+                "cluster_id" : 1030,
+                "attributes_to_request" : [0, 1, 16, 17, 18],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 2821, "ignore" : true
+            }
+        ]
+    },
+    "CentraLite_3328-G" : "CentraLite_3305-Geu",
+    "CentraLite_3315-G": {
+        "cluster_infos" : [
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 0,
+                "attributes_to_request" : [4, 5],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1,
+                "attributes_to_request" : [32, 49, 51],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 25, "ignore" : true
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 32,
+                "attributes_to_request" : [0],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1026,
+                "attributes_to_request" : [0, 1, 2, 3],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1,
+                "cluster_id" : 1280,
+                "attributes_to_request" : [1, 2],
+                "discover_commands_received" : false,
+                "discover_commands_generated" : false
+            },
+            {
+                "endpoint_id" : 1, "cluster_id" : 2821, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 0, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 1, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 3, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 15, "ignore" : true
+            },
+            {
+                "endpoint_id" : 2, "cluster_id" : 2821, "ignore" : true
+            }
+        ]
+    }
+}

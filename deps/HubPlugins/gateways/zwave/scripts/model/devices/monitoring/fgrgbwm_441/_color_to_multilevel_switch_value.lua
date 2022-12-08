@@ -1,0 +1,3 @@
+local self, color_switch_value = ...
+
+return color_switch_value == 0 and 0 or math.floor(color_switch_value / 255 * 98 + 1)

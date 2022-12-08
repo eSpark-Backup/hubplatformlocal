@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# Compressed plugins
+*.zip
+*.tar
+
+# Generated files from devices_info.json file
+gateways/zwave/scripts/model/devices/devices_info/generated
+gateways/zwave/scripts/model/devices/device_settings
+gateways/zwave/configs/
+gateways/zigbee/scripts/devices/device_info/generated/
+gateways/bluetooth/scripts/devices/generated/
+gateways/2gig/scripts/model/devices/generated/
+
+# Build directory
+build
+
+# JetBrains IDE
+.idea
+# VSCode editor settings
+.vscode
+
+#Qt creator IDE
+tests_runner/*.user
+
+#Mac OS
+.DS_Store

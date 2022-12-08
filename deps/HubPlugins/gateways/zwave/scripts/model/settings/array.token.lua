@@ -1,0 +1,3 @@
+local node_id, dev_handler_id, setting_info = ...
+
+return hubplugins.weak_loadfile("HUB:zwave/scripts/model/settings/token")(node_id, dev_handler_id, setting_info)

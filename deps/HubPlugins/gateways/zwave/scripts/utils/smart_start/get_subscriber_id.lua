@@ -1,0 +1,6 @@
+local self = ...
+
+local storage = hubplugins.object( "storage_helper", "HUB:zwave/scripts/utils" )
+
+--HUB:zwave/scripts/reset clears the whole plugin's database, but the plugin doesn't get restarted...
+return storage:call( "get_string", "core_subscriber_id" ) or "HUB:zwave/scripts/events/events_handling"

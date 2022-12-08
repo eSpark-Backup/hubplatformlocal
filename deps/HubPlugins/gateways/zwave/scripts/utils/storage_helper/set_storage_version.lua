@@ -1,0 +1,3 @@
+local self, version = ...
+
+self._storage.set_number("version", version)

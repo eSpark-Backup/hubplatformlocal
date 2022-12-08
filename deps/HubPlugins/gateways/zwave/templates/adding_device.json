@@ -1,0 +1,523 @@
+{
+  "category_id": 120,
+  "wizard": {
+    "name": "Other ZWave device -  <-Model->",
+    "countable_steps": 4,
+    "delete_step": 100,
+    "steps": [
+      {
+        "id": 1,
+        "step_count": 1,
+        "template": 1,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "",
+                "text": ""
+              }
+            ]
+          },
+          {
+            "static_group": 2,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_intro",
+                "text": "First you will need to add this device to your system by pairing it with your Vera.  Click 'next' to get started."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_next",
+              "text": "Next"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "step_count": 2,
+        "template": 1,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_install_zwave_device_p5",
+                "text": "If the device requires assembly read the manual and follow the assembly instructions there and then power the device."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_next",
+              "text": "Next"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 3
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "step_count": 3,
+        "template": 1,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_pair",
+                "text": "For best results this initial pairing should be done within 3 meters (10 feet) of your Vera.  After it has been added you can move it to the desired location.  I will notify you when the device is added.  Vera is now ready to pair."
+              },
+              {
+                "lang_tag": "ui7_install_zwave_device_p7",
+                "text": "Follow the inclusion process as described in the users manual."
+              }
+            ]
+          },
+          {
+            "static_group": 2,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_reset_text",
+                "text": "If you are sure that you are following the instructions and have tried several times to make the device pair but it still will not add, then perhaps the device was already added to another system and needs to be reset first."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "auto_command": [
+          {
+            "command_type": "gateway",
+            "action": {
+              "type": "hub.extensions.plugin.run",
+              "arguments": {
+                  "script": "HUB:zwave/scripts/start_include"
+              }
+            }
+          },
+          {
+            "command_type": "event",
+            "event_add": "hub.device.added",
+            "action": {
+              "type": "action_go_to_step",
+              "argument": 4
+            }
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_reset",
+              "text": "Retry"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 5
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "step_count": 4,
+        "template": 3,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_found",
+                "text": "The device was added."
+              }
+            ]
+          },
+          {
+            "static_group": 2,
+            "group_text": [
+              {
+                "lang_tag": "",
+                "text": ""
+              },
+              {
+                "lang_tag": "ui7_devwiz_name_room",
+                "text": "Now you can name the device and indicate what room you will put it in."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "widgets": [
+          "device_type_found"
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_finish",
+              "text": "Finish"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_exit_wizard",
+                  "argument": 2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "template": 1,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_reset_intro",
+                "text": "The Vera Controller will now begin the un-pairing process."
+              },
+              {
+                "lang_tag": "ui7_wizard_retry_inclusion_p2",
+                "text": "Exclude your device by following the procedure described in the manual that came with it. The light on the Vera should flicker fast  when the device is detected."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "auto_command": [
+          {
+            "command_type": "gateway",
+            "action": {
+              "type": "hub.extensions.plugin.run",
+              "arguments": {
+                 "script": "HUB:zwave/scripts/start_exclude"
+              }
+            }
+          },
+          {
+            "command_type": "event",
+            "event_remove": "hub.device.added"
+          },
+          {
+            "command_type": "event",
+            "event_add": "hub.device.removed",
+            "action": {
+              "type": "action_go_to_step",
+              "argument": 3
+            }
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_factory_reset",
+              "text": "Factory reset"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 6
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 2,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_exit",
+              "text": "Exit"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_exit_wizard",
+                  "argument": 2
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 3,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_add_again",
+              "text": "Try adding it again"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 3
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "template": 1,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_factory_reset_info",
+                "text": "If the device is not working and cannot be reset, you can do a factory reset."
+              },
+              {
+                "lang_tag": "ui7_devwiz_factory_reset_generic",
+                "text": "All devices are different.  Consult the user's manual for the device to learn how to perform a factory reset."
+              }
+            ]
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_exit",
+              "text": "Exit"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_exit_wizard",
+                  "argument": 2
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 2,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_add_again",
+              "text": "Try adding it again"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 3
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 100,
+        "template": 1,
+        "uninstall_steps": 7,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_remove",
+                "text": "Vera is ready to remove the device and reset it."
+              },
+              {
+                "lang_tag": "ui7_delete_zwave_p4",
+                "text": "Please follow the devices exclusion instructions as described in the manual that came along with it."
+              }
+            ]
+          }
+        ],
+        "images": [
+          {
+            "static_group": 1,
+            "group_image": ""
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_delete",
+              "text": "I don't have the device anymore or it's broken"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 101
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 2,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_exit",
+              "text": "Exit"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_exit_wizard",
+                  "argument": 3
+                }
+              }
+            ]
+          }
+        ],
+        "auto_command": [
+          {
+            "command_type": "gateway",
+            "action": {
+              "type": "hub.extensions.plugin.run",
+              "arguments": {
+                 "script": "HUB:zwave/scripts/start_exclude"
+              }
+            }
+          },
+          {
+            "command_type": "event",
+            "event_add": "hub.device.removed",
+            "action": {
+              "type": "action_exit_wizard",
+              "argument": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": 101,
+        "template": 1,
+        "uninstall_steps": 7,
+        "text_content": [
+          {
+            "static_group": 1,
+            "group_text": [
+              {
+                "lang_tag": "ui7_devwiz_dead_node",
+                "text": "If you still have the device and it is functional you should remove it by unpairing it properly, which resets the device so it can be included on another network and does not interfere with other devices on this network.  If you are sure that the device is missing or broken and will not respond again, then we can purge it.  This may take a few minute as we must first scan the network to be sure the device is not still responding.  If it is, the purge will abort and you will have to remove the device by resetting it."
+              }
+            ]
+          }
+        ],
+        "buttons": [
+          {
+            "button_id": 1,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_purge",
+              "text": "I'm sure the device is gone or broken so purge it"
+            },
+            "button_command": [
+              {
+                "command_type": "gateway",
+                "action": {
+                  "type": "action_delete_unresponsive_device",
+                  "argument": 3
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 2,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_retry_reset",
+              "text": "I have the device.  Go back and try to reset it."
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_go_to_step",
+                  "argument": 100
+                }
+              }
+            ]
+          },
+          {
+            "button_id": 3,
+            "label": {
+              "lang_tag": "ui7_devwiz_btn_cancel",
+              "text": "Cancel"
+            },
+            "button_command": [
+              {
+                "command_type": "navigation",
+                "action": {
+                  "type": "action_exit_wizard",
+                  "argument": 2
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

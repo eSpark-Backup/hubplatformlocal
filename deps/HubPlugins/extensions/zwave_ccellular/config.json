@@ -1,0 +1,40 @@
+{
+  "id": "zwave_ccellular",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Extension for Consumer Cellular"
+    },
+    "description": {
+      "text": "This plugin extension contains some zwave device settings."
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "extension",
+  "extensions": {
+    "plugins": [
+       {
+          "id": "zwave",
+          "configs": [
+             {
+                 "name": "deviceSettings",
+                 "config": "configs/device_settings.json"
+             }
+          ]
+       }
+    ]
+  },
+  "permissions": [],
+  "dependencies": {
+    "plugins": [
+      {
+        "id": "zwave",
+        "version": "1.0"
+      }
+    ]
+  }
+}

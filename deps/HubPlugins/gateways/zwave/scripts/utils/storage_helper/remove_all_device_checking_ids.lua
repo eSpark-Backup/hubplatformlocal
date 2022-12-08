@@ -1,0 +1,3 @@
+local self, node_id = ...
+
+self._storage.delete("checking_devices")

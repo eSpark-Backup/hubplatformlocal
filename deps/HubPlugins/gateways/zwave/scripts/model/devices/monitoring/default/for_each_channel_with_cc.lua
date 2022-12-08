@@ -1,0 +1,3 @@
+local self, node_id, class_id, callback = ...
+
+self:call("find_channel_with_cc", node_id, class_id, callback)

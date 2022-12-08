@@ -1,0 +1,3 @@
+local self, ids = ...
+
+self._timer.cancel(self._postponed_timer_id)

@@ -1,0 +1,71 @@
+{
+  "id": "zwave",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Z-Wave devices support"
+    },
+    "description": {
+      "text": "This plugin supports Z-Wave devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "extensions":{
+      "configs":[
+        {
+            "name":"deviceSettings",
+            "description":"Specific Z-Wave device configuration"
+        }
+      ]
+  },
+  "dependencies": {
+    "addons": [
+      {
+        "id": "zwave",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+      "zwave",
+      "core",
+      "storage",
+      "timer",
+      "scenes",
+      "extensions_manager"
+  ],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+  "initialize_migration": "scripts/migration/initialize_migration",
+  "migration": "scripts/migration/migrate_device",
+  "finalize_migration": "scripts/migration/finalize_migration",
+
+  "gateway": {
+    "name": "zwave",
+    "label": "zwave gateway",
+    "setItemValueCommand": "HUB:zwave/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "HUB:zwave/scripts/add_item_dictionary_value",
+    "setItemDictionaryValueCommand": "HUB:zwave/scripts/set_item_dictionary_value",
+    "removeItemDictionaryValueCommand": "HUB:zwave/scripts/remove_item_dictionary_value",
+    "clearItemDictionaryCommand": "HUB:zwave/scripts/clear_item_dictionary",
+    "resetSettingCommand": "HUB:zwave/scripts/reset_setting",
+    "setSettingValueCommand": "HUB:zwave/scripts/set_setting_value",
+    "setSettingDictionaryValueCommand": "HUB:zwave/scripts/set_setting_dictionary_value",
+    "forceRemoveDeviceCommand": "HUB:zwave/scripts/start_exclude",
+    "updateDeviceFirmwareCommand": "HUB:zwave/scripts/update_devices_firmware",
+    "checkDeviceCommand": "HUB:zwave/scripts/check_device",
+    "setGatewaySettingValueCommand": "HUB:zwave/scripts/set_gateway_setting_value"
+  }
+}

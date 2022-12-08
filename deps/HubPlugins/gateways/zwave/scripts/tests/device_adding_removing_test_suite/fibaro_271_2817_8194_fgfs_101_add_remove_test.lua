@@ -1,0 +1,153 @@
+local item_names = require("HUB:zwave/scripts/resources/item_names")
+local class_ids = require("HUB:zwave/scripts/resources/class_ids")
+local item_descriptor_tags = require("HUB:zwave/scripts/resources/item_descriptor_tags")
+local events_handler = hubplugins.weak_loadfile("HUB:zwave/scripts/events/events_handling")
+local fixture = hubplugins.weak_loadfile("HUB:zwave/scripts/tests/fixtures/base_fixture")()
+local zwave = require("zwave")
+local tests = require( "tests" )
+
+zwave.request_node_values = tests.create_mock()
+
+local node = {
+    id = "9000",
+    channels =  {
+        {
+            id = 0,
+            classes =  {
+                { id = 94, },
+                { id = 133, },
+                -- { id = class_ids.configuration },
+                { id = 114, },
+                { id = 134, },
+                { id = 132, },
+                { id = class_ids.basic, },
+                { id = class_ids.battery, },
+                {
+                    id = class_ids.notification,
+                    notifications =  {
+                        {
+                            event_types = {
+                                "state_idle",
+                                "water_leak_detected"
+                            },
+                            type = "water_alarm",
+                            unknown_event_types =  {}
+                        },
+                        {
+                            event_types = {
+                                "state_idle",
+                                "product_cover_removed"
+                            },
+                            type = "home_security",
+                            unknown_event_types =  {}
+                        }
+                    },
+                },
+                {
+                    id = class_ids.alarm_sensor,
+                    sensor_types =  {
+                        "general",
+                        "water_alarm"
+                    },
+                },
+                {
+                    id = class_ids.multilevel_sensor,
+                    sensors =  {
+                        {
+                            scales =  { "celsius" },
+                            sensor_type = "air_temperature"
+                        }
+                    },
+                },
+            },
+        }
+    },
+    generic_type = "GENERIC_TYPE_SENSOR_NOTIFICATION",
+    specific_type = "SPECIFIC_TYPE_NOTIFICATION_SENSOR",
+    is_battery_powered = true,
+    manufacturer_id = 271,
+    product_type = 2817,
+    product_id = 8194,
+    security =  { "s0" },
+    security_class_started =  { "s0" },
+}
+
+fixture:add_node(node)
+
+local expected_devices = {
+    {
+        name = "Flood Sensor",
+        category = "security_sensor",
+        subcategory = "leak",
+        items = {
+            {
+                name = item_names.battery,
+                cc_id = class_ids.battery,
+                channel_id = 0
+            },
+            {
+                name = item_names.basic,
+                cc_id = class_ids.basic,
+                channel_id = 0
+            },
+            {
+                name = item_names.tampering_cover_alarm,
+                tag = item_descriptor_tags.home_security,
+                cc_id = class_ids.notification,
+                channel_id = 0
+            },
+            {
+                name = item_names.water_leak_alarm,
+                tag = item_descriptor_tags.water_alarm,
+                cc_id = class_ids.notification,
+                channel_id = 0,
+            },
+            {
+                name = item_names.water_leak_alarm,
+                cc_id = class_ids.alarm_sensor,
+                channel_id = 0,
+                tag = item_descriptor_tags.water_alarm,
+                is_merged = true,
+            },
+            {
+                name = item_names.security_threat,
+                tag = "water_alarm.security_tag",
+                cc_id = class_ids.notification,
+                channel_id = 0,
+                main_item_name = item_names.water_leak_alarm
+            }
+        },
+        node_id = "9000",
+        battery_powered = true,
+        security = "middle",
+
+        subdevices = {
+            {
+                name = "Temperature Sensor",
+                category = "temperature",
+                subcategory = "",
+                items = {
+                    {
+                        name = item_names.temp,
+                        cc_id = class_ids.multilevel_sensor,
+                        channel_id = 0
+                    }
+                },
+            }
+        }
+    }
+}
+
+local check_context = {
+    descriptors = {},
+    item_ids = {},
+    device_ids = {},
+    tests = tests
+}
+
+local test_suite_dir = "HUB:zwave/scripts/tests/device_adding_removing_test_suite/"
+loadfile(test_suite_dir .. "check_zwave_node_adding_result")(expected_devices, check_context)
+
+fixture:remove_node(node)
+
+loadfile(test_suite_dir .. "check_zwave_node_removing_result")(check_context)

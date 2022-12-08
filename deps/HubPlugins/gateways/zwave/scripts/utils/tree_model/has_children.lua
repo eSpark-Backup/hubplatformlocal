@@ -1,0 +1,3 @@
+local self, node = ...
+
+return node.children and next(node.children)

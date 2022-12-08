@@ -1,0 +1,3 @@
+local self = ...
+
+self._timer.cancel(self._timer_id)

@@ -1,0 +1,36 @@
+{
+    "test_suites": [
+        {
+            "name": "startup_synchronization",
+            "directory": "startup_synchronization_test_suite",
+            "test_cases": [
+                "device_added_test",
+                "device_removed_test",
+                "device_reachability_changed_test",
+                "capability_added_test",
+                "capability_removed_test"
+            ]
+        },
+        {
+            "name": "events",
+            "directory": "events_test_suite",
+            "test_cases": [
+                "device_added_test",
+                "device_removed_test",
+                "device_reachability_changed_test",
+                "capability_added_test",
+                "capability_removed_test"
+            ]
+        },
+        {
+            "name": "set_item_value",
+            "directory": "set_item_value_test_suite",
+            "test_cases": [
+                "text_command_test",
+                "send_command_timeout_test",
+                "send_command_cloud_error_test",
+                "send_command_malformed_result_test"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "cloud_devices",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Cloud devices support"
+    },
+    "description": {
+      "text": "This plugin integrates cloud devices as the controller devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": false
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "cloud_devices",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  "permissions": [
+    "cloud_devices",
+    "core",
+    "storage"
+  ],
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+  "gateway": {
+    "name": "cloud_devices",
+    "label": "cloud devices gateway",
+    "setItemValueCommand": "HUB:cloud_devices/scripts/set_item_value",
+    "setItemValueResponsePolicy": "custom",
+    "addItemDictionaryValueCommand": "",
+    "setItemDictionaryValueCommand": "",
+    "removeItemDictionaryValueCommand": "",
+    "forceRemoveDeviceCommand": "",
+    "operations": []
+  }
+}

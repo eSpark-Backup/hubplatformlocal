@@ -1,0 +1,51 @@
+{
+  "id": "plughub",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "PlugHub build-it plugin"
+    },
+    "description": {
+      "text": "This plugin automatically creates plug device for controlling PlugHub functionality"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "plughub",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+      "plughub",
+      "core",
+      "storage"
+  ],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+  "migration": "scripts/migration/execute_migration",
+
+  "gateway": {
+    "name": "plughub",
+    "label": "plughub gateway",
+    "setItemValueCommand": "HUB:plughub/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "",
+    "setItemDictionaryValueCommand": "",
+    "removeItemDictionaryValueCommand": "",
+    "forceRemoveDeviceCommand": ""
+  }
+}

@@ -1,0 +1,3 @@
+local self, state = ...
+
+self._storage.set_bool("should_check_extensions", state)

@@ -1,0 +1,3 @@
+local self, device_id = ...
+
+return self._storage.get_string(device_id)

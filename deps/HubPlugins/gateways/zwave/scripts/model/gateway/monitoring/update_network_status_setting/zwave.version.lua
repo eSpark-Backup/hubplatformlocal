@@ -1,0 +1,3 @@
+local self, info = ...
+
+self:call("set_setting_value_to_core", "zwave.version", info.module_firmware_version)

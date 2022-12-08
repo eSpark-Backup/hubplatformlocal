@@ -1,0 +1,3 @@
+local self, setting_name = ...
+
+return "zwave." .. setting_name

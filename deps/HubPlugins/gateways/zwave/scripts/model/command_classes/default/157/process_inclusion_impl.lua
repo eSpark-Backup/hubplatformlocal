@@ -1,0 +1,3 @@
+local self, inclusion_context, build_tree_context, device_node = ...
+
+print("Inclusion of silence alarm")

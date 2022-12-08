@@ -1,0 +1,3 @@
+local self, node_id = ...
+
+return "monitoring_handler_" .. math.floor(node_id)

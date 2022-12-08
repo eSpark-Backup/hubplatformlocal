@@ -1,0 +1,5 @@
+local device_info = require("HUB:2gig/scripts/model/devices/{device_type}")
+
+{entries}
+
+return device_info

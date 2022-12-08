@@ -1,0 +1,3 @@
+local self = ...
+
+return self:call("_normalize_values", self:_super_call("slots_mapper/base", "_load_values"))

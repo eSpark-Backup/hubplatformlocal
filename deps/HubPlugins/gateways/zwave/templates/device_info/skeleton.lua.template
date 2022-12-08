@@ -1,0 +1,5 @@
+local {0} = hubplugins.weak_loadfile("HUB:zwave/scripts/model/devices/devices_info/base_info")()
+
+{1}
+
+return {0}

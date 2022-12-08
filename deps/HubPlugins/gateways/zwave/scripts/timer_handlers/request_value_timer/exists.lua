@@ -1,0 +1,3 @@
+local self = ...
+
+return self._timer.exists( self._timer_id)

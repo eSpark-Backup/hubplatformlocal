@@ -1,0 +1,1 @@
+return "domestic_hot_water_temperature"

@@ -1,0 +1,3 @@
+local self = ...
+
+return self._base_device_info.name

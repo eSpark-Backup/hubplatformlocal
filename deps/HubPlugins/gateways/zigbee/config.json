@@ -1,0 +1,65 @@
+{
+  "id": "zigbee",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "ZigBee devices support"
+    },
+    "description": {
+      "text": "This plugin supports ZigBee devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "zigbee",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ],
+    "plugins": [
+      {
+        "id": "native_plugins_utils",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+      "zigbee",
+      "core",
+      "storage",
+      "timer",
+      "house_modes",
+      "native_plugins_utils"
+  ],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+  "initialize_migration": "scripts/migration/initialize_migration",
+  "migration": "scripts/migration/migrate_device",
+  "finalize_migration": "scripts/migration/finalize_migration",
+
+  "gateway": {
+    "name": "zigbee",
+    "label": "zigbee gateway",
+    "setItemValueCommand": "HUB:zigbee/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "HUB:zigbee/scripts/add_item_dictionary_value",
+    "setItemDictionaryValueCommand": "HUB:zigbee/scripts/set_item_dictionary_value",
+    "removeItemDictionaryValueCommand": "HUB:zigbee/scripts/remove_item_dictionary_value",
+    "resetSettingCommand": "HUB:zigbee/scripts/reset_setting",
+    "setSettingValueCommand": "HUB:zigbee/scripts/set_setting_value",
+    "setSettingDictionaryValueCommand": "HUB:zigbee/scripts/set_setting_dictionary_value",
+    "forceRemoveDeviceCommand": "HUB:zigbee/scripts/device_remove"
+  }
+}

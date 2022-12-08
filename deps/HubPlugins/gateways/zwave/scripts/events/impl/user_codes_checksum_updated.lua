@@ -1,0 +1,3 @@
+local params = ...
+
+print(string.format("User codes checksum updated, node id: %g, channel id: %g, class id: %g, checksum: %g", params.node_id, params.channel_id, params.class_id, params.value))

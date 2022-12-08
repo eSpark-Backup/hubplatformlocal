@@ -1,0 +1,3 @@
+local self, item_id, item_descriptor, value_type, value = ...
+
+self:call("set_item_dictionary_value", item_id, item_descriptor, nil--[[key]], value_type, value)

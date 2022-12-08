@@ -1,0 +1,49 @@
+{
+  "id": "cameras",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Cameras devices support"
+    },
+    "description": {
+      "text": "Simple prototype plugin supports camera devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": false
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "cameras",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  
+  "permissions": [
+      "cameras",
+      "core",
+      "storage" 
+  ],
+    
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+    "gateway": {
+      "name": "cameras",
+      "label": "cameras gateway",
+      "setItemValueCommand": "HUB:cameras/scripts/set_item_value",
+      "addItemDictionaryValueCommand": "HUB:cameras/scripts/add_item_dictionary_value",
+      "setItemDictionaryValueCommand": "HUB:cameras/scripts/set_item_dictionary_value",
+      "removeItemDictionaryValueCommand": "HUB:cameras/scripts/remove_item_dictionary_value",
+      "forceRemoveDeviceCommand": "HUB:cameras/scripts/force_remove"
+    }
+}

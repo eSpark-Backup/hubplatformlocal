@@ -1,0 +1,3 @@
+local self, item_id = ...
+
+return "usernames." .. item_id

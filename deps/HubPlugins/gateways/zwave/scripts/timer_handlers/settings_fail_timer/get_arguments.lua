@@ -1,0 +1,3 @@
+local self = ...
+
+return self._timer.get_arguments(self._timer_id)

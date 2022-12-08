@@ -1,0 +1,1584 @@
+{
+    "134_4_80": [
+        {
+            "todo": "should be displayed as 2 token settings: volume and sound",
+            "name": "Configure the Siren sound and its volume",
+            "description": "This parameter is used to configure the siren sound and volume as the default setting.",
+            "type": "int",
+            "configuration": {
+                "number": 37,
+                "size": 2
+            }
+        },
+        {
+            "name": "Enable/Disable to send notifications to associated devices to associated devices",
+            "description": "This parameter is used to Enable/Disable to send notifications to associated devices (in Group 1) when the state of Siren Gen5s load is changed.",
+            "type": "token",
+            "enum": {
+                "nothing": {
+                    "value": 0,
+                    "text": "Send Nothing (Disabled)"
+                },
+                "hail": {
+                    "value": 1,
+                    "text": "Send HAIL Command"
+                },
+                "basic": {
+                    "value": 2,
+                    "text": "Send BASIC Report Command"
+                }
+            },
+            "configuration": {
+                "number": 80,
+                "size": 1
+            }
+        },
+        {
+            "todo": "0 is a special value - should be displayed separately",
+            "name": "Partner ID",
+            "description": "This parameter is used to configure the partner ID.",
+            "type": "int",
+            "configuration": {
+                "number": 200,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable/Disable Lock Configuration",
+            "description": "This parameter is used to enable/disable Lock all configuration parameters.",
+            "type": "bool",
+            "configuration": {
+                "number": 252,
+                "size": 1
+            }
+        },
+        {
+            "todo": "should be displayed as 2 action settings",
+            "name": "Reset to default factory setting",
+            "description": "This parameter is used to reset product to default factory setting.",
+            "type": "token",
+            "enum": {
+                "reset_configuration": {
+                    "value": 1,
+                    "text": "Resets all configuration parameters to default setting"
+                },
+                "reset_device_and_exclude": {
+                    "value": 1431655765,
+                    "text": "Reset the product to default factory setting and be excluded from the Z-wave network"
+                }
+            },
+            "configuration": {
+                "number": 255,
+                "size": 4
+            }
+        }
+    ],
+    "134_260_80": { "$ref": "#/134_4_80" },
+    "134_516_80": { "$ref": "#/134_4_80" },
+
+    "271_5121_8192": [
+        {
+            "name": "Remember device status before the power failure",
+            "description": "This parameter determines how the Wall Plug will react in the event of power supply failure.",
+            "type": "bool",
+            "configuration": {
+                "number": 2,
+                "size": 1
+            }
+        },
+        {
+            "name": "Overload safety switch",
+            "description": "This function allows to turn off the controlled device in case of exceeding the defined power.",
+            "type": "int",
+            "configuration": {
+                "number": 3,
+                "size": 2
+            }
+        },
+        {
+            "name": "Power reporting",
+            "description": "This parameter determines the minimum percentage change in active power consumption (in relation to the previously reported) that will result in sending new power report.",
+            "type": "int",
+            "configuration": {
+                "number": 11,
+                "size": 1
+            }
+        },
+        {
+            "name": "Energy reporting threshold",
+            "description": "This parameter determines the minimum change in energy consumption (in relation to the previously reported) that will result in sending a new report.",
+            "type": "int",
+            "configuration": {
+                "number": 12,
+                "size": 2
+            }
+        },
+        {
+            "name": "Periodic power reporting",
+            "description": "This parameter defines time period between independent reports sent when changes in power load have not been recorded or if changes are insignificant. By default reports are sent every hour.",
+            "type": "int",
+            "configuration": {
+                "number": 13,
+                "size": 2
+            }
+        },
+        {
+            "name": "Periodic energy reporting",
+            "description": "This parameter defines time period between independent reports sent when changes in power load have not been recorded or if changes are insignificant. By default reports are sent every hour.",
+            "type": "int",
+            "configuration": {
+                "number": 14,
+                "size": 2
+            }
+        },
+        {
+            "name": "Measuring energy consumed by the Wall Plug itself",
+            "description": "This parameter determines whether power metering should include the amount of power consumed by the Wall Plug itself. Results are being added to the value of power consumed by controlled device.",
+            "type": "bool",
+            "configuration": {
+                "number": 15,
+                "size": 1
+            }
+        },
+        {
+            "name": "UP value - \"On/Off (Power)\" association group (3)",
+            "description": "Upper power threshold, used in parameter 23. UP value cannot be lower than a value specified in parameter 22.",
+            "type": "int",
+            "value_min": 100,
+            "value_max": 18000,
+            "configuration": {
+                "number": 21,
+                "size": 2
+            }
+        },
+        {
+            "name": "DOWN value - \"On/Off (Power)\" association group (3)",
+            "description": "Lower power threshold, used in parameter 23. DOWN value cannot be higher than a value specified in parameter 21.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 17900,
+            "configuration": {
+                "number": 22,
+                "size": 2
+            }
+        },
+        {
+            "name": "Controlling \"On/Off (Power)\" association group (3)",
+            "description": "This parameter defines the way that 3rd association group devices are controlled. Depends on the actual measured power (according to parameters 21 and 22 settings).",
+            "type": "token",
+            "enum": {
+                "send_if_power_exceeds": {
+                    "value": 1,
+                    "text": "Send frame (with value set in parameter 26) only if power exceeded value of parameter 21"
+                },
+                "send_if_power_drops": {
+                    "value": 2,
+                    "text": "Send frame (with value set in parameter 27) only if power dropped below value of parameter 22"
+                },
+                "send_if_drops_or_exceeds": {
+                    "value": 3,
+                    "text": "Send frame in both cases"
+                }
+            },
+            "configuration": {
+                "number": 23,
+                "size": 1
+            }
+        },
+        {
+            "name": "SWITCH ON value - \"On/Off (Button)\" association group (2)",
+            "description": "The value of BASIC SET command frame sent to the devices associated in 2nd group \"On/Off (Button)\" when turning the device ON using the button.",
+            "type": "int",
+            "configuration": {
+                "number": 24,
+                "size": 2
+            }
+        },
+        {
+            "name": "SWITCH OFF value - \"On/Off (Button)\" association group (2)",
+            "description": "The value of BASIC SET command frame sent to the devices associated in 2nd group \"On/Off (Button)\" when turning the device ON using the button.",
+            "type": "int",
+            "configuration": {
+                "number": 25,
+                "size": 2
+            }
+        },
+        {
+            "name": " THRESHOLD UP value - \"On/Off (Button)\" association group (2)",
+            "description": "The value of BASIC SET command frame sent to the devices associated in 3rd group \"On/Off (Power)\" if power exceeded value of parameter 21.",
+            "type": "int",
+            "configuration": {
+                "number": 26,
+                "size": 2
+            }
+        },
+        {
+            "name": " THRESHOLD DOWN value - \"On/Off (Button)\" association group (2)",
+            "description": "The value of BASIC SET command frame sent to the devices associated in 3rd group \"On/Off (Power)\" if power dropped below value of parameter 22.",
+            "type": "int",
+            "configuration": {
+                "number": 27,
+                "size": 2
+            }
+        },
+        {
+            "name": "Active alarms",
+            "description": "Define Z-Wave network alarms to which the Wall Plug will respond.",
+            "type": "array.token",
+            "enum": {
+                "general_alarm": {
+                    "value": 1,
+                    "text": "General alarm"
+                },
+                "smoke_alarm": {
+                    "value": 2,
+                    "text": "Smoke_alarm"
+                },
+                "co_alarm": {
+                    "value": 4,
+                    "text": "CO alarm"
+                },
+                "co2_alarm": {
+                    "value": 8,
+                    "text": "CO2 alarm"
+                },
+                "heat_alarm": {
+                    "value": 16,
+                    "text": "High temperature alarm"
+                },
+                "flood_alarm": {
+                    "value": 32,
+                    "text": "Flood alarm"
+                }
+            },
+            "configuration": {
+                "number": 30,
+                "size": 1
+            }
+        },
+        {
+            "name": "Response to alarm frames",
+            "description": "This parameter defines how the Wall Plug will respond to alarms (device's status change).",
+            "type": "int",
+            "configuration": {
+                "number": 31,
+                "size": 1
+            }
+        },
+        {
+            "name": "Alarm state duration",
+            "description": "This parameter specifies the duration of alarm state. If a device sending an alarm frame through the Z-Wave network sets alarm duration as well, this settings are ignored.",
+            "type": "int",
+            "value_min": 1,
+            "value_max": 32400,
+            "configuration": {
+                "number": 32,
+                "size": 2
+            }
+        },
+        {
+            "name": "Power load for violet color",
+            "description": "This parameter determines maximum active power value, which when exceeded, causes the LED frame to flash violet. Function is active only when parameter 41 is set to 1 or 2.",
+            "type": "int",
+            "value_min": 1000,
+            "value_max": 18000,
+            "configuration": {
+                "number": 40,
+                "size": 2
+            }
+        },
+        {
+            "name": "LED frame color when controlled device is on",
+            "description": "When set to 1 or 2, LED frame color will change depending on active power and parameter 40. Other colors are set permanently and do not depend on power consumption.",
+            "type": "token",
+            "enum": {
+                "no_luminance": {
+                    "value": 0,
+                    "text": "Illumination turned off completely"
+                },
+                "color_change_smooth": {
+                    "value": 1,
+                    "text": "Color changes smoothly depending on active power"
+                },
+                "color_change_steps": {
+                    "value": 2,
+                    "text": "Color changes in steps depending on active power"
+                },
+                "white": {
+                    "value": 3,
+                    "text": "White"
+                },
+                "red": {
+                    "value": 4,
+                    "text": "Red"
+                },
+                "green": {
+                    "value": 5,
+                    "text": "Green"
+                },
+                "blue": {
+                    "value": 6,
+                    "text": "Blue"
+                },
+                "yellow": {
+                    "value": 7,
+                    "text": "Yellow"
+                },
+                "cyan": {
+                    "value": 8,
+                    "text": "Cyan"
+                },
+                "magenta": {
+                    "value": 9,
+                    "text": "Magenta"
+                }
+            },
+            "configuration": {
+                "number": 41,
+                "size": 1
+            }
+        },
+        {
+            "name": "LED frame color at the Z-Wave network alarm detection",
+            "description": "This parameter defines the illumination color in case of Z-Wave alarm.",
+            "type": "token",
+            "enum": {
+                "no_luminance": {
+                    "value": 0,
+                    "text": "Illumination turned off completely"
+                },
+                "color_change_smooth": {
+                    "value": 1,
+                    "text": "LED frame is illuminated with a color corresponding to the last measured power, before the controlled device was turned off."
+                },
+                "white": {
+                    "value": 3,
+                    "text": "White"
+                },
+                "red": {
+                    "value": 4,
+                    "text": "Red"
+                },
+                "green": {
+                    "value": 5,
+                    "text": "Green"
+                },
+                "blue": {
+                    "value": 6,
+                    "text": "Blue"
+                },
+                "yellow": {
+                    "value": 7,
+                    "text": "Yellow"
+                },
+                "cyan": {
+                    "value": 8,
+                    "text": "Cyan"
+                },
+                "magenta": {
+                    "value": 9,
+                    "text": "Magenta"
+                }
+            },
+            "configuration": {
+                "number": 42,
+                "size": 1
+            }
+        },
+        {
+            "name": "LED frame color when controlled device is off",
+            "description": "This parameter defines the illumination color after turning off.",
+            "type": "token",
+            "enum": {
+                "no_luminance": {
+                    "value": 0,
+                    "text": "Illumination turned off completely"
+                },
+                "color_change_smooth": {
+                    "value": 1,
+                    "text": "No change in color. LED frame color is determined by settings of parameters 41 or 42"
+                },
+                "color_change_steps": {
+                    "value": 2,
+                    "text": "LED frame flashes red/blue/white"
+                },
+                "white": {
+                    "value": 3,
+                    "text": "White"
+                },
+                "red": {
+                    "value": 4,
+                    "text": "Red"
+                },
+                "green": {
+                    "value": 5,
+                    "text": "Green"
+                },
+                "blue": {
+                    "value": 6,
+                    "text": "Blue"
+                },
+                "yellow": {
+                    "value": 7,
+                    "text": "Yellow"
+                },
+                "cyan": {
+                    "value": 8,
+                    "text": "Cyan"
+                },
+                "magenta": {
+                    "value": 9,
+                    "text": "Magenta"
+                }
+            },
+            "configuration": {
+                "number": 43,
+                "size": 1
+            }
+        }
+    ],
+    "271_5121_4096": { "$ref": "#/271_5121_8192" },
+
+    "305_2_3": [
+        {
+            "todo": "should be a scalable (milliseconds) int in range [0, 250]",
+            "name": "Strobe interval",
+            "description": "Strobe interval, in units of 10 milliseconds.",
+            "type": "int",
+            "valueMin": 0,
+            "valueMax": 25,
+            "configuration": {
+                "number": 2,
+                "size": 1
+            }
+        },
+        {
+            "todo": [
+                "127 is a special value - should be displayed separately",
+                "should be an int in range [0, 25]"
+            ],
+            "name": "Strobe pulse count",
+            "description": "Number of strobe pulses. Setting this parameter to value 127 makes the bulb strobe indefinitely.",
+            "type": "int",
+            "configuration": {
+                "number": 3,
+                "size": 1
+            }
+        },
+        {
+            "name": "Randomize strobe pulse color",
+            "description": "Randomize strobe pulse color.",
+            "type": "bool",
+            "configuration": {
+                "number": 4,
+                "size": 1
+            }
+        },
+        {
+            "name": "Reset bulb to factory settings",
+            "description": "Initiate the factory reset procedure.",
+            "type": "action",
+            "value": 2290649224,
+            "label": {
+                "text": "Initiate the factory reset procedure"
+            },
+            "configuration": {
+                "number": 255,
+                "size": 4
+            }
+        }
+    ],
+    "305_3_6": { "$ref": "#/305_2_3" },
+
+    "881_3_2": [
+        {
+            "name": "User custom mode for LED animations",
+            "description": "User custom mode for LED animations",
+            "type": "token",
+            "enum": {
+                "value_1": {
+                    "value": 0,
+                    "text": "Disable custom mode"
+                },
+                "value_2": {
+                    "value": 1,
+                    "text": "Blink Colors in order mode"
+                },
+                "value_3": {
+                    "value": 2,
+                    "text": "Randomized blink color mode"
+                }
+            },
+            "configuration": {
+                "number": 1,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable/Disable Strobe over Custom Color",
+            "description": "Enable/Disable Strobe over Custom Color",
+            "type": "bool",
+            "configuration": {
+                "number": 2,
+                "size": 1
+            }
+        },
+        {
+            "name": "Set the rate of change to next color in Custom Mode",
+            "description": "Set the rate of change to next color in Custom Mode",
+            "type": "int",
+            "value_min": 5,
+            "value_max": 8640000,
+            "configuration": {
+                "number": 3,
+                "size": 4
+            }
+        },
+        {
+            "name": "Set color that LED Bulb blinks in (Blink Mode)",
+            "description": "Set color that LED Bulb blinks in (Blink Mode)",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 4,
+                "size": 1
+            }
+        },
+        {
+            "name": "Ramp rate when dimming using Multilevel Switch V1 CC in 100ms",
+            "description": "Ramp rate when dimming using Multilevel Switch V1 CC in 100ms",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 100,
+            "configuration": {
+                "number": 16,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable to send notifications to associated devices (Group 1) when the state of LED Bulb is changed",
+            "description": "Enable to send notifications to associated devices (Group 1) when the state of LED Bulb is changed",
+            "type": "bool",
+            "configuration": {
+                "number": 80,
+                "size": 1
+            }
+        },
+        {
+            "name": "The user can configure the parameter to adjust the color component Warm White",
+            "description": "The user can configure the parameter to adjust the color component Warm White",
+            "type": "int",
+            "value_min": 2700,
+            "value_max": 4999,
+            "configuration": {
+                "number": 81,
+                "size": 2
+            }
+        },
+        {
+            "name": "The user can configure the parameter to adjust the color component Cold White",
+            "description": "The user can configure the parameter to adjust the color component Cold White",
+            "type": "int",
+            "value_min": 5000,
+            "value_max": 6500,
+            "configuration": {
+                "number": 82,
+                "size": 2
+            }
+        }
+    ],
+    "881_259_2": { "$ref": "#/881_3_2" },
+
+    "59_25409_20548": [
+        {
+            "name": "Enable beeper",
+            "description": "Enable beeper",
+            "type": "bool",
+            "configuration": {
+                "number": 3,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable vacation mode",
+            "description": "Enable vacation mode",
+            "type": "bool",
+            "configuration": {
+                "number": 4,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable Lock&Leave mode",
+            "description": "Enable Lock&Leave mode",
+            "type": "bool",
+            "configuration": {
+                "number": 5,
+                "size": 1
+            }
+        },
+        {
+            "name": "Lock specific alarm mode",
+            "description": "Lock specific alarm mode",
+            "type": "token",
+            "enum": {
+                "alarm_off": {
+                    "value": 0,
+                    "text": "Alarm off"
+                },
+                "alert": {
+                    "value": 1,
+                    "text": "Alert"
+                },
+                "tamper": {
+                    "value": 2,
+                    "text": "Tamper"
+                },
+                "forced_entry": {
+                    "value": 3,
+                    "text": "Forced entry"
+                }
+            },
+            "configuration": {
+                "number": 7,
+                "size": 1
+            }
+        },
+        {
+            "name": "Lock specific alarm alert sesitivity",
+            "description": "Lock specific alarm alert sesitivity",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 5,
+            "configuration": {
+                "number": 8,
+                "size": 1
+            }
+        },
+        {
+            "name": "Lock specific alarm tamper sesitivity",
+            "description": "Lock specific alarm tamper sesitivity",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 5,
+            "configuration": {
+                "number": 9,
+                "size": 1
+            }
+        },
+        {
+            "name": "Lock specific alarm kick sesitivity",
+            "description": "Lock specific alarm kick sesitivity",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 5,
+            "configuration": {
+                "number": 10,
+                "size": 1
+            }
+        },
+        {
+            "name": "Lock specific alarm; disabled local controls",
+            "description": "Lock specific alarm; disabled local controls",
+            "type": "bool",
+            "configuration": {
+                "number": 11,
+                "size": 1
+            }
+        },
+        {
+            "name": "Enable auto lock",
+            "description": "Enable auto lock",
+            "type": "bool",
+            "configuration": {
+                "number": 15,
+                "size": 1
+            }
+        },
+        {
+            "name": "User code PIN Length",
+            "description": "User code PIN Length",
+            "type": "int",
+            "value_min": 4,
+            "value_max": 8,
+            "configuration": {
+                "number": 16,
+                "size": 1
+            }
+        }
+    ],
+    "59_1_1129": { "$ref": "#/59_25409_20548" },
+    "316_2_12": [
+        {
+            "name": "Basic Set Level",
+            "description": "Setting the BASIC command value to turn on the light. The 0xFF(-1) means turn on the light. For dimmer equipment 1 to 100 means the light strength. 0 means turn off the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 2,
+                "size": 1,
+                "value": 255
+            }
+        },
+        {
+            "name": "PIR Sensitivity",
+            "description": "PIR sensitivity settings. 0 means disable the PIR motion. 1 means the lowest sensitivity, 99 means the highest sensitivity. High sensitivity means can detected long distance, but if there is more noise signal in the environment, it will re-trigger too frequency.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 3,
+                "size": 1,
+                "value": 80
+            }
+        },
+        {
+            "name": "Light Threshold",
+            "description": "Setting the illumination threshold to turn on the light. When the event triggered and the environment illumination lower then the threshold, the device will turn on the light. 0 means turn off illumination detected function. And never turn on the light. 1 means darkest. 99 means brightest. 100 means turn off illumination detected function. And always turn on the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 4,
+                "size": 1,
+                "value": 99
+            }
+        },
+        {
+            "name": "Operation Mode",
+            "description": "Operation mode.",
+            "type": "array.token",
+            "enum": {
+                "test_mode": {
+                    "value": 2,
+                    "text": "Test mode"
+                },
+                "disable_door_window": {
+                    "value": 4,
+                    "text": "Disable the door/window function"
+                },
+                "temperature_scale": {
+                    "value": 8,
+                    "text": "Setting the temperature scale Celsius"
+                },
+                "disable_illumination_report": {
+                    "value": 16,
+                    "text": "Disable the illumination report after event triggered"
+                },
+                "disable_temperature_report": {
+                    "value": 32,
+                    "text": "Disable the temperature report after event triggered"
+                },
+                "disable_back_key_release": {
+                    "value": 128,
+                    "text": "Disable the back key release into test mode"
+                }
+            },
+            "configuration": {
+                "number": 5,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Mult-Sensor Function Switch",
+            "description": "Multisensor function switch.",
+            "type": "array.token",
+            "enum": {
+                "disable_magnetic": {
+                    "value": 1,
+                    "text": "Disable magnetic integrate illumination to turn ON the lighting nodes in the association group 2"
+                },
+                "disable_pir": {
+                    "value": 2,
+                    "text": "Disable PIR integrate Illumination to turn ON the lighting nodes in the association group 2"
+                },
+                "disable_magnetic_enable_pir": {
+                    "value": 4,
+                    "text": "Disable magnetic integrate PIR to turn ON the lighting nodes in the association group 2"
+                },
+                "are_lights_in_the_same_room": {
+                    "value": 8,
+                    "text": "When Bit2 is 0 (Enable), Are the device and the lighting in the same room"
+                },
+                "disable_delay_5_sec": {
+                    "value": 16,
+                    "text": "Disable delay 5 seconds to turn off the light, when door/window closed"
+                },
+                "disable_auto_turn_off": {
+                    "value": 32,
+                    "text": "Disable auto turn off the light, after door/window opened to turn on the light"
+                }
+            },
+            "configuration": {
+                "number": 6,
+                "size": 1,
+                "value": 4
+            }
+        },
+        {
+            "name": "Customer function",
+            "description": "Customer function switch, using bit control.",
+            "type": "array.token",
+            "enum": {
+                "motion_off_report": {
+                    "value": 2,
+                    "text": "Enable sending motion OFF report"
+                },
+                "rip_super_sensitivity": {
+                    "value": 4,
+                    "text": "Enable PIR super sensitivity mode"
+                },
+                "basic_off": {
+                    "value": 8,
+                    "text": "Disablesend out BASIC OFF after door closed"
+                },
+                "notification_type": {
+                    "value": 16,
+                    "text": "Using Sensor Binary Report"
+                },
+                "disable_multi_cc": {
+                    "value": 32,
+                    "text": "Disable Multi CC in auto report"
+                },
+                "disable_battery_state_report": {
+                    "value": 64,
+                    "text": "Disable to report battery state when the device triggered"
+                }
+            },
+            "configuration": {
+                "number": 7,
+                "size": 1,
+                "value": 22
+            }
+        },
+        {
+            "name": "PIR Re-Detect Interval Time",
+            "description": "In the normal mode, after the PIR motion detected, setting the re-detect time. 8 seconds per tick, default tick is 3 (24 seconds).Setting the suitable value to prevent received the trigger signal too frequently. Also can save the battery energy.",
+            "type": "int",
+            "value_min": 1,
+            "value_max": 127,
+            "configuration": {
+                "number": 8,
+                "size": 1,
+                "value": 3
+            }
+        },
+        {
+            "name": "Turn Off Light Time",
+            "description": "After turn on the lighting, setting the delay time to turn off the lighting when the PIR motion is not detected. 8 seconds per tick, default tick is 4 (32seconds). 0 means never send turn off light command.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 9,
+                "size": 1,
+                "value": 4
+            }
+        },
+        {
+            "name": "Auto Report Battery Time",
+            "description": "The interval time for auto report the battery level.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 10,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Door/Window State",
+            "description": "The interval time for auto report the door/window state.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 11,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Illumination Time",
+            "description": "The interval time for auto report the illumination.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 12,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Temperature Time",
+            "description": "The interval time for auto report the temperature.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 13,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Tick Interval",
+            "description": "The interval time for auto report each tick. Setting this configuration will effect configuration No.10, No.11, No.12 and No.13. The unit is 1 minute.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 20,
+                "size": 1,
+                "value": 30
+            }
+        },
+        {
+            "name": "Temperature Differential Report",
+            "description": "The temperature differential to report. 0 means turn off this function. The unit is Fahrenheit. Enable this function the device will detect every minutes. And when the temperature is over 140 degree Fahrenheit, it will continue report.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 21,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Illumination Differential Report",
+            "description": "The illumination differential to report. 0 means turn off this function. The unit is percentage. Enable this function the device will detect every minutes.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 22,
+                "size": 1,
+                "value": 0
+            }
+        }
+    ],
+    "316_2_13": [
+        {
+            "name": "Basic Set Level",
+            "description": "Setting the BASIC command value to turn on the light. The 0xFF(-1) means turn on the light. For dimmer equipment 1 to 100 means the light strength. 0 means turn off the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 2,
+                "size": 1,
+                "value": 255
+            }
+        },
+        {
+            "name": "PIR Sensitivity",
+            "description": "PIR sensitivity settings. 0 means disable the PIR motion. 1 means the lowest sensitivity, 99 means the highest sensitivity. High sensitivity means can detected long distance, but if there is more noise signal in the environment, it will re-trigger too frequency.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 3,
+                "size": 1,
+                "value": 80
+            }
+        },
+        {
+            "name": "Light Threshold",
+            "description": "Setting the illumination threshold to turn on the light. When the event triggered and the environment illumination lower then the threshold, the device will turn on the light. 0 means turn off illumination detected function. And never turn on the light. 1 means darkest. 99 means brightest. 100 means turn off illumination detected function. And always turn on the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 4,
+                "size": 1,
+                "value": 99
+            }
+        },
+        {
+            "name": "Operation Mode",
+            "description": "Operation mode.",
+            "type": "array.token",
+            "enum": {
+                "test_mode": {
+                    "value": 2,
+                    "text": "Test mode"
+                },
+                "temperature_scale": {
+                    "value": 8,
+                    "text": "Setting the temperature scale Celsius"
+                },
+                "disable_illumination_report": {
+                    "value": 16,
+                    "text": "Disable the illumination report after event triggered"
+                },
+                "disable_temperature_report": {
+                    "value": 32,
+                    "text": "Disable the temperature report after event triggered"
+                },
+                "disable_back_key_release": {
+                    "value": 128,
+                    "text": "Disable the back key release into test mode"
+                }
+            },
+            "configuration": {
+                "number": 5,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Mult-Sensor Function Switch",
+            "description": "Multisensor function switch.",
+            "type": "array.token",
+            "enum": {
+                "disable_pir": {
+                    "value": 2,
+                    "text": "Disable PIR integrate Illumination to turn ON the lighting nodes in the association group 2"
+                }
+            },
+            "configuration": {
+                "number": 6,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Customer function",
+            "description": "Customer function switch, using bit control.",
+            "type": "array.token",
+            "enum": {
+                "motion_off_report": {
+                    "value": 2,
+                    "text": "Enable sending motion OFF report"
+                },
+                "rip_super_sensitivity": {
+                    "value": 4,
+                    "text": "Enable PIR super sensitivity mode"
+                },
+                "notification_type": {
+                    "value": 16,
+                    "text": "Using Sensor Binary Report"
+                },
+                "disable_multi_cc": {
+                    "value": 32,
+                    "text": "Disable Multi CC in auto report"
+                },
+                "disable_battery_state_report": {
+                    "value": 64,
+                    "text": "Disable to report battery state when the device triggered"
+                }
+            },
+            "configuration": {
+                "number": 7,
+                "size": 1,
+                "value": 22
+            }
+        },
+        {
+            "name": "PIR Re-Detect Interval Time",
+            "description": "In the normal mode, after the PIR motion detected, setting the re-detect time. 8 seconds per tick, default tick is 3 (24 seconds).Setting the suitable value to prevent received the trigger signal too frequently. Also can save the battery energy.",
+            "type": "int",
+            "value_min": 1,
+            "value_max": 127,
+            "configuration": {
+                "number": 8,
+                "size": 1,
+                "value": 3
+            }
+        },
+        {
+            "name": "Turn Off Light Time",
+            "description": "After turn on the lighting, setting the delay time to turn off the lighting when the PIR motion is not detected. 8 seconds per tick, default tick is 4 (32seconds). 0 means never send turn off light command.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 9,
+                "size": 1,
+                "value": 4
+            }
+        },
+        {
+            "name": "Auto Report Battery Time",
+            "description": "The interval time for auto report the battery level.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 10,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Illumination Time",
+            "description": "The interval time for auto report the illumination.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 12,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Temperature Time",
+            "description": "The interval time for auto report the temperature.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 13,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Tick Interval",
+            "description": "The interval time for auto report each tick. Setting this configuration will effect configuration No.10, No.11, No.12 and No.13. The unit is 1 minute.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 20,
+                "size": 1,
+                "value": 30
+            }
+        },
+        {
+            "name": "Temperature Differential Report",
+            "description": "The temperature differential to report. 0 means turn off this function. The unit is Fahrenheit. Enable this function the device will detect every minutes. And when the temperature is over 140 degree Fahrenheit, it will continue report.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 21,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Illumination Differential Report",
+            "description": "The illumination differential to report. 0 means turn off this function. The unit is percentage. Enable this function the device will detect every minutes.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 22,
+                "size": 1,
+                "value": 0
+            }
+        }
+    ],
+    "316_2_14": [
+        {
+            "name": "Basic Set Level",
+            "description": "Setting the BASIC command value to turn on the light. The 0xFF(-1) means turn on the light. For dimmer equipment 1 to 100 means the light strength. 0 means turn off the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 2,
+                "size": 1,
+                "value": 255
+            }
+        },
+        {
+            "name": "Light Threshold",
+            "description": "Setting the illumination threshold to turn on the light. When the event triggered and the environment illumination lower then the threshold, the device will turn on the light. 0 means turn off illumination detected function. And never turn on the light. 1 means darkest. 99 means brightest. 100 means turn off illumination detected function. And always turn on the light.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 4,
+                "size": 1,
+                "value": 99
+            }
+        },
+        {
+            "name": "Operation Mode",
+            "description": "Operation mode.",
+            "type": "array.token",
+            "enum": {
+                "test_mode": {
+                    "value": 2,
+                    "text": "Test mode"
+                },
+                "disable_door_window": {
+                    "value": 4,
+                    "text": "Disable the door/window function"
+                },
+                "temperature_scale": {
+                    "value": 8,
+                    "text": "Setting the temperature scale Celsius"
+                },
+                "disable_illumination_report": {
+                    "value": 16,
+                    "text": "Disable the illumination report after event triggered"
+                },
+                "disable_temperature_report": {
+                    "value": 32,
+                    "text": "Disable the temperature report after event triggered"
+                },
+                "disable_back_key_release": {
+                    "value": 128,
+                    "text": "Disable the back key release into test mode"
+                }
+            },
+            "configuration": {
+                "number": 5,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Mult-Sensor Function Switch",
+            "description": "Multisensor function switch.",
+            "type": "array.token",
+            "enum": {
+                "disable_magnetic": {
+                    "value": 1,
+                    "text": "Disable magnetic integrate illumination to turn ON the lighting nodes in the association group 2"
+                },
+                "disable_delay_5_sec": {
+                    "value": 16,
+                    "text": "Disable delay 5 seconds to turn off the light, when door/window closed"
+                },
+                "disable_auto_turn_off": {
+                    "value": 32,
+                    "text": "Disable auto turn off the light, after door/window opened to turn on the light"
+                }
+            },
+            "configuration": {
+                "number": 6,
+                "size": 1,
+                "value": 4
+            }
+        },
+        {
+            "name": "Customer function",
+            "description": "Customer function switch, using bit control.",
+            "type": "array.token",
+            "enum": {
+                "basic_off": {
+                    "value": 8,
+                    "text": "Disablesend out BASIC OFF after door closed"
+                },
+                "notification_type": {
+                    "value": 16,
+                    "text": "Using Sensor Binary Report"
+                },
+                "disable_multi_cc": {
+                    "value": 32,
+                    "text": "Disable Multi CC in auto report"
+                },
+                "disable_battery_state_report": {
+                    "value": 64,
+                    "text": "Disable to report battery state when the device triggered"
+                }
+            },
+            "configuration": {
+                "number": 7,
+                "size": 1,
+                "value": 16
+            }
+        },
+        {
+            "name": "Turn Off Light Time",
+            "description": "After turn on the lighting, setting the delay time to turn off the lighting when the PIR motion is not detected. 8 seconds per tick, default tick is 4 (32seconds). 0 means never send turn off light command.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 9,
+                "size": 1,
+                "value": 4
+            }
+        },
+        {
+            "name": "Auto Report Battery Time",
+            "description": "The interval time for auto report the battery level.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 10,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Door/Window State",
+            "description": "The interval time for auto report the door/window state.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 11,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Illumination Time",
+            "description": "The interval time for auto report the illumination.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 12,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Temperature Time",
+            "description": "The interval time for auto report the temperature.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 13,
+                "size": 1,
+                "value": 12
+            }
+        },
+        {
+            "name": "Auto Report Tick Interval",
+            "description": "The interval time for auto report each tick. Setting this configuration will effect configuration No.10, No.11, No.12 and No.13. The unit is 1 minute.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 255,
+            "configuration": {
+                "number": 20,
+                "size": 1,
+                "value": 30
+            }
+        },
+        {
+            "name": "Temperature Differential Report",
+            "description": "The temperature differential to report. 0 means turn off this function. The unit is Fahrenheit. Enable this function the device will detect every minutes. And when the temperature is over 140 degree Fahrenheit, it will continue report.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 127,
+            "configuration": {
+                "number": 21,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Illumination Differential Report",
+            "description": "The illumination differential to report. 0 means turn off this function. The unit is percentage. Enable this function the device will detect every minutes.",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 99,
+            "configuration": {
+                "number": 22,
+                "size": 1,
+                "value": 0
+            }
+        }
+    ],
+    "634_28672_40967": [
+        {
+            "name": "Scene control",
+            "description": "Enable/Disable scene control functionality for quick double tap triggers",
+            "type": "bool",
+            "configuration": {
+                "number": 13,
+                "size": 1,
+                "value": 1
+            }
+        }
+    ],
+    "634_28672_40962": {"$ref": "#/634_28672_40967"},
+    "634_28672_40966": [
+        {
+            "name": "Scene control",
+            "description": "Enable/Disable scene control functionality for quick double tap triggers",
+            "type": "bool",
+            "configuration": {
+                "number": 10,
+                "size": 1,
+                "value": 1
+            }
+        }
+    ],
+    "634_28672_40961": [
+        {
+            "name": "Scene control",
+            "description": "Enable/Disable scene control functionality for quick double tap triggers",
+            "type": "bool",
+            "configuration": {
+                "number": 9,
+                "size": 1,
+                "value": 1
+            }
+        }
+    ],
+    "351_53792_20737": [
+        {
+            "name": "Energy metering reporting",
+            "description": "Configure the energy reports sent by device",
+            "type": "token",
+            "enum": {
+                "disable": {
+                    "value": 0,
+                    "text": "Disabled"
+                },
+                "watts_only": {
+                    "value": 1,
+                    "text": "Only report Watts"
+                },
+                "kwh_only": {
+                    "value": 2,
+                    "text": "Only report KWh"
+                },
+                "watts_kwh": {
+                    "value": 3,
+                    "text": "Only report Watts and KWh"
+                },
+                "amps": {
+                    "value": 4,
+                    "text": "Only report Amps"
+                },
+                "amps_watts": {
+                    "value": 5,
+                    "text": "Only report Amps and Watts"
+                },
+                "amps_kwh": {
+                    "value": 6,
+                    "text": "Only report Amps and KWh"
+                },
+                "amps_kwh_watts": {
+                    "value": 7,
+                    "text": "Only report Amps, KWh and Watts"
+                },
+                "voltage": {
+                    "value": 8,
+                    "text": "Only report Voltage"
+                },
+                "voltage_watts": {
+                    "value": 9,
+                    "text": "Only report Voltage and Watts"
+                },
+                "voltage_kwh": {
+                    "value": 10,
+                    "text": "Only report Voltage and KWh"
+                },
+                "voltage_kwh_watts": {
+                    "value": 11,
+                    "text": "Only report Voltage, KWh and Watts"
+                },
+                "voltage_amps": {
+                    "value": 12,
+                    "text": "Only report Voltage and Amps"
+                },
+                "voltage_amps_watts": {
+                    "value": 13,
+                    "text": "Only report Voltage, Amps and Watts"
+                },
+                "voltage_amps_kwh": {
+                    "value": 14,
+                    "text": "Report Voltage, Amps and KWh"
+                },
+                "voltage_amps_kwh_watts": {
+                    "value": 15,
+                    "text": "Report Voltage, Amps, KWh and Watts"
+                }
+			},
+            "configuration": {
+                "number": 15,
+                "size": 1,
+                "value": 15
+            }
+        }
+    ],
+    "340_256_257": [
+        {
+            "name": "Button 1 and 3 mode",
+            "description": "Adjust double click functionality",
+            "type": "token",
+            "enum": {
+                "separately": {
+                    "value": 0,
+                    "text": "Separately"
+                },
+                "with_double_click": {
+                    "value": 1,
+                    "text": "In pair without double clicks"
+                },
+                "without_double_click": {
+                    "value": 2,
+                    "text": "In pair with double clicks"
+                }
+            },
+            "configuration": {
+                "number": 1,
+                "size": 1,
+                "value": 2
+            }
+        }, {
+            "name": "Button 2 and 4 mode",
+            "description": "Adjust double click functionality",
+            "type": "token",
+            "enum": {
+                "separately": {
+                    "value": 0,
+                    "text": "Separately"
+                },
+                "with_double_click": {
+                    "value": 1,
+                    "text": "In pair without double clicks"
+                },
+                "without_double_click": {
+                    "value": 2,
+                    "text": "In pair with double clicks"
+                }
+            },
+            "configuration": {
+                "number": 2,
+                "size": 1,
+                "value": 2
+            }
+        }
+    ],
+    "1041_1_4161": [
+        {
+            "name": "Available Control mode",
+            "description": "Configure available Thermostat Modes",
+            "type": "token",
+            "enum": {
+                "heat_cool_auto": {
+                    "value": 0,
+                    "text": "Heat, Cool and Auto"
+                },
+                "heat_only": {
+                    "value": 1,
+                    "text": "Heat Only"
+                },
+                "cool_only": {
+                    "value": 2,
+                    "text": "Cool Only"
+                },
+                "heat_cool_no_auto": {
+                    "value": 3,
+                    "text": "Heat and Cool, no Auto"
+                }
+            },
+            "configuration": {
+                "number": 3,
+                "size": 1,
+                "value": 0
+            }
+        }
+    ]
+}

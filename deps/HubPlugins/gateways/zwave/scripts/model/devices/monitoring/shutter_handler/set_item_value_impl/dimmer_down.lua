@@ -1,0 +1,3 @@
+local self, item_descriptor, value = ...
+
+self:call("set_item_value_impl/dimmer_impl", item_descriptor, "down")

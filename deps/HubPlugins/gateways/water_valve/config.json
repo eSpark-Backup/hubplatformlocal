@@ -1,0 +1,50 @@
+{
+  "id": "water_valve",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Water Valve build-it plugin"
+    },
+    "description": {
+      "text": "This plugin automatically creates Water Valve device for controlling Water Valve functionality"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "water_valve",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+      "water_valve",
+      "core",
+      "storage"
+  ],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+  "gateway": {
+    "name": "water_valve",
+    "label": "water_valve gateway",
+    "setItemValueCommand": "HUB:water_valve/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "",
+    "setItemDictionaryValueCommand": "",
+    "removeItemDictionaryValueCommand": "",
+    "forceRemoveDeviceCommand": "",
+    "operations": []
+  }
+}

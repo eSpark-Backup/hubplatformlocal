@@ -1,0 +1,33 @@
+{
+  "id": "json",
+  "version": "0.1.2",
+  "meta":{
+    "name" : {
+      "text":"JSON library"
+    },
+    "description" : {
+      "text":"A lightweight JSON library for Lua. Source: https://github.com/rxi/json.lua"
+    },
+    "author" : {
+      "text":"rxi"
+    },
+    "links": [
+      "https://github.com/rxi/json.lua"
+    ],
+    "hidden": false,
+    "deny_uninstall": false
+  },
+  "type": "library",
+  "permissions": [],
+  "dependencies": {
+    "addons": [
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  "library": {
+    "entryPoint": "HUB:json/json"
+  }
+}

@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("unit_converter", "HUB:zigbee/scripts/utils")

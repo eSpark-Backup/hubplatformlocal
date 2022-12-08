@@ -1,0 +1,3 @@
+local self, setting_info = ...
+
+return setting_info and setting_info.name ~= "RESERVED"

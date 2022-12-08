@@ -1,0 +1,34 @@
+*.o
+*.a
+*.so
+*.sw*
+*.orig
+__pycache__/
+/*.cfg
+DEADJOE
+.cproject
+.idea
+.project
+.settings
+.cmake
+prototype.iml
+build.log
+
+# CMake build tree
+build/
+firmware_tests/
+
+# Visual Studio Code directory
+.vscode/
+
+# KDevelop 4 IDE files
+*.kdev4
+
+# Ignore node modules
+CMakeLists.txt.*
+
+# patches
+*.patch
+
+#Sourcetrail
+*.srctrl*

@@ -1,0 +1,1 @@
+return "kilo_volt_ampere_hour"

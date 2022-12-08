@@ -1,0 +1,2 @@
+#!/bin/bash
+STAGING_DIR=${STAGING_DIR:-/missing} /usr/local/toolchains/gcc7.4.0_musl-mipsel-v1.1/bin/mipsel-openwrt-linux-musl-gcc "$@"

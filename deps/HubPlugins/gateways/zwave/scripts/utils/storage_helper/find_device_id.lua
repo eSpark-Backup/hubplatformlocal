@@ -1,0 +1,3 @@
+local self, node_id = ...
+
+return self._storage.get_string(tostring(math.floor(node_id)))

@@ -1,0 +1,3 @@
+local self, node_id, class_id, tag = ...
+
+return table.concat({ "setting", math.floor(node_id), class_id and math.floor(class_id) or "none", tag }, "_")

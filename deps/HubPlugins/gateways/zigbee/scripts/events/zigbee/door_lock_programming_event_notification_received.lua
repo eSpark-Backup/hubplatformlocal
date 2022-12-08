@@ -1,0 +1,18 @@
+local params = ...
+
+local zigbee = assert(require "zigbee", "Fail to load zigbee functionality")
+local node = assert(zigbee.get_node(params.node_id), "Node not found by id: " .. params.node_id)
+
+local dev_handler = hubplugins.weak_loadfile("HUB:zigbee/scripts/helpers/get_device_handler_monitoring")(node)
+
+dev_handler:door_lock_programming_event_notification_received(
+    node, 
+    params.endpoint_id, 
+    params.cluster_name, 
+    params.event_source, 
+    params.event_name,
+    params.user_id,
+    params.pin_code,
+    params.user_type,
+    params.user_status
+)

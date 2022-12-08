@@ -1,0 +1,3 @@
+local self, node, id = ...
+
+return node.children and node.children[id]

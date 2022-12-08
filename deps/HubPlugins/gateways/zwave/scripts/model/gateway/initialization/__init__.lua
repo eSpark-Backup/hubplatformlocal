@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("initialization", "HUB:zwave/scripts/model/gateway")

@@ -1,0 +1,1 @@
+return "weekly_interval"

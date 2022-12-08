@@ -1,0 +1,3 @@
+local self, state = ...
+
+self._storage.set_string("migration_state", state)

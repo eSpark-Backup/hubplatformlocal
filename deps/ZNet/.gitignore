@@ -1,0 +1,29 @@
+# CMake build tree
+CMakeLists.txt.user
+build/
+cmake-build-debug/
+Testing/
+
+# Visual Studio Code directory
+.vscode/
+
+# KDevelop 4 IDE files
+*.kdev4
+
+# CLion
+.cproject
+.idea
+.project
+.settings
+
+# Coredump
+core
+
+# Python object files
+*.pyc
+*.pyo
+
+#kdiff3
+*.orig
+
+.DS_Store

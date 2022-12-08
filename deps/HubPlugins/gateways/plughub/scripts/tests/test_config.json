@@ -1,0 +1,12 @@
+{
+    "test_suites": [
+        {
+            "name": "migration",
+            "directory": "migration",
+            "test_cases": [
+                "multiple_versions_test",
+                "single_version_2_test"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1 @@
+return "thermostat_energy_saving_mode"

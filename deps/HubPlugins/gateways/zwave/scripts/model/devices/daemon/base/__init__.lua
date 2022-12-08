@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("base", "HUB:zwave/scripts/model/devices/daemon")

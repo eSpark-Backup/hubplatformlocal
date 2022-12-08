@@ -1,0 +1,3 @@
+local self, storage_number_name = ...
+
+return self._storage.get_number(storage_number_name)

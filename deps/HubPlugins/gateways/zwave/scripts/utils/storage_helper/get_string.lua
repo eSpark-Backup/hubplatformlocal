@@ -1,0 +1,3 @@
+local self, storage_string_name = ...
+
+return self._storage.get_string(storage_string_name)

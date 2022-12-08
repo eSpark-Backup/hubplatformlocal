@@ -1,0 +1,1 @@
+return "sensor_binary"

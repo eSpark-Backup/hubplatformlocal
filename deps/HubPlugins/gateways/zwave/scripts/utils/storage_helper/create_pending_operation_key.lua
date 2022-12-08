@@ -1,0 +1,3 @@
+local self, node_id, channel_id, operation_name, args = ...
+
+return table.concat({ "pending_operation", math.floor(node_id), math.floor(channel_id), operation_name, table.concat(args or {}, "_") }, "_")

@@ -1,0 +1,3 @@
+local self, item_descriptor, value = ...
+
+self:call("set_item_value_impl/_thermostat_setpoint_set", item_descriptor, value)

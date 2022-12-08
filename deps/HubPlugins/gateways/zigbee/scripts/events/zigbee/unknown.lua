@@ -1,0 +1,3 @@
+local params = ...
+
+print("Unknown event: " .. params.event)

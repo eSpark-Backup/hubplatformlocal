@@ -1,0 +1,3 @@
+local self, setting_id, value = ...
+
+self:call("set_setting_value_impl/" .. setting_id, setting_id, value)

@@ -1,0 +1,1 @@
+return "rain_rate"

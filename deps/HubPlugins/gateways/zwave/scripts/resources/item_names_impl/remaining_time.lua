@@ -1,0 +1,1 @@
+return "remaining_time"

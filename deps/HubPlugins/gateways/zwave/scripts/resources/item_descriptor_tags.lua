@@ -1,0 +1,1 @@
+return hubplugins.resource( "HUB:zwave/scripts/resources/item_descriptor_tags_impl/" )

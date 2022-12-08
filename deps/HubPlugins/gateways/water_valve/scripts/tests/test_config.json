@@ -1,0 +1,30 @@
+{
+    "test_suites": [
+        {
+            "name": "startup",
+            "directory": "startup_test_suite",
+            "test_cases": [
+                "add_device_no_sensors_test",
+                "add_device_with_sensors_test",
+                "add_device_repeat_test"
+            ]
+        },
+        {
+            "name": "set_item_value",
+            "directory": "set_item_value_test_suite",
+            "test_cases": [
+                "no_invertion_test",
+                "invertion_test"
+            ]
+        },
+        {
+            "name": "events",
+            "directory": "events_test_suite",
+            "test_cases": [
+                "valve_event_no_inversion_test",
+                "sensor_event_test",
+                "valve_event_inversion_test"
+            ]
+        }
+    ]
+}

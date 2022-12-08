@@ -1,0 +1,1 @@
+return  { impact_detected = true }

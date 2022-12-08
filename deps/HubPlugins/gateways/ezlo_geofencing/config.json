@@ -1,0 +1,40 @@
+{
+  "id": "ezlo_geofencing",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Ezlo geofencing build-it plugin"
+    },
+    "description": {
+      "text": "This plugin manages geofencing feature for Ezlo controllers"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  "permissions": [
+    "core",
+    "cloud_devices",
+    "storage",
+    "logging"
+  ],
+  "gateway": {
+    "name": "ezlo_geofencing",
+    "label": "ezlo geofencing gateway",
+    "setItemValueCommand": "HUB:ezlo_geofencing/scripts/set_item_value",
+    "createAbstractSubscriptionCommand": "HUB:ezlo_geofencing/scripts/create_abstract_subscription",
+    "updateAbstractSubscriptionCommand": "HUB:ezlo_geofencing/scripts/update_abstract_subscription",
+    "deleteAbstractSubscriptionCommand": "HUB:ezlo_geofencing/scripts/delete_abstract_subscription"
+  }
+}

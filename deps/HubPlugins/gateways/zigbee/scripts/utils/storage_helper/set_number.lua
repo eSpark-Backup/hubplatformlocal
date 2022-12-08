@@ -1,0 +1,3 @@
+local self, storage_number_name, number = ...
+
+self._storage.set_number(storage_number_name, number)

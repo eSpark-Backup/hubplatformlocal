@@ -1,0 +1,3 @@
+local self, inclusion_context, build_tree_context, device_node = ...
+
+error("method 'process_inclusion_impl' must to be overridden by derived class")

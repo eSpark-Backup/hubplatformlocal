@@ -1,0 +1,38 @@
+menu "znet"
+
+menu "Heap"
+
+config ZNET_HEAP
+    bool "Use custom heap memory"
+    default n
+    help
+        The heap manager reserves a piece of fixed-size memory in the data segment.
+        Reserves space in data segment during assembly.
+
+config ZNET_HEAP_ALLOC
+    depends on ZNET_HEAP
+    int "Reserved size"
+    default 32768
+    range 1024 65535
+    help
+        The size of the reserved memory for heap. [1024-65535]
+
+config ZNET_HEAP_HEADER_ALIGNMENT
+    depends on ZNET_HEAP
+    int "Header alignment"
+    default 4
+    range 1 8
+    help
+        TBD...
+
+config ZNET_HEAP_DATA_ALIGNMENT
+    depends on ZNET_HEAP
+    int "Data alignment"
+    default 4
+    range 1 8
+    help
+        TBD...
+
+endmenu
+
+endmenu

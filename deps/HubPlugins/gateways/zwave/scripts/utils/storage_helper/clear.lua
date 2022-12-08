@@ -1,0 +1,3 @@
+local self = ...
+
+self._storage.delete_all()

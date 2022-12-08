@@ -1,0 +1,3 @@
+local self, node_id, channel_id, colors, target_colors, target_durations = ...
+
+self:_super_call("default", "update_rgb_value", node_id, 0, colors, target_colors, target_durations)

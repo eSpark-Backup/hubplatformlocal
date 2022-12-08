@@ -1,0 +1,48 @@
+{
+  "id": "test_plugin",
+  "version": "1.2",
+  "meta": {
+    "name": {
+      "text": "Virtual devices plugin emulator"
+    },
+    "description": {
+      "text": "This plugin provides way to create any virtual device on the controller and manage it"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": false,
+    "deny_uninstall": false
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+      "core",
+      "storage",
+      "timer",
+      "logging"
+  ],
+ 
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+ 
+  "gateway": {
+    "name": "test_plugin",
+    "label": "test gateway",
+    "setItemValueCommand": "HUB:test_plugin/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "HUB:test_plugin/scripts/add_item_dictionary_value",
+    "setItemDictionaryValueCommand": "HUB:test_plugin/scripts/set_item_dictionary_value",
+    "removeItemDictionaryValueCommand": "HUB:test_plugin/scripts/remove_item_dictionary_value",
+    "setSettingValueCommand": "HUB:test_plugin/scripts/set_setting_value",
+    "setSettingDictionaryValueCommand": "HUB:test_plugin/scripts/set_setting_dictionary_value",
+    "forceRemoveDeviceCommand": "HUB:test_plugin/scripts/force_remove_device"
+  }
+}

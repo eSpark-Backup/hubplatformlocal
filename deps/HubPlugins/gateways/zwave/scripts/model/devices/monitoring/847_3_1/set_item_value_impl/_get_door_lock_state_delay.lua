@@ -1,0 +1,3 @@
+local self = ...
+
+return 4000

@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, sensor_type, value = ...
+
+-- Ignore binary sensor value update

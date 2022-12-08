@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("associations_helper", "HUB:zwave/scripts/helpers")

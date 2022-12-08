@@ -1,0 +1,3 @@
+local self, node_id = ...
+
+return "anti_theft_hint_" .. math.floor(node_id)

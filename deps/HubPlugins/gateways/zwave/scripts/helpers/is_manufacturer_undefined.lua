@@ -1,0 +1,3 @@
+local manufacturer_id = ...
+
+return manufacturer_id == 0xFFFF or manufacturer_id == 0 -- ID is MFG_ID_NOT_DEFINED, See SDS13425-Z-Wave-Plus-Assigned-Manufacturer-IDs

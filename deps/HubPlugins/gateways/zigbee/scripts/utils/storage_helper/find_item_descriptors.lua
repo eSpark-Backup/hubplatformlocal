@@ -1,0 +1,3 @@
+local self, item_id = ...
+
+return self._storage.get_table(item_id)

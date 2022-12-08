@@ -1,0 +1,3 @@
+local self, inclusion_context, build_tree_context, device_node = ...
+
+inclusion_context.processed_command_class_ids[build_tree_context.channel.id][build_tree_context.command_class.id] = true

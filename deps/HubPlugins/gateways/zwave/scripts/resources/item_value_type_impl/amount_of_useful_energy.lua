@@ -1,0 +1,1 @@
+return "amount_of_useful_energy"

@@ -1,0 +1,3 @@
+local self, item_name, node_id, channel_id, class_id, tag = ...
+
+return self:_super_call("default", "find_item_id", item_name, node_id, 0, class_id, tag)

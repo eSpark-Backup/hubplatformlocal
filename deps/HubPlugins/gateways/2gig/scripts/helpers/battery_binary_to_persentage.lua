@@ -1,0 +1,3 @@
+local is_low = ...
+
+return is_low and 15 or 100

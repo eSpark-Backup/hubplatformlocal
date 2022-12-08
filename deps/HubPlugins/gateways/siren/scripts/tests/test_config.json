@@ -1,0 +1,27 @@
+{
+  "test_suites": [
+    {
+      "name": "startup",
+      "directory": "startup_test_suite",
+      "test_cases": [
+        "device_added_test",
+        "teardown_test",
+        "device_cleanup_test"
+      ]
+    },
+    {
+      "name": "set_item_value",
+      "directory": "set_item_value_test_suite",
+      "test_cases": [
+        "start_playback"
+      ]
+    },
+    {
+      "name": "migration",
+      "directory": "migration",
+      "test_cases": [
+        "migrate_to_v2_test"
+      ]
+    }
+  ]
+}

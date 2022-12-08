@@ -1,0 +1,3 @@
+local self, quantity = ...
+
+return (quantity - 32) * 5 / 9

@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register( "smart_start", "HUB:zwave/scripts/utils" )

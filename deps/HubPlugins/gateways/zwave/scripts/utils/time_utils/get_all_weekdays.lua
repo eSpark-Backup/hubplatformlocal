@@ -1,0 +1,3 @@
+local self = ...
+
+return require("HUB:zwave/scripts/resources/week_days_list")

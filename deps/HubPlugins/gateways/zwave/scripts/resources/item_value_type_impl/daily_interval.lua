@@ -1,0 +1,1 @@
+return "daily_interval"

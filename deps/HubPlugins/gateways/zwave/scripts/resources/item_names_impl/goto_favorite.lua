@@ -1,0 +1,1 @@
+return "goto_favorite"

@@ -1,0 +1,93 @@
+{
+    "test_suites": [
+        {
+            "name": "unit",
+            "directory": "unit",
+            "test_cases": [
+                "item_factory_test",
+                "time_string_parser_test",
+                "time_comparator_test",
+                "time_duration_calculator_test"
+            ]
+        },
+        {
+            "name": "device_adding",
+            "directory": "device_adding",
+            "test_cases": [
+                "add_device_test",
+                "panic_button_test",
+                "remote_keyfob_test",
+                "door_window_sensor_test",
+                "smoke_detector_test",
+                "glass_break_detector_test",
+                "keypad_test",
+                "co_detector_test",
+                "pir_detector_test",
+                "tilt_detector_test",
+                "flood_temperature_test",
+                "smoke_co_detector_test"
+            ]
+        },
+        {
+            "name": "device_removal",
+            "directory": "device_removal",
+            "test_cases": [
+                "remove_child_device_test",
+                "remove_device_test",
+                "remove_device_tree_test"
+            ]
+        },
+        {
+            "name": "events",
+            "directory": "events",
+            "test_cases": [
+                "panic_button_status_updated_test",
+                "remote_keyfob_status_updated_test",
+                "door_window_sensor_status_updated_dw10_test",
+                "door_window_sensor_status_updated_dw20_test",
+                "smoke_detector_status_updated_test",
+                "glass_break_detector_status_updated_test",
+                "pad_status_updated_test",
+                "pin_code_entered_test",
+                "co_detector_status_updated_test",
+                "flood_temperature_status_updated_test",
+                "pir_detector_status_updated_test",
+                "tilt_detector_status_updated_test",
+                "smoke_co_detector_status_updated_test"
+            ]
+        },
+        {
+            "name": "entry_scripts",
+            "directory": "entry_scripts",
+            "test_cases": [
+                "set_setting_value_test",
+                "user_codes_test",
+                "week_restrictions_test",
+                "day_restrictions_test"
+            ]
+        },
+        {
+            "name": "pin_codes_restrictions",
+            "directory": "pin_codes_restrictions",
+            "test_cases": [
+                "day_restrictions_test",
+                "timer_handler_test",
+                "week_restrictions_test"
+            ]
+        },
+        {
+            "name": "migration",
+            "directory": "migration",
+            "test_cases": [
+                "migration_utils_test",
+                "single_version_2_test",
+                "single_version_3_test",
+                "single_version_5_test",
+                "single_version_6_test",
+                "single_version_7_test",
+                "single_version_8_test",
+                "single_version_9_test"
+            ]
+        }
+    ]
+}

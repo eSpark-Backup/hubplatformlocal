@@ -1,0 +1,29 @@
+#pragma once
+
+// DO NOT EDIT definitions.h directly 
+// definitions.h is generated automatically from definitions.h.in - modify definitions.h.in instead 
+
+#define PLATFORM_HEADER "@PLATFORM_HEADER_FILE@"
+#define DUNIX
+#define DUNIX_HOST
+#define DPHY_NULL
+#define CONFIGURATION_HEADER "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/app/framework/util/config.h"
+#define EZSP_HOST
+#define GATEWAY_APP
+#define ZA_GENERATED_HEADER "@APP_BUILDER_CONFIG_HEADER@"
+#define ATTRIBUTE_STORAGE_CONFIGURATION "@APP_BUILDER_STORAGE_FILE@"
+#define BOARD_HOST
+#define BOARD_HEADER "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/app/builder/zigbeegw/zigbeegw_board.h"
+#define EM_AF_TEST_HARNESS_CODE
+#define EM_AF_LINK_M
+#define EM_AF_LINK_PTHREAD
+#define EMBER_AF_API_EMBER_TYPES "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/stack/include/ember-types.h"
+#define EMBER_AF_API_DEBUG_PRINT "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/app/framework/util/print.h"
+#define EMBER_AF_API_AF_HEADER "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/app/framework/include/af.h"
+#define EMBER_AF_API_AF_SECURITY_HEADER "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/app/framework/security/af-security.h"
+#define EMBER_AF_API_NEIGHBOR_HEADER "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/protocol/zigbee/stack/include/stack-info.h"
+#define EMBER_STACK_ZIGBEE
+#define EZSP_ASH
+#define NO_READLINE
+#define MBEDTLS_CONFIG_FILE "@CMAKE_CURRENT_SOURCE_DIR@/@STACK_VERSION@/app/builder/zigbeegw/mbedtls-config-generated.h"
+#define EMBER_COMMAND_INTEPRETER_HAS_DESCRIPTION_FIELD

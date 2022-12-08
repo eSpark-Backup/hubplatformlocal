@@ -1,0 +1,1 @@
+return "solar_radiation"

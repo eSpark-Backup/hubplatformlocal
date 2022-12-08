@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("default/base_command_class", "HUB:zwave/scripts/model/command_classes")

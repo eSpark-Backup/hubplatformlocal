@@ -1,0 +1,3 @@
+local self, string_name, string_value = ...
+
+self._storage.set_string(string_name, string_value)

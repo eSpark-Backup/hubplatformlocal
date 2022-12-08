@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.2)
+
+add_subdirectory( backupd )
+add_subdirectory( cloud_devices )
+add_subdirectory( cored )
+add_subdirectory( extensions_manager )
+add_subdirectory( external_controllers )
+add_subdirectory( hardware_manager )
+add_subdirectory( networkd )
+add_subdirectory( scenes_manager )
+add_subdirectory( uid )
+add_subdirectory( update_manager )

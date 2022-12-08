@@ -1,0 +1,3 @@
+local params = ...
+
+loadfile("HUB:2gig/scripts/helpers/remove_device")(params.tx_ids)

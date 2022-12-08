@@ -1,0 +1,31 @@
+return {
+    name = "thermostat_mode",
+    value_type = "token",
+    enum = {
+        "off",
+        "heat",
+        "cool",
+        "auto",
+        "aux_mode",
+        "resume",
+        "fan_only",
+        "furnace",
+        "dry_air",
+        "moist_air",
+        "auto_change_over",
+        "saving_heat",
+        "saving_cool",
+        "away_heat",
+        "away_cool",
+        "full_power",
+        "special",
+        "eco",
+        "emergency_heating",
+        "precooling",
+        "sleep",
+        "manufacturer_specific"
+    },
+    value = "off",
+    has_getter = true,
+    has_setter = true
+}

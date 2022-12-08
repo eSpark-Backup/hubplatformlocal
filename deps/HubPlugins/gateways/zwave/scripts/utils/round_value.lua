@@ -1,0 +1,3 @@
+local value, characters_after_comma = ...
+
+return tonumber(string.format("%." .. math.floor(characters_after_comma) .. "f", value))

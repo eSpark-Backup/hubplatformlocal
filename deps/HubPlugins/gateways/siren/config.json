@@ -1,0 +1,39 @@
+{
+  "id": "siren",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Siren build-it plugin"
+    },
+    "description": {
+      "text": "This plugin automatically creates siren device for controlling Ezlo Secure speaker functionality"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": ["speaker", "core", "storage", "logging"],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+  "migration": "scripts/migration/execute_migration",
+
+  "gateway": {
+    "name": "siren",
+    "label": "siren gateway",
+    "setItemValueCommand": "HUB:siren/scripts/set_item_value",
+    "updateDeviceFirmwareCommand": "none"
+  }
+}

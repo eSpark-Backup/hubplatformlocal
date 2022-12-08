@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, event_type, notification_value--[[opt]] = ...
+
+self:call("forward_notification_event", node_id, channel_id, class_id, "access_control", event_type, notification_value)

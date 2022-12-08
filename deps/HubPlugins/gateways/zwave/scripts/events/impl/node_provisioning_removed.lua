@@ -1,0 +1,3 @@
+local params = ...
+
+print( "Node provisioning removed, node:" .. params.node_id )

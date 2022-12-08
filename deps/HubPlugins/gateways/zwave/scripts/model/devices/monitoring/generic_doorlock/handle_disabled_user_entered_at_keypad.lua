@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, user_id = ...
+
+print("doorlook alarm 0x83: Disable user entered via keypad, user " .. user_id)

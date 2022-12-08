@@ -1,0 +1,3 @@
+local base64 = ...
+-- TODO: implement
+return nil

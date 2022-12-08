@@ -1,0 +1,3 @@
+local self, key = ...
+
+self._storage.delete(key)

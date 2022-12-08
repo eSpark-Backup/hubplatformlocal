@@ -1,0 +1,53 @@
+{
+  "id": "bluetooth",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "Bluetooth devices support"
+    },
+    "description": {
+      "text": "Simple prototype plugin supports bluetooth devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": false
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "bluetooth",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+
+  "permissions": [
+    "bluetooth",
+    "core",
+    "storage"
+  ],
+
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+
+  "gateway": {
+    "name": "bluetooth",
+    "label": "bluetooth gateway",
+    "setItemValueCommand": "HUB:bluetooth/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "HUB:bluetooth/scripts/add_item_dictionary_value",
+    "setItemDictionaryValueCommand": "HUB:bluetooth/scripts/set_item_dictionary_value",
+    "removeItemDictionaryValueCommand": "HUB:bluetooth/scripts/remove_item_dictionary_value",
+    "resetSettingCommand": "none",
+    "setSettingValueCommand": "none",
+    "setSettingDictionaryValueCommand": "none",
+    "forceRemoveDeviceCommand": "HUB:bluetooth/scripts/force_remove",
+    "updateDeviceFirmwareCommand": "none"
+  }
+}

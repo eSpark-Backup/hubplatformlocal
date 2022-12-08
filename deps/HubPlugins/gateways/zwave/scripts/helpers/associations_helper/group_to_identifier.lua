@@ -1,0 +1,3 @@
+local self, channel_id, group_id = ...
+
+return tostring(math.floor(channel_id)) .. "_" .. tostring(math.floor(group_id))

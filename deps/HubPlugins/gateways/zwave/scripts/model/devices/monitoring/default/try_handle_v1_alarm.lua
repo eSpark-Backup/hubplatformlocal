@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, v1_alarm_type, v1_alarm_level = ...
+
+return false

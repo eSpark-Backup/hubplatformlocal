@@ -1,0 +1,6 @@
+[submodule "utils/deps"]
+	path = utils/deps
+	url = git@github.com:ezloteam/HubPluginsUtils.git
+[submodule "plugins/foscam"]
+	path = plugins/foscam
+	url = git@github.com:ezloplugins/foscam-ezlo.git

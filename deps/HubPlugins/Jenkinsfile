@@ -1,0 +1,432 @@
+#!/usr/bin/env groovy
+
+issue_pattern = "EZZB-\\d+|EFWR-\\d+|ECMT-\\d+|EATT-\\d+|EIDC-\\d+|ECON-\\d+"
+jira_id_enforcement = false
+
+slack_restricted_channel = "#firmware_plugins"
+slack_all_builds_channel = "#plugins_builds"
+slack_channel = slack_restricted_channel
+
+current_branch = env.BRANCH_NAME
+passed_builds = []
+included_jira_ids = []
+jira_transition = []
+//jira_parent = []
+build_versions = []
+default_changelog = "\n  Changelog: "
+default_exit_error = "\n  ERROR: "
+default_jira_id_warning = "\n  MISSING JIRA ID for: "
+default_status_warning = "\n  Status Validation FAILED for: "
+result_changelog = default_changelog
+exit_error = default_exit_error
+jira_id_warning = default_jira_id_warning
+status_warning = default_status_warning
+def jira_types = ['Defect', 'Bug', 'Sub-task', 'Task', 'Story']
+def jira_statuses = ['Defect': 'Fixed', 'Bug': 'RESOLVED', 'Sub-task': 'RESOLVED', 'Task': 'RESOLVED', 'Story':'RESOLVED']
+def ready_for_qa_transitions = ['Defect': '151', 'Bug': '51', 'Sub-task': '61', 'Task': '51', 'Story': '271']
+branch_pattern = "release/(.*)"
+
+def notifications2MainBranches(String build_status = 'STARTED') {
+	// build status of null means successful
+	build_status = build_status ?: 'SUCCESS'
+	if ( current_branch.equals('master') || current_branch.matches("${branch_pattern}") ) {
+		if ( current_branch.equals('master') ) {
+			slack_channel = slack_all_builds_channel
+		}
+		// Default Color Values
+		def colorName = 'RED'
+		def colorCode = '#FF0000'
+
+		// Text
+		def subject = "${build_status}: Job '${env.JOB_NAME} [Plugins-${current_branch}-${env.BUILD_NUMBER}]'"
+		def summary = "${subject} (${env.BUILD_URL})"
+
+		// Override default values based on build status
+		if (build_status == 'STARTED') {
+			color = 'YELLOW'
+			colorCode = '#FFFF00'
+		}
+		else if (build_status == 'SUCCESS') {
+			color = 'GREEN'
+			colorCode = '#228B22'
+			summary = "Plugins[*${current_branch}-${env.BUILD_NUMBER}*] have been built at \n${env.BUILD_URL}"
+		}
+		else {
+			color = 'RED'
+			colorCode = '#FF0000'
+			slack_channel = slack_restricted_channel
+		}
+
+		if ( exit_error == default_exit_error) {
+			exit_error = ""
+		}
+		if ( jira_id_warning == default_jira_id_warning ) {
+			jira_id_warning = ""
+		}
+		if ( status_warning == default_status_warning) {
+			status_warning = ""
+		}
+		if ( result_changelog == default_changelog ) {
+			result_changelog = ""
+		}
+		
+		def smileMark = ":spiral_note_pad:"
+		if ( current_branch.equals('master') ) {
+			smileMark = ":card_file_box:"
+		}
+
+		summary = "${smileMark} ${summary} ${exit_error}${result_changelog}"
+		slackSend (channel: slack_channel, color: colorCode, message: summary)
+
+		if ( jira_id_warning != "" || status_warning != "" ) {
+			warnings = "${jira_id_warning}${status_warning}"
+			slackSend (channel: slack_channel, color: '#0000FF', message: warnings)
+		}
+		if ( jira_id_warning != "") {
+			mail (to: 'jiraid-validation@ezlo.com',
+			subject: "HubPlugins ${current_branch} ${env.BUILD_NUMBER} missing JIRA IDs",
+			body: " \nGit Branch: ${current_branch} Git Hash: ${env.GIT_COMMIT} \n${jira_id_warning}"
+			)
+		}
+		mail (to: 'hubplugins-builds@ezlo.com',
+			subject: "${subject}",
+			body: " \n${build_status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' \n\nGit Branch: ${current_branch} Git Hash: ${env.GIT_COMMIT} \n${exit_error}${jira_id_warning}${status_warning}\n${result_changelog}"
+		)
+	}
+}
+
+def notifyStatusChange(build_status) {
+	// build status of null means successful
+	build_status = build_status ?: 'SUCCESS'
+
+	if (current_branch.equals('master')) {
+		def subject = "${build_status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+		def summary = "${subject} (${env.BUILD_URL})"
+
+		def colorName = 'RED'
+		def colorCode = '#FF0000'
+		switch (build_status) {
+			case 'SUCCESS':
+				color = 'GREEN'
+				colorCode = '#228B22'
+				summary = "Plugins[*${env.BUILD_NUMBER}*] have been built at *${current_branch}*\n${env.BUILD_URL}"
+				break
+
+			case 'UNSTABLE':
+				color = 'YELLOW'
+				colorCode = '#FFFF00'
+				break
+
+			case 'FAILURE':
+				color = 'RED'
+				colorCode = '#FF0000'
+				break
+		}
+
+		if ( exit_error == default_exit_error) {
+			exit_error = ""
+		}
+		if ( jira_id_warning == default_jira_id_warning ) {
+			jira_id_warning = ""
+		}
+		if ( status_warning == default_status_warning) {
+			status_warning = ""
+		}
+		if ( result_changelog == default_changelog ) {
+			result_changelog = ""
+		}
+		
+		def smileMark = ":spiral_note_pad:"
+		if ( current_branch.equals('master') ) {
+			smileMark = ":card_file_box:"
+		}
+
+		summary = "${smileMark} ${summary} ${exit_error}${result_changelog}"
+		slackSend (channel: slack_restricted_channel, color: colorCode, message: summary)
+
+		if ( jira_id_warning != "" ) {
+			warnings = "${jira_id_warning}"
+			slackSend (channel: slack_restricted_channel, color: '#0000FF', message: warnings)
+		}
+	}
+}
+
+def getTagVersion(branch_name, build_number) {
+	switch (branch_name) {
+		case 'master':
+			return "release/${build_number}"
+		case ~/${branch_pattern}/:
+			return "${branch_name}.${build_number}"
+		default:
+			return "${branch_name}.${build_number}"
+	}
+}
+
+def tag2MainBranches(tag_ver) {
+	if ( current_branch.equals('master') || current_branch.matches("${branch_pattern}") ) {
+		def tag_message = "Tag for version " + "${tag_ver}"
+		withCredentials([usernamePassword(credentialsId: '30e56f0f-2720-48e8-9f0a-18db5e14ceed', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
+			sh " git tag -a '${tag_ver}' -m '${tag_message}' && git push https://$GIT_USER:$GIT_PASS@github.com/ezloteam/HubPlugins.git 'refs/tags/${tag_ver}'"
+			}
+		}
+}
+
+def tag_version = getTagVersion(current_branch, "${env.BUILD_NUMBER}")
+def pkg_version = tag_version.replaceAll("release/","").replaceAll("/","_")
+
+pipeline {
+	agent {
+		docker {
+			image 'ezlo/hub_platform:1.9'
+			args '-u root -v /var/lib/jenkins/.ssh:/var/jenkins_home/ssh'
+			label 'kubeslave'
+		}
+	}
+
+	options {
+		buildDiscarder(logRotator(artifactDaysToKeepStr: '5', artifactNumToKeepStr: '5', daysToKeepStr: '5', numToKeepStr: '5'))
+		disableConcurrentBuilds()
+		timestamps()
+		retry(1)
+	}
+
+	stages {
+		stage('Prepare Environment') {
+			steps {
+				timeout(1) {
+					sh 'cp -R /var/jenkins_home/ssh /root/.ssh'
+					sh 'chown -R root:root /root/.ssh'
+				}
+				script {
+					sshagent(['faf26e3e-38ee-4f0c-bf72-9038200e2465']) {
+						sh 'git submodule update --init --recursive'
+					}
+				}
+			}
+		}
+
+		stage('Jira Checks') {
+			steps{
+				script {
+					lastSuccessfulBuild(passed_builds, currentBuild)
+					result_changelog = processChangeLog(included_jira_ids, passed_builds)
+					for (j = 0; j <included_jira_ids.size(); j++) {
+						jiraId = included_jira_ids[j]
+						//jira_parent[j] = ""
+						type_found = false
+						try {
+							def jira_issue = jiraGetIssue site: 'JIRA_MIOS', idOrKey: jiraId
+							def jira_status = jira_issue.data.fields.status.name.toString()
+							def jira_type = jira_issue.data.fields.issuetype.name.toString()
+							def currentBuildVersion = jira_issue.data.fields.customfield_12102.toString()
+							build_versions[j] = currentBuildVersion
+							for (x in jira_types) {
+								def current_type = x // Need to bind the label variable before the closure - can't do 'for (current_type in jira_types)'
+								if (jira_type == current_type) {
+									type_found = true
+									jira_transition[j] = ready_for_qa_transitions[current_type]
+									if ( ( current_branch.equals('master') || current_branch.matches("${branch_pattern}") ) && jira_status != jira_statuses[current_type]) {
+										status_warning += "\n * ${jiraId}:${jira_type}: - Actual: ${jira_status}  - Expected at PR time: ${jira_statuses[current_type]}"
+										jira_transition[j] = "BAD_STATUS"
+									}
+								}
+								//if (jira_type == 'Sub-task') {
+									//jira_parent[j] = jira_issue.data.fields.parent.id.toString()
+								//}
+							}
+							if (!type_found && jira_id_enforcement) {
+								exit_error = "\n Un-handled Jira Issue Type: - ${jira_type}. You are not supposed to commit with it!"
+								error ()
+							}
+						}
+						catch(err) {
+							if (jira_id_enforcement) {
+								exit_error = "\n Un-handled error: " + err.getMessage() + "\nYou are not supposed to commit with it!"
+								error ()
+							}
+							else {
+								echo err.getMessage()
+								echo "Error detected, but we will continue."
+							}
+						}
+					}
+				}
+			}
+		}
+
+		stage('Generate device info files') {
+			steps{
+				timeout(2) {
+					sh ". /etc/profile && make devices 2>&1"
+				}
+			}
+		}
+
+		stage('Check scene blocks format') {
+			steps{
+				timeout(2) {
+					dir( "utils" ) {
+						sh ". /etc/profile && ./check_scene_blocks.py ../extensions/scene_blocks/templates/scene_blocks.json 2>&1"
+					}
+				}
+			}
+		}
+
+		stage('Check script paths and english characters') {
+			steps{
+				timeout(2) {
+					dir( "utils" ) {
+						sh ". /etc/profile && ./static_scripts_check.py ../ 2>&1"
+					}
+				}
+			}
+		}
+
+		stage('Compile and run tests') {
+			steps{
+				timeout(10) {
+					sh ". /etc/profile && make compile_tests_runner -j4 && make run_tests TESTS_PLATFORM=freertos TESTS_HARDWARE_REVISION=1 && make run_tests 2>&1"
+				}
+			}
+		}
+
+		stage('Build OpenWRT packages') {
+			steps{
+				timeout(1) {
+					sh ". /etc/profile && make VERSION=${pkg_version} COMPILE=1 packages 2>&1"
+				}
+				timeout(1) {
+					dir( "build/openwrt/packages" ) {
+						archiveArtifacts artifacts: '**/*'
+					}
+				}
+			}
+		}
+
+		stage('Deploy OpenWRT packages') {
+			when {
+				anyOf {
+					branch 'master';
+					branch '*@wrt_build';
+					expression {current_branch.matches("${branch_pattern}")}
+					}
+			}
+			steps{
+				withCredentials([file(credentialsId: 'ez_bundle', variable: 'SFTP_KEY_FILE')]) {
+					timeout(10) {
+						sh ". /etc/profile && ./utils/deps/opkg/deploy_packages.py " +
+								"--identity_file ${SFTP_KEY_FILE} " +
+								"--packages_dir build/openwrt/packages 2>&1"
+					}
+				}
+			}
+		}
+
+		stage('Upload plugins info to QA Marketplace') {
+			when {
+				anyOf {
+					branch 'master';
+					expression {current_branch.matches("${branch_pattern}")}
+				}
+			}
+			steps{
+				timeout(10) {
+				withCredentials([string(credentialsId: 'qa_plugin_marketplace_token', variable: 'TOKEN')]) {
+					sh ". /etc/profile && ./utils/upload_all_plugins_info.py " +
+											"--server https://appstore-api-qa.ezlo.com " +
+											"--token $TOKEN " +
+											"--build ${pkg_version} " +
+											"2>&1"
+					}
+				}
+			}
+		}
+
+		stage('Jira Updates') {
+			when {
+				anyOf {
+					branch 'master';
+					expression {current_branch.matches("${branch_pattern}")}
+				}
+			}
+			steps{
+				script {
+					try {
+					def current_build_msg = "HubPlugins-" + "${tag_version}"
+						def comment = [ body: "${current_build_msg}" ]
+						for (j = 0; j <included_jira_ids.size(); j++) {
+							def new_val = current_build_msg
+							if (build_versions[j] != "" && build_versions[j] != "null") {
+								new_val = "${build_versions[j]}; ${new_val}"
+							}
+							def build_version = [fields: [customfield_12102: "${new_val}"]]
+							jiraAddComment site: 'JIRA_MIOS', idOrKey: included_jira_ids[j], input: comment
+							jiraEditIssue site: 'JIRA_MIOS', idOrKey: included_jira_ids[j], issue: build_version
+						}
+					}
+					catch(err) {
+						echo err.getMessage()
+						echo "Error detected, but we will continue."
+					}
+				}
+			}
+		}
+	}
+
+	post {
+		changed{
+			notifyStatusChange currentBuild.result
+		}
+		always {
+			tag2MainBranches tag_version
+			notifications2MainBranches currentBuild.result
+		}
+		cleanup {
+			echo 'Clearing out'
+			sh "chmod -R 777 ."
+			deleteDir()
+		}
+	}
+}
+
+def lastSuccessfulBuild(passed_builds, build) {
+	if (build != null && build.result != 'SUCCESS') {
+		passed_builds.add(build)
+		lastSuccessfulBuild(passed_builds, build.getPreviousBuild())
+		print ' checking prev build for success '
+	}
+}
+
+@NonCPS
+String processChangeLog(included_jira_ids, included_builds) {
+	log = default_changelog
+	for (int x = 0; x < included_builds.size(); x++) {
+		def current_build = included_builds[x];
+		def changelog_sets = current_build.rawBuild.changeSets
+		for (int i = 0; i < changelog_sets.size(); i++) {
+			def entries = changelog_sets[i].items
+			for (int j = 0; j < entries.length; j++) {
+				def entry = entries[j]
+				log += "\n * ${entry.msg} by @${entry.author}"
+				String msg = entry.msg
+				def id_found = false
+				msg.findAll(issue_pattern).each {jira_id ->
+					if ( 0 == included_jira_ids.count{it == jira_id} ) {
+						included_jira_ids.push(jira_id)
+					}
+					id_found = true
+				}
+				if ( !id_found ) {
+					if ( jira_id_enforcement ) {
+						exit_error = "\n Aborting build since changelog contains commits without jira Id in message. issue_pattern: ${issue_pattern} CommitHash:${entry.commitId}  CommitMessage: ${entry.msg}"
+						print " ${exit_error} "
+						error ()
+					} else {
+						jira_id_warning += "\n * `${entry.commitId}` - ${entry.msg}"
+					}
+				}
+			}
+		}
+	}
+	return log;
+}

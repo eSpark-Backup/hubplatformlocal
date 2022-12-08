@@ -1,0 +1,3 @@
+local self, sub_values, index = ...
+
+return sub_values[index].value, index + 1

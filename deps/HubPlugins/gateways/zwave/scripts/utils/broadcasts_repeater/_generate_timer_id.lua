@@ -1,0 +1,3 @@
+local self, event_name = ...
+
+return "time_id_broadcast_" .. event_name

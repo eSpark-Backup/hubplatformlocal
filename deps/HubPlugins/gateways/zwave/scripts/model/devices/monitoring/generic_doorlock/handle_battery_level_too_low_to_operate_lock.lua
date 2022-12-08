@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, percents = ...
+
+print("doorlook alarm 0XA9: Battery discharged")

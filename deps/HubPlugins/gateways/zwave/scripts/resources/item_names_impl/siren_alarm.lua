@@ -1,0 +1,1 @@
+return "siren_alarm"

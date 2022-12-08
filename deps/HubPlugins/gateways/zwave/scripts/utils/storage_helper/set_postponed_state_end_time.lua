@@ -1,0 +1,3 @@
+local self, item_id, time = ...
+
+self:call("set_table", "postponed_state_end_time_" .. item_id, time)

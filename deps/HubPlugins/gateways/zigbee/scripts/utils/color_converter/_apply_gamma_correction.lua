@@ -1,0 +1,3 @@
+local self, value = ...
+
+return value > 0.04045 and (((value + 0.055) / (1.0 + 0.055)) ^ 2.4) or (value / 12.92)

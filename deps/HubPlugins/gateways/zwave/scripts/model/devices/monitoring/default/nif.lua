@@ -1,0 +1,19 @@
+local self, node_id = ...
+
+local zwave = require( "zwave" )
+
+local node_info = zwave.get_node_info(node_id)
+
+local dev_handler_id = hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/create_device_type_id")(
+    node_info.manufacturer_id,
+    node_info.product_type,
+    node_info.product_id
+)
+
+local device_info = hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/get_device_info")(dev_handler_id)
+
+zwave.request_node_values( 
+    node_id, 
+    device_info.request_value_delay,
+    hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/get_unset_pin_codes_count_to_stop_requesting")(device_info) 
+)

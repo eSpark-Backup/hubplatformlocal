@@ -1,0 +1,3 @@
+local self, time = ...
+
+self._storage.set_table("zwave_virtual_pin_code_restriction_nearest_event_time", time)

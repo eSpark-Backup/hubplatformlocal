@@ -1,0 +1,3 @@
+local self, slot, value = ...
+
+error("slots_mapper:_run_command is item specific method. Please, override it!")

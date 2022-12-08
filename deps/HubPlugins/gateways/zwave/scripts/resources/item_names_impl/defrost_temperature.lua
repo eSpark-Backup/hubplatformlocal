@@ -1,0 +1,1 @@
+return "defrost_temperature"

@@ -1,0 +1,3 @@
+local params = ...
+
+loadfile( "HUB:test_plugin/scripts/device_adder/add_devices" )( params )

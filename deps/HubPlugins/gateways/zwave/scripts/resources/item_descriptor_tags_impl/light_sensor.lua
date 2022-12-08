@@ -1,0 +1,1 @@
+return "light_sensor"

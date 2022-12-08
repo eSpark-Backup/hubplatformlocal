@@ -1,0 +1,3 @@
+local self, value = ...
+
+return math.floor(value < 0 and 0 or value * 255)

@@ -1,0 +1,3 @@
+local self = ...
+
+return { "sequent_requests_sender/user_codes", "HUB:zwave/scripts/utils", self._item_id, self._node_id, self._channel_id }

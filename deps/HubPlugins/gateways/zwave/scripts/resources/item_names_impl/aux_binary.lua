@@ -1,0 +1,1 @@
+return "aux_binary"

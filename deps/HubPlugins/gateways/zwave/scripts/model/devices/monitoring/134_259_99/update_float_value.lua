@@ -1,0 +1,3 @@
+local self, node_id, channel_id, class_id, type, value, scale, precision = ...
+
+self:_super_call("default", "update_float_value", node_id, 0, class_id, type, value, scale, precision)

@@ -1,0 +1,1 @@
+return "gas_alarm"

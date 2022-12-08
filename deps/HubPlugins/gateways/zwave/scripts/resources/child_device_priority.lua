@@ -1,0 +1,1 @@
+return hubplugins.resource( "HUB:zwave/scripts/resources/child_device_priority_impl/" )

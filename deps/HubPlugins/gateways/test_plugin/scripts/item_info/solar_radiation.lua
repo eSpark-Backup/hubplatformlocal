@@ -1,0 +1,10 @@
+return {
+    name = "solar_radiation",
+    value_type = "irradiance",
+    value = {
+        value = 0,
+        scale = "watt_per_square_meter",
+    },
+    has_getter = true,
+    has_setter = false
+}

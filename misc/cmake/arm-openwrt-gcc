@@ -1,0 +1,2 @@
+#!/bin/bash
+STAGING_DIR=${STAGING_DIR:-/missing} /usr/local/toolchains/gcc7.4.0_musl_eabi-arm-v1.5/bin/arm-openwrt-linux-muslgnueabi-gcc "$@"

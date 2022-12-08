@@ -1,0 +1,51 @@
+{
+  "id": "2gig",
+  "version": "1.0",
+  "meta": {
+    "name": {
+      "text": "2GIG devices support"
+    },
+    "description": {
+      "text": "This plugin supports 2GIG devices"
+    },
+    "author": {
+      "text": "Ezlo Innovation"
+    },
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "gateway",
+  "dependencies": {
+    "addons": [
+      {
+        "id": "2gig",
+        "version": "1.0"
+      },
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  "permissions": [
+    "2gig",
+    "core",
+    "storage",
+    "house_modes",
+    "timer"
+  ],
+  "startup": "scripts/startup",
+  "teardown": "scripts/teardown",
+  "migration": "scripts/migration/execute_migration",
+  "gateway": {
+    "name": "2gig",
+    "label": "2GIG devices gateway",
+    "setItemValueCommand": "HUB:2gig/scripts/set_item_value",
+    "addItemDictionaryValueCommand": "HUB:2gig/scripts/add_item_dictionary_value",
+    "setItemDictionaryValueCommand": "HUB:2gig/scripts/set_item_dictionary_value",
+    "removeItemDictionaryValueCommand": "HUB:2gig/scripts/remove_item_dictionary_value",
+    "clearItemDictionaryCommand": "HUB:2gig/scripts/clear_item_dictionary",
+    "setSettingValueCommand": "HUB:2gig/scripts/set_setting_value",
+    "forceRemoveDeviceCommand": "HUB:2gig/scripts/remove_device"
+  }
+}

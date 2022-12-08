@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/opt/firmware/bin/logcmd --upload-postponed
+/opt/firmware/bin/logcmd --rotate

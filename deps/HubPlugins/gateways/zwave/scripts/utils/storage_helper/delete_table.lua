@@ -1,0 +1,3 @@
+local self, storage_table_name = ...
+
+self._storage.delete(storage_table_name)

@@ -1,0 +1,33 @@
+{
+  "id": "native_plugins_utils",
+  "version": "1.0",
+  "meta":{
+    "name" : {
+      "text":"EZLO Plugins Utilss"
+    },
+    "description" : {
+      "text":"Utils to implement EZLO plugins"
+    },
+    "author" : {
+      "text":"Ezlo Innovation"
+    },
+    "links": [
+      "https://github.com/rxi/json.lua"
+    ],
+    "hidden": true,
+    "deny_uninstall": true
+  },
+  "type": "library",
+  "permissions": [],
+  "dependencies": {
+    "addons": [
+      {
+        "id": "lua",
+        "version": "1.0"
+      }
+    ]
+  },
+  "library": {
+    "entryPoint": "HUB:native_plugins_utils/entry"
+  }
+}

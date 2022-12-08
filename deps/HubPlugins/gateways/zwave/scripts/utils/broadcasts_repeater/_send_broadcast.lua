@@ -1,0 +1,3 @@
+local self, broadcast_body = ...
+
+self._core.send_ui_broadcast(broadcast_body)

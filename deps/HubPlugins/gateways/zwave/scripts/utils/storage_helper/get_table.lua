@@ -1,0 +1,3 @@
+local self, storage_table_name = ...
+
+return self._storage.get_table(storage_table_name)

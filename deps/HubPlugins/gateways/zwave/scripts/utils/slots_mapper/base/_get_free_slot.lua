@@ -1,0 +1,3 @@
+local self, slots_set = ...
+
+return #slots_set + 1

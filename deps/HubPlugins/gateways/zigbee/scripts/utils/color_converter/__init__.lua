@@ -1,0 +1,3 @@
+local self = ...
+
+self:_register("color_converter", "HUB:zigbee/scripts/utils")

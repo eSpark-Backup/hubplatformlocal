@@ -1,0 +1,21 @@
+return {
+    [789] = "ZWP",
+    [155] = "2gig",
+    [134] = "AEON",
+    [148] = "Alarm.com",
+    [59] = "Allegion",
+    [26] = "Cooper",
+    [271] = "Fibaro",
+    [132] = "Fortrezz",
+    [108] = "Schlage",
+    [5] = "Intermatic",
+    [99] = "Jasco",
+    [29] = "Leviton",
+    [144] = "KWIKSET",
+    [622] = "SWF",
+    [139] = "Trane",
+    [342] = "Vivint",
+    [634] = "Zooz",
+    [288] = "Zonoff",
+    [603] = "Ezlo"
+}

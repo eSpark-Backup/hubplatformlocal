@@ -1,0 +1,1 @@
+return "latch_state"

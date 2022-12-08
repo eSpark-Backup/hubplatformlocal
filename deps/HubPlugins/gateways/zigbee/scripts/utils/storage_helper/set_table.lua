@@ -1,0 +1,3 @@
+local self, storage_table_name, table = ...
+
+self._storage.set_table(storage_table_name, table)

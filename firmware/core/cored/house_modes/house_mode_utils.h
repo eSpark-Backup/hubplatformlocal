@@ -1,0 +1,140 @@
+#pragma once
+
+#include "json_utils/json_fwd.h"
+#include "config_reader/config_reader.h"
+#include "cored/remote_interface/cored_interface.h"
+#include "cored/house_modes/house_mode_entry.h"
+#include "cored/house_modes/protect_button.h"
+#include "service_interfaces/service.h"
+
+class IDbClient;
+
+namespace HubPlatform {
+
+namespace CoreD {
+class IDbModifier;
+}
+
+namespace CoreDHouseModes {
+
+constexpr const char HOUSE_MODE_ENTRY[] = "houseMode";
+constexpr const char HOUSE_MODE_SWITCH_ENTRY[] = "switchTo";
+constexpr const char HOUSE_MODE_TIME_TO_SWITCH[] = "timeIsLeftToSwitch";
+constexpr const char HOUSE_MODE_SWITCH_DELAY[] = "switchToDelay";
+constexpr const char HOUSE_MODE_ALARM_DELAY[] = "alarmDelay";
+
+using DeviceIDs = std::vector< std::string >;
+using StatusDeviceByMode = std::map< std::string, bool >;
+
+using DeviceItemID = std::pair< std::string, std::string >;
+using DeviceItemIDs = std::vector< DeviceItemID >;
+using namespace HubPlatform::CoreD;
+
+void ensureHouseModesInDb( IDbClient& dbClient, const ConfigReader& configReader );
+
+std::vector< HouseModeEntry > getHouseModesList( const IDbClient& dbClient );
+std::unique_ptr< HouseModeEntry > getHouseMode( const IDbClient& dbClient,
+                                                const std::string& modeId,
+                                                bool absentModeIsError = false );
+std::unique_ptr< HouseModeEntry > getHouseModeByName( const IDbClient& dbClient,
+                                                      const std::string& modeName,
+                                                      bool absentModeIsError = false );
+std::unique_ptr< HouseModeEntry > getCurrentHouseMode( const IDbClient& dbClient );
+
+DeviceIDs getArmedDeviceIDsAffectedByHouseModes( const IDbClient& dbClient );
+DeviceIDs getAlarmDeviceIDsAffectedByHouseModes( const IDbClient& dbClient );
+DeviceItemIDs getCamerasDeviceItemPairs( const IDbClient& dbClient, const Json& query = JSON_EMPTY_OBJ );
+
+using ProcessDbResultsetItem = std::function< void( const Json& ) >;
+size_t getCamerasDeviceItemPairs( const IDbClient& dbClient,
+                                  const Json& query,
+                                  const ProcessDbResultsetItem& callback );
+
+DeviceIDs getDefaultDisarmedDeviceIDs( const IDbClient& dbClient, const std::string& modeId );
+DeviceIDs getDefaultAlarmOffDeviceIDs( const IDbClient& dbClient, const std::string& modeId );
+DeviceIDs getDefaultCamerasOffDeviceIDs( const IDbClient& dbClient, const std::string& modeId );
+
+StatusDeviceByMode checkAlarmCategoryAffectedByHouseMode( const IDbClient& dbClient,
+                                                          const std::string& category,
+                                                          const std::string& subcategory );
+StatusDeviceByMode checkCategoryAffectedByHouseMode( const IDbClient& dbClient,
+                                                     const std::string& category,
+                                                     const std::string& subcategory );
+
+std::string getCurrentHouseModeId( const IDbClient& dbClient );
+std::string getHouseModeSwitchTo( const IDbClient& dbClient );
+
+void setSwitchDelay( IDbClient& dbClient, int delay );
+void setAlarmDelay( IDbClient& dbClient, int delay );
+
+/* @return 0 or bigger in success cases and less for errors */
+int getSwitchDelay( IDbClient& dbClient );
+int getSwitchDelayLeft( IDbClient& dbClient );
+int getAlarmDelay( IDbClient& dbClient );
+
+bool setDisarmedDefault( Services::Service& broadcaster,
+                         IDbModifier& dBModifier,
+                         const std::string& modeId,
+                         bool disarmedDefault );
+bool addDisarmedDevice( Services::Service& broadcaster,
+                        IDbModifier& dBModifier,
+                        const std::string& modeId,
+                        const std::string& deviceId,
+                        bool newDevice = false,
+                        bool changeArmedState = true );
+bool removeDisarmedDevice( Services::Service& broadcaster,
+                           IDbModifier& dBModifier,
+                           const std::string& modeId,
+                           const std::string& deviceId,
+                           bool changeArmedState = true );
+bool setProtect( Services::Service& broadcaster, IDbModifier& dBModifier, const std::string& modeId, bool protect );
+bool protectButtonsSet( Services::Service& broadcaster, const std::string& deviceId, ProtectServiceEnum service );
+std::vector< ProtectButton > getProtectButtons( IDbClient& dbClient );
+std::pair< ProtectButton, bool > findProtectButtonById( IDbClient& dbClient, const std::string& deviceId );
+bool removeProtectButton( IDbClient& dbClient, const std::string& deviceId );
+
+bool protectDevicesAdd( Services::Service& broadcaster, const DeviceIDs& ids );
+bool protectDevicesRemove( Services::Service& broadcaster, const DeviceIDs& ids );
+DeviceIDs getProtectDevicesIds( IDbClient& dbClient, const Json& dbQuery );
+bool removeProtectDevice( IDbClient& dbClient, const std::string& deviceId );
+std::tuple< bool, std::vector< std::string >, JsonObject > readDeviceIdsParams( const JsonObject& params );
+
+bool setNotifications( IDbClient& dbClient,
+                       Services::Service& broadcaster,
+                       IDbModifier& dBModifier,
+                       const std::string& modeId,
+                       bool notifyAll,
+                       const std::vector< std::string >& userIds );
+void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
+                                    const std::string& modeId,
+                                    const std::string& deviceId );
+
+bool addAlarmsOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
+bool removeAlarmsOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
+
+bool addCamerasOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
+bool removeCamerasOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
+bool addCamera( IDbClient& dbClient, const std::string& deviceId, const std::string& makeRecordingItemId );
+bool removeCamera( IDbClient& dbClient, const std::string& deviceId );
+
+bool addBypassDevices( Services::Service& broadcaster, const std::string& modeId, const DeviceIDs& deviceIds );
+bool removeBypassDevices( Services::Service& broadcaster, const std::string& modeId, const DeviceIDs& deviceIds );
+void removeAllBypassDevices( Services::Service& broadcaster, const std::string& modeId );
+
+bool eraseDisarmedDevice( IDbClient& dbClient, const std::string& deviceId );
+
+bool modifyDevice( Services::Service& broadcaster,
+                   IDbModifier& dbModifier,
+                   const std::string& deviceId,
+                   const JsonObject& device );
+
+bool addSecurityDevice( IDbClient& dbClient, const std::string& deviceId, const std::string& securityThreatItemId );
+bool removeSecurityDevice( IDbClient& dbClient, const std::string& deviceId );
+size_t getSecurityDeviceItemPairs( const IDbClient& dbClient,
+                                   const Json& query,
+                                   const ProcessDbResultsetItem& callback );
+
+JsonArray findHouseModesArrayField( IDbClient& dbClient, const std::string& modeId, const char* fieldName );
+
+}  // namespace CoreDHouseModes
+}  // namespace HubPlatform

@@ -1,0 +1,4 @@
+09.03.2018
+* move code form znet_missing.* files and remove files
+* implement znet_main files for esp32
+* check all TODO in files

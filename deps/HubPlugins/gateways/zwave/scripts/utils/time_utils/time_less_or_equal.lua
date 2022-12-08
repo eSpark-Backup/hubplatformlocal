@@ -1,0 +1,3 @@
+local self, lhs, rhs = ...
+
+return self:call("_object_less_or_equal", lhs, rhs, { "hour", "minute", "second" })
