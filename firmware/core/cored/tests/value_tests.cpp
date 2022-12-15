@@ -8,6 +8,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "base_utils/float_operations.h"
 
 /*
 
@@ -33,6 +34,9 @@ DONE        2.2 Update
 DONE            2.2.1 By the same value
 DONE            2.2.2 By different value
 DONE            2.2.3 By different type
+DONE        2.3 Compare
+DONE            2.3.1 Compare all conditions
+DONE            2.3.2 Compare float in the power of two
 DONE    3 Int value
 DONE        3.1 Create
 DONE            3.1.1 By default
@@ -85,7 +89,12 @@ DONE            8.1.2 From json
 DONE            8.1.3 From different type
 DONE            8.1.4 Compare temperature values
 DONE            8.1.5 Compare scalable values
+DONE            8.1.5.1 Compare scalable values near power of two
+DONE            8.1.5.2 Compare scalable values in for loop
+DONE            8.1.5.3 Compare scalable values are not equal
 DONE            8.1.6 Compare scalable values with different relativity
+DONE            8.1.6.1 Compare celsius values are less
+DONE            8.1.6.2 Compare fahrenheit values are less
 DONE            8.1.7 Convert temperature to different scales
 DONE    9 Dictionary value
 DONE        9.1 Create
@@ -414,6 +423,33 @@ TEST_F( ValueTestSuite, testFloatValueUpdateByDifferentType /*2.2.3*/ ) {
     EXPECT_THROW( update( newValue, *floatValue ), UnexpectedJsonValueFormatError );
     EXPECT_EQ( floatValue->toJson(), json );
 }
+
+TEST_F( ValueTestSuite, testCompareAllConditions /*2.3.1*/ ) {
+    constexpr float val1{ 10.0f };
+    constexpr float val2{ 10.1f };
+
+    EXPECT_TRUE( val1 );
+    EXPECT_TRUE( val2 );
+
+    EXPECT_FALSE( HubPlatform::areFloatsEqual( val1, val2 ) );
+    EXPECT_TRUE( HubPlatform::isFloatLess( val1, val2 ) );
+    EXPECT_FALSE( HubPlatform::isFloatLess( val2, val1 ) );
+}
+
+TEST_F( ValueTestSuite, testCompareFloatInThePowerOfTwo /*2.3.2*/ ) {
+    float delta = 0.01f;
+    float base = 1.0f;
+    for( unsigned power = 0; power < 15; power++ ) {
+        base *= 2;
+        float val1{ base };
+        float val2{ base + delta };
+
+        EXPECT_FALSE( HubPlatform::areFloatsEqual( val1, val2 ) );
+
+        EXPECT_TRUE( HubPlatform::isFloatLess( val1, val2 ) );
+    }
+}
+
 
 TEST_F( ValueTestSuite, testIntValueCreateByDefault /*3.1.1*/ ) {
     auto intValue = IntValue::createDefaultValue();
@@ -846,6 +882,44 @@ TEST_F( ValueTestSuite, testCompareScalableValues /*8.1.5*/ ) {
     EXPECT_EQ( *temperatureValueC10, *temperatureValueC10 );
 }
 
+TEST_F( ValueTestSuite, testCompareScalableValuesNearPowerOfTwo /*8.1.5.1*/ ) {
+    auto temperatureValueCLeft = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, JSON( "value" << 0.01f << "scale" << ValueScales::Celsius ) );
+    auto temperatureValueFRight = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, Json{ { "value", 32.018f }, { "scale", ValueScales::Fahrenheit } } );
+    EXPECT_TRUE( *temperatureValueCLeft == *temperatureValueFRight );
+    EXPECT_EQ( *temperatureValueCLeft, *temperatureValueFRight );
+}
+
+TEST_F( ValueTestSuite, testCompareScalableValuesInForLoop /*8.1.5.2*/ ) {
+    for( float i = 0; i < 10; i += 0.01 ) {
+        auto temperatureValueCLeft = ValueFactory::createItemValue(
+            ValueType::Enum::Temperature, JSON( "value" << i << "scale" << ValueScales::Celsius ) );
+        auto temperatureValueFRight = ValueFactory::createItemValue(
+            ValueType::Enum::Temperature,
+            Json{ { "value", ( i * 9.0f / 5.0f + 32.0f ) }, { "scale", ValueScales::Fahrenheit } } );
+
+        EXPECT_TRUE( *temperatureValueCLeft == *temperatureValueFRight );
+        EXPECT_EQ( *temperatureValueCLeft, *temperatureValueFRight );
+        EXPECT_EQ( *temperatureValueFRight, *temperatureValueCLeft );
+    }
+}
+
+TEST_F( ValueTestSuite, testCompareScalableValuesAreNotEqual /*8.1.5.3*/ ) {
+    for( float i = 0; i < 10; i += 0.1 ) {
+        auto temperatureValueCLeft = ValueFactory::createItemValue(
+            ValueType::Enum::Temperature, JSON( "value" << i << "scale" << ValueScales::Celsius ) );
+        auto temperatureValueFRight = ValueFactory::createItemValue(
+            ValueType::Enum::Temperature,
+            Json{ { "value", ( ( i + 0.1f ) * 9.0f / 5.0f + 32.0f ) }, { "scale", ValueScales::Fahrenheit } } );
+
+        EXPECT_FALSE( *temperatureValueCLeft == *temperatureValueFRight );
+        EXPECT_NE( *temperatureValueCLeft, *temperatureValueFRight );
+        EXPECT_NE( *temperatureValueFRight, *temperatureValueCLeft );
+    }
+}
+
+
 TEST_F( ValueTestSuite, testCompareScalableValuesWithDifferentRelativity /*8.1.6*/ ) {
     auto temperatureValueRelative = ValueFactory::createItemValue(
         ValueType::Enum::Temperature, JSON( "value" << 10 << "scale" << ValueScales::Celsius << "relative" << true ) );
@@ -877,6 +951,34 @@ TEST_F( ValueTestSuite, testCompareScalableValuesWithDifferentRelativity /*8.1.6
     // cannot compare relative and not relative scalable values
     EXPECT_THROW( *temperatureValueNotRelative < *temperatureValueRelative, ValueError );
     EXPECT_THROW( *temperatureValueRelative < *temperatureValueNotRelative, ValueError );
+}
+
+TEST_F( ValueTestSuite, testCompareCelsiusValuesAreLess /*8.1.6.1*/ ) {
+    auto temperatureValueL = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, JSON( "value" << 10.0 << "scale" << ValueScales::Celsius ) );
+
+    auto temperatureValueG = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, JSON( "value" << 10.01 << "scale" << ValueScales::Celsius ) );
+
+    EXPECT_LT( *temperatureValueL, *temperatureValueG );
+    EXPECT_GT( *temperatureValueG, *temperatureValueL );
+    EXPECT_FALSE( *temperatureValueG < *temperatureValueL );
+    EXPECT_TRUE( *temperatureValueL < *temperatureValueG );
+    EXPECT_TRUE( *temperatureValueG != *temperatureValueL );
+}
+
+TEST_F( ValueTestSuite, testCompareFahrenheitValuesAreLess /*8.1.6.2*/ ) {
+    auto temperatureValueL = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, JSON( "value" << 32.0 << "scale" << ValueScales::Fahrenheit ) );
+
+    auto temperatureValueG = ValueFactory::createItemValue(
+        ValueType::Enum::Temperature, JSON( "value" << 32.01 << "scale" << ValueScales::Fahrenheit ) );
+
+    EXPECT_LT( *temperatureValueL, *temperatureValueG );
+    EXPECT_FALSE( *temperatureValueG < *temperatureValueL );
+    EXPECT_TRUE( *temperatureValueL < *temperatureValueG );
+    EXPECT_FALSE( *temperatureValueL > *temperatureValueG );
+    EXPECT_TRUE( *temperatureValueG > *temperatureValueL );
 }
 
 TEST_F( ValueTestSuite, testConvertTemperature /*8.1.7*/ ) {

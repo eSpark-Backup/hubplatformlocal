@@ -160,7 +160,7 @@ TEST_F( InArrayEventTests, inForNotSameButComparableScalableValues ) {  // 1.6
     EXPECT_TRUE( event.compare( celsius3 ) );
 }
 
-TEST_F( InArrayEventTests, DISABLED_inForArrayWithDifferentScalableValues ) {  // 1.7
+TEST_F( InArrayEventTests, inForArrayWithDifferentScalableValues ) {  // 1.7
     Json payload = R"({
         "type": "array.temperature",
         "value": [
@@ -298,7 +298,7 @@ TEST_F( InArrayEventTests, notInForNotSameButComparableScalableValues ) {  // 2.
     EXPECT_FALSE( event.compare( celsius4 ) );
 }
 
-TEST_F( InArrayEventTests, DISABLED_notInForArrayWithDifferentScalableValues ) {  // 2.7
+TEST_F( InArrayEventTests, notInForArrayWithDifferentScalableValues ) {  // 2.7
     Json payload = R"({
         "type": "array.temperature",
         "value": [
