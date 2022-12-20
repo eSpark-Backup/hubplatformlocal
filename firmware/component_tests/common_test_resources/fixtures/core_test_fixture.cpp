@@ -331,6 +331,25 @@ CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithOneItem( CoreD::Mod
     return { deviceId, itemId };
 }
 
+CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithSecurityThreatItem( int codeLine ) {
+    CoreDRemoteInterface::CoreDInterface& coreRemoteInterface = makeRemote( nma() );
+    const std::string deviceCategory = "security_sensor";
+    const std::string deviceSubcategory = "smoke";
+    const std::string testItemName = "security_threat";
+    auto deviceId = addDevice( coreRemoteInterface,
+                               "Controller device-item group device",
+                               deviceCategory,
+                               deviceCategory,
+                               deviceCategory,
+                               deviceSubcategory,
+                               false,
+                               __LINE__ );
+    auto itemId = addItem(
+        coreRemoteInterface, deviceId, testItemName, CoreD::Model::ValueType::Enum::Bool, true, true, codeLine );
+    checkDeviceUpdateBroadcast( deviceId, { { "armed", true } }, __LINE__ );
+    return { deviceId, itemId };
+}
+
 CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithOneItemAndRoom( CoreD::Model::ValueType::Enum valueType,
                                                                              const std::string& roomId,
                                                                              int codeLine ) {

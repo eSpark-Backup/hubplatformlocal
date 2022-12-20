@@ -38,7 +38,7 @@ public:
                        const CamerasOffDevices& camerasOffDevices,
                        const BypassDevices& bypassDevices ) override;
 
-    JsonObject buildResponse() const override;
+    JsonObject buildResponse( IDbClient& dbClient ) const override;
 
 protected:
     std::string m_currentHouseModeId;

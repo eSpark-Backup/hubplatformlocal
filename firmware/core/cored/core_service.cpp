@@ -79,6 +79,7 @@
 #include <functional>
 #include <thread>
 #include <utility>
+#include <chrono>
 
 namespace HubPlatform {
 namespace CoreD {
@@ -151,6 +152,8 @@ void CoreService::setUp() {
     m_permanentDBWriteScheduler->schedule( WriteToPermanentDBInterval );
 
     m_busDBManager = std::make_unique< BusDbManager >( getDBClient() );
+
+    CoreDHouseModes::clearDeviceFromHouseModesAlarmedList( getDBClient() );
 
     initLogOptionsFromFirmwareConfig();
     setUpHouseModes();
@@ -2813,6 +2816,21 @@ DeviceManager& CoreService::getDeviceManager() {
     return *m_deviceManager;
 }
 
+void CoreService::addDeviceToHouseModesAlarmedList( const JsonObject& json, const std::string& id, int delay ) {
+    if( delay > 0 ) {
+        const auto type = json.find( ItemFields::TypeFieldName );
+        auto timestamp = std::chrono::duration_cast< std::chrono::milliseconds >(
+                             std::chrono::system_clock::now().time_since_epoch() )
+                             .count();
+
+        CoreDHouseModes::addDeviceToHouseModesAlarmedList( getDBClient(), id, timestamp, delay );
+    }
+}
+
+void CoreService::deleteDeviceFromHouseModesAlarmedList( const std::string& id ) {
+    CoreDHouseModes::deleteDeviceFromHouseModesAlarmedList( getDBClient(), id );
+}
+
 void CoreService::checkSecurityThreat( const std::string& itemId ) {
     const JsonObject jsonTemp = getDBClient().findOne(
         Model::Resources::DBNames::TempItemsDB, JSON( Model::Resources::ItemFields::IdFieldName << itemId ), nullptr );
@@ -2829,18 +2847,30 @@ void CoreService::checkSecurityThreat( const std::string& itemId ) {
     }
 
     const auto itemName = itemNameIt.value().get< std::string >();
-    const auto deviceId = deviceIdIt.value().get< std::string >();
+    const std::string deviceId = deviceIdIt.value().get< std::string >();
     const auto value = valueIt.value().get< bool >();
 
     bool deviceArmed = getDeviceArmedStatusByItem( json );
+
+    if( !deviceArmed ) {
+        deleteDeviceFromHouseModesAlarmedList( deviceId );
+    }
+
     if( deviceArmed && itemName == CoreDHouseModes::Resources::Items::SecurityThreat && value ) {
         auto delay = CoreDHouseModes::getAlarmDelay( getDBClient() );
+
+        auto currentHouseModePtr = CoreDHouseModes::getCurrentHouseMode( getDBClient() );
+        const bool bypassDevice = currentHouseModePtr->m_bypassDeviceIds.count( deviceId ) > 0;
+
+        addDeviceToHouseModesAlarmedList( json, deviceId, delay );
+
         auto delayThreadLambda = [this, json, deviceId]( Services::PostponedTask& ) -> void {
             bool deviceArmed = getDeviceArmedStatusByItem( json );
             if( deviceArmed ) {
                 runSecurityThreatNotifications( json, deviceId );
             }
         };
+
         createPostponedTask( delayThreadLambda )->start( std::chrono::seconds( delay ), false );
     }
 }
@@ -2860,6 +2890,8 @@ void CoreService::runSecurityThreatNotifications( const JsonObject& json, const 
     }
 
     notifyAllCameras( cameraItemNames, currentHouseModePtr );
+
+    deleteDeviceFromHouseModesAlarmedList( deviceId );
 }
 
 void CoreService::notifyAllAlarms( const std::vector< std::string >& alarmItemNames,

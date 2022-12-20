@@ -28,6 +28,7 @@ class ItemDbModifierTest;
 class GatewaySettingsTest;
 class DeviceSettingsTest;
 class SettingsManagerTest;
+class FeatureManagerTestSuite;
 }  // namespace UT
 
 namespace Hub {
@@ -294,6 +295,8 @@ private:
     void sendCloudVideoforwardRequest( MessageSubClasses subClass, const Json& json );
     static Json createCloudVideoforwardRequestData( const std::string& identity );
     JsonObject handlePlaceDevice( const JsonObject& request );
+    void addDeviceToHouseModesAlarmedList( const JsonObject& json, const std::string& deviceId, int delay );
+    void deleteDeviceFromHouseModesAlarmedList( const std::string& id );
 
 private:
     std::unique_ptr< RoomManager > m_roomManager;

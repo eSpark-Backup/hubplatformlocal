@@ -11,8 +11,7 @@ namespace V2 {
 class ResponseBuilder : public V1::ResponseBuilder {
 public:
     ResponseBuilder( const rpc::Message& message, const std::string& api );
-
-    JsonObject buildResponse() const override;
+    JsonObject buildResponse( IDbClient& dbClient ) const;
 };
 
 }  // namespace V2

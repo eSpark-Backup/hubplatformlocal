@@ -48,6 +48,8 @@ namespace {
 #define MAX_CHANNEL 26
 #define DEFAULT_CHANNEL 25
 
+#define HAS_MFGLIB_RX_CALLBACK false
+
 extern "C" void emAfResetAndInitNCP();
 extern "C" void ezspChildJoinHandler( int8u, boolean, EmberNodeId, EmberEUI64, EmberNodeType ){ /* stub */ };
 extern "C" void hubPlatformPollControlCheckInCallback( uint16_t, uint8_t, uint16_t ){ /* stub */ };
@@ -56,21 +58,24 @@ using Buffer = std::vector< uint8_t >;
 
 struct Settings {
     std::string channel = std::to_string( DEFAULT_CHANNEL );
+    std::string txPower;
 };
 
 const std::string ARG_CHANNEL = "--chan";
+const std::string ARG_POWER = "--power";
 
 void help() {
     ManPage page;
 
     const std::string optChannel = ARG_CHANNEL + " channel";
+    const std::string optPower = ARG_POWER + " power";
 
     page.section( "NAME" );
     page.subSection( PROG_NAME );
     page.newLine();
 
     page.section( "SYNOPSIS" );
-    page.subSection( ManPage::join( { PROG_NAME, ManPage::optional( optChannel ) } ) );
+    page.subSection( ManPage::join( { PROG_NAME, ManPage::optional( optChannel ), ManPage::optional( optPower ) } ) );
     page.subSection( ManPage::join( { PROG_NAME, "{-h | --help}" } ) );
     page.newLine();
 
@@ -85,7 +90,11 @@ void help() {
     std::string maxChannelStr = std::to_string( MAX_CHANNEL );
     page.descr( ManPage::join( { "Channel range:", minChannelStr, "<= N <=", maxChannelStr } ) );
     page.descr( "Default: " + std::to_string( DEFAULT_CHANNEL ) );
-    page.descr( ManPage::join( { "Example:", ARG_CHANNEL, "25" } ) );
+    page.subSection( optPower );
+    page.descr( "Set radio TX power in dBm" );
+
+    page.newLine();
+    page.section( ManPage::join( { "Example:", ARG_CHANNEL, "25", ARG_POWER, "0" } ) );
 
     std::cout << page.content().str() << std::endl << std::flush;
 }
@@ -126,6 +135,12 @@ Settings parseArgs( int argc, char* argv[] ) {
                 }
 
                 settings.channel = *it;
+            }
+            else if( *it == ARG_POWER ) {
+                check_range( ++it );
+                if( !isNumber( *it ) )
+                    throw std::runtime_error( "Power is not an integer number" );
+                settings.txPower = *it;
             }
             else
                 throw std::runtime_error( "Option \"" + *it + "\" is not recognized" );
@@ -216,7 +231,20 @@ void setupRadioChannel( int channel ) {
         throw std::runtime_error( err_msg.str() );
     }
     std::cout << "Zigbee radio channel set to: " << radioChannel << std::endl;
-};
+}
+
+void setupTxPower( int8_t power ) {
+    auto status = mfglibSetPower( EMBER_TX_POWER_MODE_DEFAULT, power );
+    if( status != EMBER_SUCCESS ) {
+        std::stringstream error;
+        error << "Radio power setup failed with status: " << status << std::endl;
+        throw std::runtime_error( error.str() );
+    }
+}
+
+int8_t getTxPower() {
+    return mfglibGetPower();
+}
 
 Buffer getMac() {
     Buffer buffer( 8, 0 );
@@ -286,12 +314,10 @@ Buffer createMacFrame( size_t panId, Buffer& mac ) {
 };
 
 void sendMacFrames( Buffer& macFrame ) {
-    ezspMfglibStart( false );
     while( true ) {
         mfglibSendPacket( macFrame.size(), macFrame.data() );
         std::this_thread::sleep_for( std::chrono::milliseconds( 20 ) );
     }
-    mfglibEnd();
 };
 
 void startTxStream( const Settings& settings ) {
@@ -309,9 +335,19 @@ void startTxStream( const Settings& settings ) {
         auto panIdString = getPanIdString( panId );
         std::cout << "PanId: " << panIdString << std::endl;
 
+        ezspMfglibStart( HAS_MFGLIB_RX_CALLBACK );
+
+        if( !settings.txPower.empty() ) {
+            int8_t txPower = std::stoi( settings.txPower );
+            setupTxPower( txPower );
+        }
+        std::cout << "Zigbee radio TX power: " << int( getTxPower() ) << " dBm" << std::endl;
+
         std::cout << "START TX stream" << std::endl << std::flush;
         auto macFrame = createMacFrame( panId, mac );
         sendMacFrames( macFrame );
+
+        mfglibEnd();
     }
     catch( std::runtime_error& e ) {
         std::cout << e.what() << std::endl << std::flush;

@@ -157,6 +157,8 @@ public:
                                                                   const std::string roomId,
                                                                   int codeLine );
 
+    DeviceWithOneItemData addDeviceWithSecurityThreatItem( int codeLine );
+
     void setItemValue( CoreDRemoteInterface::CoreDInterface& coreRemoteInterface,
                        const std::string& itemId,
                        const JsonObject& value,
