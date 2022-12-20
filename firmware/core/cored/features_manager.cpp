@@ -42,9 +42,11 @@ FeaturesManager::FeaturesManager( IDbClient& dbClient )
         { "backups", { 1, 0 }, false, false },
         { "webrtc", { 1, 0 }, WITH_WEBRTC, true },
 #if defined( __HUB_TYPE_H2_SECURE__ ) || defined( __HUB_TYPE_LOCAL__ )
-        { "protect", { 1, 0 }, true, true },
+        { "protect", { 2, 0 }, true, true },
+        { "protect_delayed", { 1, 0 }, true, false },
 #elif defined( __HUB_TYPE_H2__ )
-        { "protect", { 1, 0 }, false, true },
+        { "protect", { 2, 0 }, false, true },
+        { "protect_delayed", { 1, 0 }, true, false },
 #elif defined( __HUB_TYPE_VHUB__ )
     // "protect" is not available
 #elif defined( __HUB_TYPE_BEEWAVE__ )
@@ -57,11 +59,35 @@ FeaturesManager::FeaturesManager( IDbClient& dbClient )
     };
 
     for( auto& feature : ControllerFeatures ) {
-        m_dbClient.update( DBNames::FeaturesDB,
-                           JSON_EMPTY_OBJ,
-                           JSON( db::ID_FIELD_NAME << feature.name << "version" << feature.version.toString()
-                                                   << "status" << feature.status << "editable" << feature.editable ),
-                           true );
+        auto featurePresent = m_dbClient.has( DBNames::FeaturesDB, JSON( db::ID_FIELD_NAME << feature.name ) );
+        if( !featurePresent ) {
+            m_dbClient.insert(
+                DBNames::FeaturesDB,
+                JSON( db::ID_FIELD_NAME << feature.name << "version" << feature.version.toString() << "status"
+                                        << feature.status << "editable" << feature.editable ) );
+        }
+        else {
+            m_dbClient.update(
+                DBNames::FeaturesDB,
+                JSON( db::ID_FIELD_NAME << feature.name ),
+                JSON( "$set" << JSON( "version" << feature.version.toString() << "editable" << feature.editable ) ) );
+        }
+    }
+
+    auto featuresArray = m_dbClient.findAll( DBNames::FeaturesDB, JSON_EMPTY_OBJ, nullptr );
+
+    for( int i = 0; i < featuresArray.size(); i++ ) {
+        bool isPresent = false;
+        for( auto& feature : ControllerFeatures ) {
+            if( featuresArray[ i ][ db::ID_FIELD_NAME ] == feature.name ) {
+                isPresent = true;
+                break;
+            }
+        }
+        if( !isPresent ) {
+            m_dbClient.remove( DBNames::FeaturesDB,
+                               JSON( db::ID_FIELD_NAME << featuresArray[ i ][ db::ID_FIELD_NAME ] ) );
+        }
     }
 }
 

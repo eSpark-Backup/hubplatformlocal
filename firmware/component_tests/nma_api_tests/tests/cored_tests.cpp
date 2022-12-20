@@ -2095,5 +2095,50 @@ TEST_F( CoredServiceTests, checkFollowParentPropertyFromGetChildDevice ) {  // 4
     removeDevice( remoteInterface, parentDevice.m_deviceId, 1, 0, __LINE__ );
 }
 
+TEST_F( CoredServiceTests, checkHubGetModeForAlarmedDevice ) {
+    auto& dbClient = nma().getDBClient();
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    auto device = addDeviceWithSecurityThreatItem( __LINE__ );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
+    answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    auto alarmed = answer[ "result" ][ "alarmed" ];
+    EXPECT_TRUE( !alarmed.empty() );
+    EXPECT_EQ( json_get_int( alarmed, "entryDelay" ), AlarmDelay );
+    EXPECT_EQ( json_get_int( alarmed, "timeIsLeft" ), AlarmDelay );
+    auto sources = alarmed[ "sources" ];
+    auto source = sources.front();
+    EXPECT_EQ( json_get_int( source, "delay" ), AlarmDelay );
+    EXPECT_EQ( json_get_str( source, "deviceId" ), device.m_deviceId );
+    EXPECT_TRUE( json_get_int( source, "timestamp" ) > 0 );
+    auto broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
+    EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.alarmed" );
+
+    answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
+TEST_F( CoredServiceTests, checkHubGetModeForAlarmedAndThenDisarmedDevice ) {
+    auto& dbClient = nma().getDBClient();
+    CoreDHouseModes::setAlarmDelay( dbClient, 1 );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    auto device = addDeviceWithSecurityThreatItem( __LINE__ );
+
+    setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( !answer[ "result" ][ "alarmed" ].empty() );
+    auto alarmed = answer[ "result" ][ "alarmed" ];
+    EXPECT_TRUE( !alarmed.empty() );
+
+    remoteInterface.setDeviceArmed( device.m_deviceId, false );
+    auto broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
+    EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.device.updated" );
+    setItemValue( remoteInterface, device.m_itemId, false, __LINE__ );
+    answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
 }  // namespace Tests
 }  // namespace HubPlatform

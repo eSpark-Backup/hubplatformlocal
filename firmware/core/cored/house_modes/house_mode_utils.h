@@ -136,5 +136,10 @@ size_t getSecurityDeviceItemPairs( const IDbClient& dbClient,
 
 JsonArray findHouseModesArrayField( IDbClient& dbClient, const std::string& modeId, const char* fieldName );
 
+JsonObject getHouseModesAlarmDevicesEvents( IDbClient& dbClient );
+void deleteDeviceFromHouseModesAlarmedList( IDbClient& dbClient, const std::string& id );
+void addDeviceToHouseModesAlarmedList( IDbClient& dbClient, const std::string& id, unsigned long timestamp, int delay );
+void clearDeviceFromHouseModesAlarmedList( IDbClient& dbClient );
+
 }  // namespace CoreDHouseModes
 }  // namespace HubPlatform

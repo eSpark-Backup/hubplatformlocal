@@ -94,7 +94,6 @@ DONE    32. Update device status
 DONE    33. Send execute plugin script with parameters
 DONE    34. Handle set service notifications
 DONE    35. Remove gateway devices with child
-
 */
 
 namespace HubPlatform {

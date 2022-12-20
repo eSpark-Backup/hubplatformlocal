@@ -21,6 +21,7 @@ constexpr char HaTempItemsDBName[] = "temp.db.firmware.uid.items";
 constexpr char HaDeviceSettingsDBName[] = "db.firmware.cored.device_settings";
 constexpr char HaGatewaySettingsDBName[] = "db.firmware.cored.gateway_settings";
 constexpr char HaHouseModesDBName[] = "db.firmware.cored.houseModes";
+constexpr char HaTempHouseModesAlarmDevicesDBName[] = "temp.db.firmware.cored.houseModes.alarmedDevices";
 constexpr char HaTempHouseModesDBName[] = "temp.db.firmware.cored.houseModes";
 constexpr char HaHouseModesSecurityThreatsDBName[] = "db.firmware.cored.houseModes.securityThreats";
 constexpr char HaHouseModesProtectButtonsDBName[] = "db.firmware.cored.houseModes.protectButtons";

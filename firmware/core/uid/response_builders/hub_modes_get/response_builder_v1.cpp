@@ -2,6 +2,7 @@
 #include "uid/response_builders/hub_modes_get/response_builder_v1.h"
 
 #include "jsonrpc/jsonrpc.h"
+#include "database_client/idbclient.h"
 
 namespace HubPlatform {
 namespace Uid {
@@ -66,7 +67,7 @@ void ResponseBuilder::addHouseMode( const std::string& id,
     m_houseModes.emplace_back( std::move( houseMode ) );
 }
 
-JsonObject ResponseBuilder::buildResponse() const {
+JsonObject ResponseBuilder::buildResponse( IDbClient& dbClient ) const {
     JsonObject joResponse = ResponseBuilderBase::buildResponse();
 
     JsonObject result = JSON_EMPTY_OBJ;

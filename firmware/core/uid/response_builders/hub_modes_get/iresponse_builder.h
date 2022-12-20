@@ -3,7 +3,8 @@
 #include "json_utils/json_wrapper.h"
 #include "cored/house_modes/house_mode_entry.h"
 #include "cored/house_modes/protect_button.h"
-
+#include "service_interfaces/service.h"
+#include "cored/remote_interface/cored_remote_interface.h"
 #include <set>
 #include <vector>
 
@@ -52,7 +53,7 @@ public:
                                const CamerasOffDevices& camerasOffDevices,
                                const BypassDevices& bypassDevices ) = 0;
 
-    virtual JsonObject buildResponse() const = 0;
+    virtual JsonObject buildResponse( IDbClient& dbClient ) const = 0;
 };
 
 }  // namespace HubModesGet

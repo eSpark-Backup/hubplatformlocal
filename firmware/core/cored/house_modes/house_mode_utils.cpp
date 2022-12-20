@@ -1189,5 +1189,25 @@ JsonArray findHouseModesArrayField( IDbClient& dbClient, const std::string& mode
     return result;
 }
 
+JsonObject getHouseModesAlarmDevicesEvents( IDbClient& dbClient ) {
+    return dbClient.findAll( HaTempHouseModesAlarmDevicesDBName, JSON_EMPTY_OBJ, nullptr );
+}
+
+void deleteDeviceFromHouseModesAlarmedList( IDbClient& dbClient, const std::string& id ) {
+    dbClient.remove( HaTempHouseModesAlarmDevicesDBName, JSON( db::ID_FIELD_NAME << id ) );
+}
+
+void addDeviceToHouseModesAlarmedList( IDbClient& dbClient,
+                                       const std::string& id,
+                                       unsigned long timestamp,
+                                       int delay ) {
+    JsonObject query = JSON( db::ID_FIELD_NAME << id << "timestamp" << timestamp << "alarmDelay" << delay );
+    dbClient.insert( HaTempHouseModesAlarmDevicesDBName, query );
+}
+
+void clearDeviceFromHouseModesAlarmedList( IDbClient& dbClient ) {
+    dbClient.clear( HaTempHouseModesAlarmDevicesDBName );
+}
+
 }  // namespace CoreDHouseModes
 }  // namespace HubPlatform

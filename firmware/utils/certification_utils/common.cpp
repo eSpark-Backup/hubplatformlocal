@@ -30,7 +30,7 @@ void stopFirmware() {
 }
 
 bool isNumber( const std::string& str ) {
-    static const std::regex re( "\\d+" );
+    static const std::regex re( "[-]?\\d+" );
     return std::regex_match( str, re );
 }
 

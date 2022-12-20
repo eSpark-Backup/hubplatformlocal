@@ -1701,9 +1701,9 @@ void UiProto::invokeHouseModeGetHandler( rpc::Message& rpcMessage ) {
                                        houseMode.m_bypassDeviceIds );
     }
 
-    auto response = responseBuilder->buildResponse();
-
     CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( getService() );
+
+    auto response = responseBuilder->buildResponse( getService().getDBClient() );
 
     if( !remoteInterface.checkFeatureStatus( "protect" ) ) {
         purgeProtectFields( response[ "result" ] );
