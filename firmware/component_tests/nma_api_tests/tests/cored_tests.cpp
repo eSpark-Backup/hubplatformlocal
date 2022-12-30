@@ -169,7 +169,10 @@ TEST_F( CoredServiceTests, EFWR_1446_switch_on_all_sirens_on_security_threat ) {
     EXPECT_EQ( json_get_str( broadcast[ "result" ], "_id" ), itemAddResult1.first );
     EXPECT_EQ( json_get_str( broadcast[ "result" ], "name" ), "security_threat" );
     EXPECT_EQ( json_get_bool( broadcast[ "result" ], "value" ), true );
-    testHouseModeAlarmedBroadcast( currentModeId, deviceAddResult1.first, __LINE__ );
+
+    testHouseModeAlarmedPhaseStatusBroadcast( currentModeId, deviceAddResult1.first, "entryDelay", "begin", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( currentModeId, deviceAddResult1.first, "entryDelay", "done", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( currentModeId, deviceAddResult1.first, "main", "done", __LINE__ );
 
     broadcast = waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast" ) );
     EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.item.updated" );
@@ -1751,6 +1754,8 @@ TEST_F( CoredServiceTests, onSecurityThreatTouchAllCamerasMakeRecordingItem ) { 
                     { { "name", "security_threat" }, { "value", true } },
                     NMA_TEST_MAKE_MESSAGE( "" ) );
     testHouseModeAlarmedBroadcast( currentModeId, securitySensorId, __LINE__ );
+    testHouseModeAlarmedBroadcast( currentModeId, securitySensorId, __LINE__ );
+    testHouseModeAlarmedBroadcast( currentModeId, securitySensorId, __LINE__ );
 
     // No broadcasts from that item
     checkBroadcast(
@@ -2101,9 +2106,8 @@ TEST_F( CoredServiceTests, checkHubGetModeForAlarmedDevice ) {
     CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
     CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
     auto device = addDeviceWithSecurityThreatItem( __LINE__ );
-    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
     setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
-    answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
     auto alarmed = answer[ "result" ][ "alarmed" ];
     EXPECT_TRUE( !alarmed.empty() );
     EXPECT_EQ( json_get_int( alarmed, "entryDelay" ), AlarmDelay );
@@ -2113,8 +2117,10 @@ TEST_F( CoredServiceTests, checkHubGetModeForAlarmedDevice ) {
     EXPECT_EQ( json_get_int( source, "delay" ), AlarmDelay );
     EXPECT_EQ( json_get_str( source, "deviceId" ), device.m_deviceId );
     EXPECT_TRUE( json_get_int( source, "timestamp" ) > 0 );
-    auto broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
-    EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.alarmed" );
+    const auto CurrentModeId = "1";
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "entryDelay", "begin", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "entryDelay", "done", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "main", "done", __LINE__ );
 
     answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
     EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
@@ -2122,20 +2128,96 @@ TEST_F( CoredServiceTests, checkHubGetModeForAlarmedDevice ) {
 
 TEST_F( CoredServiceTests, checkHubGetModeForAlarmedAndThenDisarmedDevice ) {
     auto& dbClient = nma().getDBClient();
-    CoreDHouseModes::setAlarmDelay( dbClient, 1 );
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
     CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
     auto device = addDeviceWithSecurityThreatItem( __LINE__ );
-
     setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
     auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
-    EXPECT_TRUE( !answer[ "result" ][ "alarmed" ].empty() );
     auto alarmed = answer[ "result" ][ "alarmed" ];
     EXPECT_TRUE( !alarmed.empty() );
 
+    const auto CurrentModeId = "1";
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "entryDelay", "begin", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "entryDelay", "done", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "main", "done", __LINE__ );
+
     remoteInterface.setDeviceArmed( device.m_deviceId, false );
-    auto broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
+    auto broadcast = waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast hub.device.armed" ) );
+
     EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.device.updated" );
     setItemValue( remoteInterface, device.m_itemId, false, __LINE__ );
+    answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithFewDevices ) {
+    auto& dbClient = nma().getDBClient();
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    auto device1 = addDeviceWithSecurityThreatItem( __LINE__ );
+    auto device2 = addDeviceWithSecurityThreatItem( __LINE__ );
+    auto device3 = addDeviceWithSecurityThreatItem( __LINE__ );
+
+    const auto CurrentModeId = "1";
+    setItemValue( remoteInterface, device1.m_itemId, true, __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device1.m_deviceId, "entryDelay", "begin", __LINE__ );
+    setItemValue( remoteInterface, device2.m_itemId, true, __LINE__ );
+    setItemValue( remoteInterface, device3.m_itemId, true, __LINE__ );
+
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device1.m_deviceId, "entryDelay", "done", __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device1.m_deviceId, "main", "done", __LINE__ );
+
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithSwitchToNotArmedMode ) {
+    auto& dbClient = nma().getDBClient();
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    CoreDHouseModes::setSwitchDelay( dbClient, 0 );
+    remoteInterface.setHouseMode( "2" );
+    waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast hub.modes.switched" ) );
+    waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast hub.modes.switched" ) );
+    auto device = addDeviceWithSmokeSensorItem( __LINE__ );
+    CoreDHouseModes::setSwitchDelay( dbClient, 0 );
+    setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( "2", device.m_deviceId, "entryDelay", "begin", __LINE__ );
+    remoteInterface.setHouseMode( "1" );
+    waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast hub.modes.switched" ) );
+    waitForBroadcast( NMA_TEST_MAKE_MESSAGE( "no broadcast hub.modes.switched" ) );
+    testHouseModeAlarmedPhaseStatusBroadcast( "1", "", "entryDelay", "canceled", __LINE__ );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithNoDalayMode ) {
+    auto& dbClient = nma().getDBClient();
+    const auto AlarmDelay = 0;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    auto device = addDeviceWithSecurityThreatItem( __LINE__ );
+    setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
+    testHouseModeAlarmedPhaseStatusBroadcast( "1", device.m_deviceId, "main", "done", __LINE__ );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
+    EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
+}
+
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithCancelEntryDalay ) {
+    auto& dbClient = nma().getDBClient();
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay( dbClient, AlarmDelay );
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( nma() );
+    auto device = addDeviceWithSecurityThreatItem( __LINE__ );
+    setItemValue( remoteInterface, device.m_itemId, true, __LINE__ );
+    const auto CurrentModeId = "1";
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, device.m_deviceId, "entryDelay", "begin", __LINE__ );
+    auto answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.entry_delay.cancel" } } );
+    EXPECT_TRUE( answer[ "result" ].empty() );
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, "", "entryDelay", "canceled", __LINE__ );
     answer = nma().sendtoHubAndGetAnswer( { { "method", "hub.modes.get" }, { "api", "2.0" } } );
     EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
 }

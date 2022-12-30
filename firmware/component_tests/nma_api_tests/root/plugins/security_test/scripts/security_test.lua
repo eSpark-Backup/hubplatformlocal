@@ -1,8 +1,8 @@
 local params = ...
-    if not params then
-        print("Parameters are empty. Expected: hash: [md5 | sha1], data: string")
-        return
-    end
+if not params then
+    print("Parameters are empty. Expected: hash: [md5 | sha1], data: string, method: string (opt)")
+    return
+end
 
 local security = require('security')
 if not security then
@@ -20,7 +20,12 @@ elseif params.method ~= nil and params.method == 'get_all_digest_names' then
     value = security.get_all_digest_names()
 elseif params.method ~= nil and params.method == 'from_hex_string' then
     local binary_value = security.from_hex_string(params.data)
-    value = security.digest_by_name(params.hash, binary_value)
+    params.binary_value = binary_value
+    if params.hash == 'base64' then
+        value = security.to_base64(binary_value)
+    else
+        value = security.digest_by_name(params.hash, binary_value)
+    end
 elseif (params.hash == 'md5') then
     value = security.md5(params.data)
 elseif (params.hash == 'md5_binary') then
@@ -33,4 +38,4 @@ elseif (params.hash == 'sha256') then
 end
 
 params.value = value
-core.send_ui_broadcast( params )
+core.send_ui_broadcast(params)

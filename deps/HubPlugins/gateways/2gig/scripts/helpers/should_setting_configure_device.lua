@@ -1,0 +1,3 @@
+local tag = ...
+
+return tag ~= "dw_detection_source"

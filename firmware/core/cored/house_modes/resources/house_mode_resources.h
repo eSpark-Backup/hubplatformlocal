@@ -66,6 +66,10 @@ extern const char* const DisarmedDeviceFieldName;
 extern const char* const CamerasOffDeviceFieldName;
 extern const char* const DeviceIdsFieldName;
 extern const char* const DeviceIdFieldName;
+extern const char* const DeviceTimestampFieldName;
+extern const char* const DevicePhaseFieldName;
+extern const char* const DeviceStatusFieldName;
+extern const char* const DevicePendingDelay;
 }  // namespace BroadcastFields
 
 namespace Items {

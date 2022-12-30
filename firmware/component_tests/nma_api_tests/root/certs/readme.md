@@ -1,10 +1,10 @@
 # Certificates for component tests
 
-See hubPlatform/firmware/component_tests/cloud_devices_tests/root/tests for instructions.
+## Local mode certificates for tests update
 
-See hubPlatform/firmware/component_tests/cloud_devices_tests/root/tests for instructions.
+Updated certificates are valid till: 2023-04-12.
 
-# Update local mode certificates for tests
+## Update local mode certificates for tests
 
 To start some component tests, the started local mode server running in the ha-uid. service is needed.
 
@@ -15,7 +15,7 @@ To update it, copy files from a real hub: **/home/data/certs/local/** folder.
 To check the certificate's due date, please, call:
 
 ```sh
-openssl x509 -in certificate.crt 0.crt -text -noout        
+openssl x509 -in 0.crt -text -noout
 ```
 
 Output will contain the following:

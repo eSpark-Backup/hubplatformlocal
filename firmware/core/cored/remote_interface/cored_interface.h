@@ -197,6 +197,7 @@ public:
     virtual void updateDeviceRoomId( const DeviceID& deviceId, const std::string& deviceRoomId ) = 0;
     virtual JsonObject setHouseMode( const HouseModeId& houseModeId ) = 0;
     virtual HouseModeId cancelHouseModeSwitching() = 0;
+    virtual JsonObject cancelEntryDelay() = 0;
     virtual HouseModesGetResult getHouseModes() const = 0;
     virtual DeviceIDs getArmedDeviceIDsAffectedByHouseModes() const = 0;
     virtual DeviceIDs getAlarmDeviceIDsAffectedByHouseModes() const = 0;

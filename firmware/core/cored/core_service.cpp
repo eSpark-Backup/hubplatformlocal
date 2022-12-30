@@ -1,4 +1,5 @@
 #include "cored/core_service.h"
+#include "cored/house_mode_alarms.h"
 #include "cored/model/resources/cored_resources.h"
 #include "cored/model/values/values.h"
 #include "cored/model/values/value_factory.h"
@@ -91,9 +92,6 @@ std::string whatError( const std::exception& e ) {
     return "( " + std::string( typeid( e ).name() ) + " ): " + e.what();
 }
 
-std::vector< std::string > getSirenItemNames() {
-    return { "siren", "switch", "basic" };
-}
 }  // namespace
 
 using namespace HubPlatform::CoreD::Model::Resources;
@@ -152,6 +150,8 @@ void CoreService::setUp() {
     m_permanentDBWriteScheduler->schedule( WriteToPermanentDBInterval );
 
     m_busDBManager = std::make_unique< BusDbManager >( getDBClient() );
+    m_houseModeAlarms =
+        std::make_unique< HouseModeAlarms >( *this, [&]( const JsonObject& json ) { handleSetItemValue( json ); } );
 
     CoreDHouseModes::clearDeviceFromHouseModesAlarmedList( getDBClient() );
 
@@ -416,6 +416,9 @@ JsonObject CoreService::handleRequestFromBus( const JsonObject& request, Message
 
         case CANCEL_SWITCHING_HOUSE_MODE:
             return handleCancelSwitchHouseMode( request );
+
+        case HOUSE_MODE_CANCEL_ENTRY_DELAY:
+            return handleCancelEntryDelay( request );
 
         case HOUSE_MODE_ADD_DISARMED_DEVICE:
             return handleAddDisarmedDevice( request );
@@ -871,6 +874,19 @@ JsonObject CoreService::handleCancelSwitchHouseMode( const JsonObject& /*params*
         m_houseModeProcessor->cancelSwitchingHouseMode();
         LOGGER_DEBUG( "" );
         return JSON( "modeId" << CoreDHouseModes::getCurrentHouseModeId( getDBClient() ) );
+    }
+    catch( const std::exception& ex ) {
+        LOGGER_DEBUG( cc::debug( "unexpected error :" ) + cc::note( ex.what() ) );
+        JsonObject result;
+        setError( result, Errors::INTERNAL_OPERATION_ERROR );
+        return result;
+    }
+}
+
+JsonObject CoreService::handleCancelEntryDelay( const JsonObject& /*params*/ ) {
+    try {
+        m_houseModeAlarms->cancelEntryDelay();
+        return JSON_EMPTY_OBJ;
     }
     catch( const std::exception& ex ) {
         LOGGER_DEBUG( cc::debug( "unexpected error :" ) + cc::note( ex.what() ) );
@@ -1494,7 +1510,7 @@ void CoreService::handleUpdateItemValue( const JsonObject& json ) {
     json_remove( result, ItemFields::TypeFieldName );
 
     m_itemsDb->update( itemId, result );
-    checkSecurityThreat( itemId );
+    m_houseModeAlarms->checkSecurityThreat( itemId );
 }
 
 DbModifier::Dictionary CoreService::getDictionaryOperation( const std::string& key,
@@ -1876,7 +1892,7 @@ void CoreService::handleUpdateItemDictionaryValue( const JsonObject& json ) {
 
     auto dictionary = getDictionaryOperation( itemDictionaryId, oldValueJson, newValueJson );
     m_itemsDb->updateDictionary( itemId, encryptedValue, dictionary );
-    checkSecurityThreat( itemId );
+    m_houseModeAlarms->checkSecurityThreat( itemId );
 }
 
 void CoreService::handleUpdateGatewaySettingValue( const JsonObject& json ) {
@@ -2816,156 +2832,6 @@ DeviceManager& CoreService::getDeviceManager() {
     return *m_deviceManager;
 }
 
-void CoreService::addDeviceToHouseModesAlarmedList( const JsonObject& json, const std::string& id, int delay ) {
-    if( delay > 0 ) {
-        const auto type = json.find( ItemFields::TypeFieldName );
-        auto timestamp = std::chrono::duration_cast< std::chrono::milliseconds >(
-                             std::chrono::system_clock::now().time_since_epoch() )
-                             .count();
-
-        CoreDHouseModes::addDeviceToHouseModesAlarmedList( getDBClient(), id, timestamp, delay );
-    }
-}
-
-void CoreService::deleteDeviceFromHouseModesAlarmedList( const std::string& id ) {
-    CoreDHouseModes::deleteDeviceFromHouseModesAlarmedList( getDBClient(), id );
-}
-
-void CoreService::checkSecurityThreat( const std::string& itemId ) {
-    const JsonObject jsonTemp = getDBClient().findOne(
-        Model::Resources::DBNames::TempItemsDB, JSON( Model::Resources::ItemFields::IdFieldName << itemId ), nullptr );
-    const JsonObject json = getDBClient().findOne(
-        Model::Resources::DBNames::ItemsDB, JSON( Model::Resources::ItemFields::IdFieldName << itemId ), nullptr );
-
-    const auto itemNameIt = json.find( ItemFields::NameFieldName );
-    const auto deviceIdIt = json.find( ItemFields::DeviceIdFieldName );
-    const auto valueIt = jsonTemp.find( ItemFields::ValueFieldName );
-
-    const bool allFieldsPresent = itemNameIt != json.end() && deviceIdIt != json.end() && valueIt != jsonTemp.end();
-    if( !allFieldsPresent || !valueIt.value().is_boolean() ) {
-        return;
-    }
-
-    const auto itemName = itemNameIt.value().get< std::string >();
-    const std::string deviceId = deviceIdIt.value().get< std::string >();
-    const auto value = valueIt.value().get< bool >();
-
-    bool deviceArmed = getDeviceArmedStatusByItem( json );
-
-    if( !deviceArmed ) {
-        deleteDeviceFromHouseModesAlarmedList( deviceId );
-    }
-
-    if( deviceArmed && itemName == CoreDHouseModes::Resources::Items::SecurityThreat && value ) {
-        auto delay = CoreDHouseModes::getAlarmDelay( getDBClient() );
-
-        auto currentHouseModePtr = CoreDHouseModes::getCurrentHouseMode( getDBClient() );
-        const bool bypassDevice = currentHouseModePtr->m_bypassDeviceIds.count( deviceId ) > 0;
-
-        addDeviceToHouseModesAlarmedList( json, deviceId, delay );
-
-        auto delayThreadLambda = [this, json, deviceId]( Services::PostponedTask& ) -> void {
-            bool deviceArmed = getDeviceArmedStatusByItem( json );
-            if( deviceArmed ) {
-                runSecurityThreatNotifications( json, deviceId );
-            }
-        };
-
-        createPostponedTask( delayThreadLambda )->start( std::chrono::seconds( delay ), false );
-    }
-}
-
-void CoreService::runSecurityThreatNotifications( const JsonObject& json, const DeviceID& deviceId ) {
-    static const std::vector< std::string > sirenItemNames = getSirenItemNames();
-    static const std::vector< std::string > cameraItemNames = { CoreDHouseModes::Resources::Items::MakeRecording };
-
-    auto currentHouseModePtr = CoreDHouseModes::getCurrentHouseMode( getDBClient() );
-    const bool bypassDevice = currentHouseModePtr->m_bypassDeviceIds.count( deviceId ) > 0;
-
-    emit( CoreDHouseModes::ScriptEvents::HouseModeAlarmed( currentHouseModePtr->m_id, deviceId ) );
-    CoreDHouseModes::sendHouseModeAlarmedBroadcast( *this, currentHouseModePtr->m_id, deviceId );
-
-    if( !bypassDevice ) {
-        notifyAllAlarms( sirenItemNames, currentHouseModePtr );
-    }
-
-    notifyAllCameras( cameraItemNames, currentHouseModePtr );
-
-    deleteDeviceFromHouseModesAlarmedList( deviceId );
-}
-
-void CoreService::notifyAllAlarms( const std::vector< std::string >& alarmItemNames,
-                                   const std::unique_ptr< CoreDHouseModes::HouseModeEntry >& currentHouseModePtr ) {
-    const auto& alarmOffDevices = currentHouseModePtr->m_alarmsOffDeviceIds;
-    auto alarmDeviceIdsVector = CoreDHouseModes::getAlarmDeviceIDsAffectedByHouseModes( getDBClient() );
-    auto alarmDeviceIds = std::set< std::string >( alarmDeviceIdsVector.begin(), alarmDeviceIdsVector.end() );
-    std::set< std::string > deviceIds;
-    std::set_difference( alarmDeviceIds.begin(),
-                         alarmDeviceIds.end(),
-                         alarmOffDevices.begin(),
-                         alarmOffDevices.end(),
-                         std::inserter( deviceIds, deviceIds.begin() ) );
-    for( const auto& alarmDeviceId : deviceIds ) {
-        auto items =
-            getDBClient().findAll( DBNames::ItemsDB, JSON( ItemFields::DeviceIdFieldName << alarmDeviceId ), nullptr );
-        for( auto& sirenItemName : alarmItemNames ) {
-            auto it = std::find_if( items.begin(), items.end(), [sirenItemName]( const JsonObject& item ) {
-                return json_get_str( item, ItemFields::NameFieldName ) == sirenItemName;
-            } );
-            if( it != items.end() ) {
-                const auto itemId = json_get_str( *it, ItemFields::IdFieldName );
-                const JsonObject setItemValueRequest{ { db::ID_FIELD_NAME, itemId },
-                                                      { ItemFields::ValueFieldName, true },
-                                                      { RPCParams::SourceField,
-                                                        { { ItemSource::TypeField, ItemSource::HouseMode } } } };
-                handleSetItemValue( setItemValueRequest );
-                break;
-            }
-        }
-    }
-}
-
-void CoreService::notifyAllCameras( const std::vector< std::string >& cameraItemNames,
-                                    const std::unique_ptr< CoreDHouseModes::HouseModeEntry >& currentHouseModePtr ) {
-    using namespace HubPlatform::CoreDHouseModes::Resources;
-    const auto& camerasOffDevices = currentHouseModePtr->m_camerasOffDeviceIds;
-    std::set< std::string > cameraDeviceIds;
-    std::map< std::string, std::string > cameraDeviceItems;
-
-    auto buildCollections = [&cameraDeviceIds, &cameraDeviceItems]( const Json& fields ) {
-        const auto& deviceId = json_get_str( fields, db::ID_FIELD_NAME );
-        const auto& itemId = json_get_str( fields, Items::MakeRecording );
-        cameraDeviceIds.insert( deviceId );
-        cameraDeviceItems.emplace( deviceId, itemId );
-    };
-
-    if( 0 == CoreDHouseModes::getCamerasDeviceItemPairs( getDBClient(), JSON_EMPTY_OBJ, buildCollections ) )
-        return;
-
-    std::set< std::string > deviceIdsToNotify;
-    std::set_difference( cameraDeviceIds.begin(),
-                         cameraDeviceIds.end(),
-                         camerasOffDevices.begin(),
-                         camerasOffDevices.end(),
-                         std::inserter( deviceIdsToNotify, deviceIdsToNotify.begin() ) );
-    for( const auto& cameraDeviceId : deviceIdsToNotify ) {
-        auto foundIt = cameraDeviceItems.find( cameraDeviceId );
-        if( foundIt != cameraDeviceItems.end() ) {
-            const auto& itemId = foundIt->second;
-
-            const int DefaultPlaybackTime = 0;
-            const JsonObject setItemValueRequest{ { db::ID_FIELD_NAME, itemId },
-                                                  { ItemFields::ValueFieldName, DefaultPlaybackTime },
-                                                  { RPCParams::SourceField,
-                                                    { { ItemSource::TypeField, ItemSource::HouseMode } } } };
-            handleSetItemValue( setItemValueRequest );
-            LOGGER_TRACE( cc::trace( "handleSetItemValue called for itemId=" ) + itemId );
-
-            break;
-        }
-    }
-}
-
 JsonObject CoreService::handleBackupVeraRequest( const Json& request ) {
     auto directoryIt = request.find( "directory" );
     if( directoryIt == request.end() || !directoryIt->is_string() ) {
@@ -3043,13 +2909,6 @@ JsonObject CoreService::generateVeraBackupResponse( const std::string& status,
     }
 
     return response;
-}
-
-bool CoreService::getDeviceArmedStatusByItem( const JsonObject& item ) {
-    const auto deviceId = json_get_str( item, ItemFields::DeviceIdFieldName );
-    const JsonObject device =
-        getDBClient().findOne( DBNames::DevicesDB, JSON( db::ID_FIELD_NAME << deviceId ), nullptr );
-    return json_get_bool( device, DeviceFields::ArmedFieldName, false );
 }
 
 bool CoreService::initLogOptionsFromFirmwareConfig() {
@@ -3262,32 +3121,6 @@ JsonObject CoreService::handleBackupCreate( const JsonObject& request ) {
     return helper.getResponse();
 }
 
-void CoreService::turnOffAlarms( const std::vector< std::string >& alarmItemNames ) {
-    CoreDHouseModes::DeviceIDs alarmIds = CoreDHouseModes::getAlarmDeviceIDsAffectedByHouseModes( getDBClient() );
-
-    Json fields = JSON( ItemFields::IdFieldName << 1 << ItemFields::NameFieldName << 1 );
-    for( const auto& alarmDeviceId : alarmIds ) {
-        auto items =
-            getDBClient().findAll( DBNames::ItemsDB, JSON( ItemFields::DeviceIdFieldName << alarmDeviceId ), &fields );
-        const bool alarmNewValue = false;
-
-        for( auto& sirenItemName : alarmItemNames ) {
-            auto it = std::find_if( items.begin(), items.end(), [sirenItemName]( const JsonObject& item ) {
-                return json_get_str( item, ItemFields::NameFieldName ) == sirenItemName;
-            } );
-            if( it != items.end() ) {
-                const auto itemId = json_get_str( *it, ItemFields::IdFieldName );
-                const JsonObject setItemValueRequest{ { db::ID_FIELD_NAME, itemId },
-                                                      { ItemFields::ValueFieldName, alarmNewValue },
-                                                      { RPCParams::SourceField,
-                                                        { { ItemSource::TypeField, ItemSource::HouseMode } } } };
-                handleSetItemValue( setItemValueRequest );
-                break;
-            }
-        }
-    }
-}
-
 void CoreService::handleMessageFromBus( const Services::Message& message, const std::string& sender ) {
     switch( message.msgClass ) {
     case EVENT:
@@ -3317,26 +3150,7 @@ void CoreService::handleEventMessage( const int subClass, const JsonObject& mess
  *      to disarmed/not protected house mode, turn off all sirens.
  */
 void CoreService::handleHouseModeSwitched( const JsonObject& message ) {
-    houseModeSwitchFromArmedToDisarmedMode( message );
-}
-
-void CoreService::houseModeSwitchFromArmedToDisarmedMode( const JsonObject& message ) {
-    int switchToDelay = json_get_int( message, "switchToDelay", -1 );
-    if( switchToDelay != 0 )
-        return;
-    std::string status = json_get_str( message, "status" );
-    if( status != "done" )
-        return;
-    std::string modeFrom = json_get_str( message, "from" );
-    std::string modeTo = json_get_str( message, "to" );
-
-    auto modeFromEntry = CoreDHouseModes::getHouseMode( getDBClient(), modeFrom );
-    if( modeFromEntry && modeFromEntry->m_armed ) {
-        auto modeToEntry = CoreDHouseModes::getHouseMode( getDBClient(), modeTo );
-        if( modeToEntry && !modeToEntry->m_armed ) {
-            turnOffAlarms( getSirenItemNames() );
-        }
-    }
+    m_houseModeAlarms->houseModeSwitchFromArmedToDisarmedMode( message );
 }
 
 }  // namespace CoreD

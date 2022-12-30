@@ -2,7 +2,7 @@ define Package/firmware-addons-bluetooth
 	$(call Package/hub-platform/Default)
 	TITLE=firmware-addons-bluetooth
 	VERSION=1.0
-	EXTRA_DEPENDS += hub-platform-firmware (=2.0.35),
+	EXTRA_DEPENDS += hub-platform-firmware (=2.0.38),
 	EXTRA_DEPENDS += glib2 (=2.46.2-1),
 	EXTRA_DEPENDS += libc (=0.9.33.2-1),
 	EXTRA_DEPENDS += libdbus (=1.9.14-1),

@@ -10044,12 +10044,17 @@
             "deviceId": "40970",
             "manufacturerId": "634",
             "model": "ZEN16",
-            "name": "multirelay",
+            "name": "Zooz Multirelay",
             "pluginId": "1",
             "subcategoryId": "3",
             "typeId": "10",
             "variables": {
-                "productType": "40960"
+                "productType": "40960",
+                "endpointsInfo": [
+                    { "channelId": 1, "name": "Multirelay Switch 1" },
+                    { "channelId": 2, "name": "Multirelay Switch 2" },
+                    { "channelId": 3, "name": "Multirelay Switch 3" }
+                ]
              }
         },
         {
@@ -15204,7 +15209,8 @@
             "pluginId": "4",
             "typeId": "1",
             "variables": {
-                "deviceType": "door_window_sensor"
+                "deviceType": "door_window_sensor",
+                "useCustomSettings": true
             }
         },
         {

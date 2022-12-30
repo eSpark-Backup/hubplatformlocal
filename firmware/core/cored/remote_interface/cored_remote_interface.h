@@ -333,6 +333,7 @@ public:
 
     JsonObject setHouseMode( const HouseModeId& houseModeId ) override;
     CoreDInterface::HouseModeId cancelHouseModeSwitching() override;
+    JsonObject cancelEntryDelay() override;
 
     /* @brief get house modes */
     HouseModesGetResult getHouseModes() const override;

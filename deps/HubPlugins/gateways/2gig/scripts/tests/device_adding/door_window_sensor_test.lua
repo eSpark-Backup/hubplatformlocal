@@ -1,8 +1,9 @@
 local test_utils = require("HUB:2gig/scripts/tests/test_utils")
 local item_factory = require("HUB:2gig/scripts/helpers/item_factory")
 
-test_utils.test_device_adding("2GIG", "DW10-345", "door_window_sensor", {
-    name = "Door & Window Sensor",
+test_utils.test_device_adding("2GIG", "DW30-345", "door_window_sensor", {
+    name = "Outdoor Contact Sensor",
+    name_for_type_device = "Door & Window Sensor",
     category = "security_sensor",
     subcategory = "door",
     items = {

@@ -1,0 +1,3 @@
+local self = ...
+
+self:call("storage/remove_inclusion_restrictions")

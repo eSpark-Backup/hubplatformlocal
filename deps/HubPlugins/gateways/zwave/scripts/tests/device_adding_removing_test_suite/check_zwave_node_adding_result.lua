@@ -68,9 +68,11 @@ local function compare_device_model_impl( root, expected, known_dev_id )
             tests.assert_ne(setting.label, nil, "check label")
             tests.assert_eq(type(setting.label.text), "string", "check setting " .. setting_description .. " label text type")
 
-            tests.assert_eq( setting.enum, setting_info.enum, "check settings enum" )
+            if setting_info.ignore_enum ~= true then
+                tests.assert_eq( setting.enum, setting_info.enum, "check settings enum" )
+            end
 
-            tests.assert_eq(setting.value_default, setting_info.value_default, "Check setting " .. setting_description .. "default value")
+            tests.assert_eq(setting.value_default, setting_info.value_default, "Check setting " .. setting_description .. " default value")
             tests.assert_eq(setting.value_min, setting_info.value_min, "Check setting min value")
             tests.assert_eq(setting.value_max, setting_info.value_max, "Check setting max value")
 

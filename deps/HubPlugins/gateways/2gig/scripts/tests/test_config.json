@@ -25,7 +25,8 @@
                 "pir_detector_test",
                 "tilt_detector_test",
                 "flood_temperature_test",
-                "smoke_co_detector_test"
+                "smoke_co_detector_test",
+                "add_dw10_sensor"
             ]
         },
         {
@@ -86,7 +87,8 @@
                 "single_version_6_test",
                 "single_version_7_test",
                 "single_version_8_test",
-                "single_version_9_test"
+                "single_version_9_test",
+                "single_version_10_test"
             ]
         }
     ]

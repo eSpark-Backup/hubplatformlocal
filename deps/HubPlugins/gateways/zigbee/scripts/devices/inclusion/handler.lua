@@ -14,6 +14,13 @@ function handler.process_node( self, node )
 
     local inclusion_context = self:build_new_tree_model(node)
 
+    local restrictions_helper = hubplugins.object("include_restrictions_helper", "HUB:zigbee/scripts/helpers")
+    local is_restricted = not restrictions_helper:call("check_tree model", inclusion_context.tree_model, inclusion_context.zigbee_node.id)
+    if is_restricted then
+        print("Node " .. inclusion_context.zigbee_node.id .. " is restricted and not added")
+        return
+    end
+
     self:add_tree_to_core(inclusion_context)
 
     self:configure_attributes_reporting(inclusion_context.tree_model)

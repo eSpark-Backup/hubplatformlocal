@@ -300,7 +300,7 @@ function core.add_setting(new_setting)
         }
     })
 
-    local tag = setting.descriptor and setting.descriptor.tag or setting.tag
+    local tag = setting.descriptor and setting.descriptor.tag or (setting.tag or (setting.info and setting.info.tag))
 
     setting.descriptor = nil
     setting.value_mapping = nil

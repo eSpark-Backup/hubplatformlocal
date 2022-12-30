@@ -423,6 +423,12 @@ const char* const DeviceData = "deviceData";
 const char* const SourceField = "source";
 const char* const SeparateChildDevices = "separateChildDevices";
 const char* const ParentRoom = "parentRoom";
+const char* const Begin = "begin";
+const char* const Done = "done";
+const char* const Main = "main";
+const char* const Canceled = "canceled";
+const char* const EntryDelay = "entryDelay";
+const char* const Bypass = "bypass";
 }  // namespace RPCParams
 
 namespace ItemSource {

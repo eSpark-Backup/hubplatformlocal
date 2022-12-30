@@ -1,0 +1,3 @@
+local self, restrictions = ...
+
+self._storage.delete("include_restrictions")

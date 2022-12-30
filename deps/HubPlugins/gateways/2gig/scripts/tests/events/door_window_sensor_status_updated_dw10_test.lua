@@ -3,6 +3,7 @@ local tests = require( "tests" )
 local door_window_sensor = require("HUB:2gig/scripts/model/devices/door_window_sensor")
 local door_window_states = require("HUB:2gig/scripts/enum/door_window_states")
 local tampering_cover_states = require("HUB:2gig/scripts/enum/tampering_cover_states")
+local storage_utils = require("HUB:2gig/scripts/helpers/storage_utils")
 local send_event = loadfile("HUB:2gig/scripts/events/events_handling")
 local add_device = loadfile("HUB:2gig/scripts/add_device")
 
@@ -69,66 +70,55 @@ check_event(
     }
 )
 
--- test closed
-check_event(
-    {
-        reed_closed = false,
-        tamper_detected = false,
-        external_contact = true,
-        low_battery = false
-    },
-    {
-        { item_ids.door_window_state_id, door_window_states.dw_is_closed },
-        { item_ids.security_threat_id, false },
-        { item_ids.tampering_cover_alarm_id, tampering_cover_states.ok },
-        { item_ids.battery_id, 100 },
-    }
-)
+-- prepare for dw state tests
+local function test_dw_state(reed_closed, external_contact, dw_state)
+    check_event(
+        {
+            reed_closed = reed_closed,
+            tamper_detected = false,
+            external_contact = external_contact,
+            low_battery = false
+        },
+        {
+            { item_ids.door_window_state_id, dw_state },
+            { item_ids.security_threat_id, dw_state ~= door_window_states.dw_is_closed },
+            { item_ids.tampering_cover_alarm_id, tampering_cover_states.ok },
+            { item_ids.battery_id, 100 },
+        }
+    )
+end
 
--- test closed second
-check_event(
-    {
-        reed_closed = false,
-        tamper_detected = false,
-        external_contact = false,
-        low_battery = false
-    },
-    {
-        { item_ids.door_window_state_id, door_window_states.dw_is_closed },
-        { item_ids.security_threat_id, false },
-        { item_ids.tampering_cover_alarm_id, tampering_cover_states.ok },
-        { item_ids.battery_id, 100 },
-    }
-)
+local setting_id = storage_utils.find_setting_id( storage_utils.find_device_id(123), "dw_detection_source" )
+tests.assert_ne(setting_id, nil)
 
--- test opened
-check_event(
-    {
-        reed_closed = true,
-        tamper_detected = false,
-        external_contact = true,
-        low_battery = false
-    },
-    {
-        { item_ids.door_window_state_id, door_window_states.dw_is_opened },
-        { item_ids.security_threat_id, true },
-        { item_ids.tampering_cover_alarm_id, tampering_cover_states.ok },
-        { item_ids.battery_id, 100 },
-    }
-)
+-- test magnet contact
+core.set_setting_value(setting_id, "magnet_contact", "synced")
 
--- test opened second
-check_event(
-    {
-        reed_closed = true,
-        tamper_detected = false,
-        external_contact = false,
-        low_battery = false
-    },
-    {
-        { item_ids.door_window_state_id, door_window_states.dw_is_opened },
-        { item_ids.security_threat_id, true },
-        { item_ids.tampering_cover_alarm_id, tampering_cover_states.ok },
-        { item_ids.battery_id, 100 },
-    }
-)
+test_dw_state(false, true, door_window_states.dw_is_closed)
+test_dw_state(false, false, door_window_states.dw_is_closed)
+test_dw_state(true, true, door_window_states.dw_is_opened)
+test_dw_state(true, false, door_window_states.dw_is_opened)
+
+-- test external contact
+core.set_setting_value(setting_id, "external_contact", "synced")
+
+test_dw_state(false, false, door_window_states.dw_is_closed)
+test_dw_state(true, false, door_window_states.dw_is_closed)
+test_dw_state(false, true, door_window_states.dw_is_opened)
+test_dw_state(true, true, door_window_states.dw_is_opened)
+
+-- test mixed optimistic
+core.set_setting_value(setting_id, "mixed_optimistic", "synced")
+
+test_dw_state(false, false, door_window_states.dw_is_closed)
+test_dw_state(true, false, door_window_states.dw_is_closed)
+test_dw_state(false, true, door_window_states.dw_is_closed)
+test_dw_state(true, true, door_window_states.dw_is_opened)
+
+-- test mixed pessimistic
+core.set_setting_value(setting_id, "mixed_pessimistic", "synced")
+
+test_dw_state(false, false, door_window_states.dw_is_closed)
+test_dw_state(true, false, door_window_states.dw_is_opened)
+test_dw_state(false, true, door_window_states.dw_is_opened)
+test_dw_state(true, true, door_window_states.dw_is_opened)

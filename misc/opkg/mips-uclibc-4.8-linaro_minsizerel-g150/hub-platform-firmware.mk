@@ -1,7 +1,7 @@
 define Package/hub-platform-firmware
 	$(call Package/hub-platform/Default)
 	TITLE=hub-platform-firmware
-	VERSION=2.0.35
+	VERSION=2.0.38
 	EXTRA_DEPENDS += firmware-common-addon_interfaces (=1.0),
 	EXTRA_DEPENDS += firmware-common-base_utils (=1.0),
 	EXTRA_DEPENDS += firmware-common-bus (=1.0),

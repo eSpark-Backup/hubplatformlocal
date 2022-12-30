@@ -410,8 +410,8 @@ TEST_F( HouseModesBypassTests, protectNotificationNotSentForBypassDevice ) {  //
 
     ASSERT_TRUE( setHouseModeProtectOn( coredRemote, houseModeId, __LINE__ ) );
     triggerBypassedSecurityItem( coredRemote, itemId, __LINE__ );
-    testHouseModeAlarmedBroadcast( houseModeId, deviceIds.front(), __LINE__ );
 
+    testHouseModeAlarmedPhaseStatusBroadcast( houseModeId, deviceIds.front(), "bypass", "done", __LINE__ );
     HouseModeToDevicesMap expected = getEmptyModeToDevicesMap();
     expected[ houseModeId ] = deviceIds;
     cleanup( expected, __LINE__ );

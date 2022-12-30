@@ -7,7 +7,7 @@ info.master_device = {
     type = "sensor",
     device_type_id = "test",
     battery_powered = true,
-    items = { "motion" }
+    items = { "motion", "security_threat" }
 }
 
 return info

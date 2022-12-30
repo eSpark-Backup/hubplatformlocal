@@ -37,4 +37,5 @@ return {
     "plug_interior_with_hw_state",
     "siren_sensor",
     "water_leak_sensor",
+    "co_sensor"
 }

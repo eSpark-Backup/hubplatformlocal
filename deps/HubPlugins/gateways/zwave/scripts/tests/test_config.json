@@ -264,7 +264,8 @@
                 "add_fibaro_fgpb_101_test",
                 "add_remove_zooz_zen30_test",
                 "add_remove_swf_dual_shutters",
-                "add_remove_dw_tilt_sensor_test"
+                "add_remove_dw_tilt_sensor_test",
+                "add_remove_zooz_zen16_test"
             ]
         },
         {
@@ -356,7 +357,8 @@
                 "zipato_ph-psr03_us_test",
                 "building36_thermostat_setpoint_updated_test",
                 "swf_dual_shutters_test",
-                "dw_tilt_sensor_test"
+                "dw_tilt_sensor_test",
+                "zooz_zen16_requests_test"
             ]
         },
         {
@@ -396,7 +398,8 @@
                 "same_version_no_device_test",
                 "schedule_entry_lock_migration_test",
                 "user_code_names_migration_test",
-                "incomplete_root_device_test"
+                "incomplete_root_device_test",
+                "dont_add_restricted_device_test"
             ]
         },
         {
@@ -598,6 +601,19 @@
             "setup_script": "setup",
             "test_cases": [
                 "s2_select_authentication_modes_test"
+            ]
+        },
+        {
+            "name": "include_restrictions",
+            "directory": "include_restrictions_test_suite",
+            "setup_script": "setup",
+            "test_cases": [
+                "insert_restrictions_test",
+                "inclusion_start_test",
+                "inclusion_stop_test",
+                "node_not_added_test",
+                "node_added_test",
+                "on_node_removed_test"
             ]
         }
     ]

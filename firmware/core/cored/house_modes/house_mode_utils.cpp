@@ -792,6 +792,28 @@ void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
     broadcaster.sendBroadcast( HOUSE_MODE_ALARMED, data );
 }
 
+void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
+                                    const std::string& modeId,
+                                    const std::string& status,
+                                    const std::string& phase,
+                                    const std::string& deviceId,
+                                    int pendingDelay ) {
+    using namespace Resources::BroadcastFields;
+    auto timestamp = std::chrono::steady_clock::now().time_since_epoch().count();
+    Json data = JSON( ModeIdFieldName << modeId << DeviceTimestampFieldName << timestamp << DeviceStatusFieldName
+                                      << status << DevicePhaseFieldName << phase );
+
+    if( !deviceId.empty() ) {
+        data[ DeviceIdFieldName ] = deviceId;
+    }
+
+    if( pendingDelay ) {
+        data[ DevicePendingDelay ] = pendingDelay;
+    }
+
+    broadcaster.sendBroadcast( HOUSE_MODE_ALARMED, data );
+}
+
 bool setProtect( Services::Service& broadcaster, IDbModifier& dBModifier, const std::string& modeId, bool protect ) {
     IDbClient& dbClient = dBModifier.getDBClient();
 
@@ -1187,6 +1209,10 @@ JsonArray findHouseModesArrayField( IDbClient& dbClient, const std::string& mode
         json_get_arr( json, fieldName, result );
 
     return result;
+}
+
+JsonObject getHouseModesAlarmDevicesEvent( IDbClient& dbClient, const std::string& id ) {
+    return dbClient.findOne( HaTempHouseModesAlarmDevicesDBName, JSON( db::ID_FIELD_NAME << id ), nullptr );
 }
 
 JsonObject getHouseModesAlarmDevicesEvents( IDbClient& dbClient ) {

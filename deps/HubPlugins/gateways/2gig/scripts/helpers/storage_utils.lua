@@ -120,7 +120,7 @@ function storage_utils.register_entities(entity_lookup_keys_by_device_id, entity
 end
 
 function storage_utils.register_entity(entity_lookup_keys_by_device_id, entity_id_by_lookup_key, device_id, entity_id, ...)
-    local lookup_keys = storage.get_table(entity_lookup_keys_by_device_id(device_id))
+    local lookup_keys = storage.get_table(entity_lookup_keys_by_device_id(device_id)) or {}
 
     if lookup_keys then
         storage.set_string(entity_id_by_lookup_key(device_id, ...), entity_id)

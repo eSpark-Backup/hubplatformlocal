@@ -17,7 +17,9 @@ value = setting.value_max ~= nil and value > setting.value_max and setting.value
 
 core.set_setting_value(params.setting_id, value, "synced")
 
-local tx_id = storage_utils.find_serial(setting.device_id)
-twogig.configure_device({ math.floor(tx_id) }, {
-    [setting.info.tag] = value
-})
+if loadfile("HUB:2gig/scripts/helpers/should_setting_configure_device")(setting.info.tag) then
+    local tx_id = storage_utils.find_serial(setting.device_id)
+    twogig.configure_device({ math.floor(tx_id) }, {
+        [setting.info.tag] = value
+    })
+end

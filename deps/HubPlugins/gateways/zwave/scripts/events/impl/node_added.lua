@@ -19,13 +19,20 @@ do
     local inclusion_context = dev_handler:call("process_node", node)
     print("memory_consumption: node added 5: " .. collectgarbage("count")*1024)
 
+    local restrictions_helper = hubplugins.object("include_restrictions_helper", "HUB:zwave/scripts/helpers")
+    local is_restricted = not restrictions_helper:call("check_tree model", inclusion_context.device_tree_model, inclusion_context.zwave_node.id)
+    if is_restricted then
+        print("Node " .. inclusion_context.zwave_node.id .. " is restricted and not added")
+        return
+    end
+
     dev_handler:call("add_tree_to_core", inclusion_context)
     print("memory_consumption: node added 6: " .. collectgarbage("count")*1024)
 
     zwave.request_node_values(
-        tostring(params.node_id), 
-        dev_handler.device_info.request_value_delay, 
-        hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/get_unset_pin_codes_count_to_stop_requesting")(dev_handler.device_info), 
+        tostring(params.node_id),
+        dev_handler.device_info.request_value_delay,
+        hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/get_unset_pin_codes_count_to_stop_requesting")(dev_handler.device_info),
         true
     )
     print("memory_consumption: node added 7: " .. collectgarbage("count")*1024)

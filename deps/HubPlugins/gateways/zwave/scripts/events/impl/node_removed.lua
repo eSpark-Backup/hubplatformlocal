@@ -6,6 +6,9 @@ local manufacturer_id = params.manufacturer_id
 local product_type = params.product_type
 local product_id = params.product_id
 
+local restrictions_helper = hubplugins.object("include_restrictions_helper", "HUB:zwave/scripts/helpers")
+restrictions_helper:call("node_removed", params.node_id)
+
 do
     hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/stop_daemon")(node_id, manufacturer_id, product_type, product_id)
 end

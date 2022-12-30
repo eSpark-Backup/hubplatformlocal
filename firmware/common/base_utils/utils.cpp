@@ -239,7 +239,7 @@ bool getBinaryFromHex( const std::string& data, std::string& result ) {
         octets[ i % 2 ] = decimal;
 
         if( i % 2 == 1 ) {
-            unsigned char byte = ( octets[ 0 ] << 8 | octets[ 1 ] );
+            unsigned char byte = ( octets[ 0 ] << 4 | octets[ 1 ] );
             result.push_back( reinterpret_cast< char& >( byte ) );
         }
     }

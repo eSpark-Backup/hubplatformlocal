@@ -3,19 +3,22 @@ require ("HUB:zigbee/scripts/helpers/scripts_preload")
 local storage_helper = hubplugins.object("storage_helper", "HUB:zigbee/scripts/utils")
 
 local migration_table = storage_helper:call("get_table", "migration_table")
+local restrictions_helper = hubplugins.object("include_restrictions_helper", "HUB:zigbee/scripts/helpers")
 
 if not migration_table then
     migration_table = {}
     local zigbee = require("zigbee")
     local nodes = zigbee.get_all_nodes_ids()
     for _, node_id in ipairs(nodes) do
-        table.insert(
-            migration_table,
-            {
-                node_id = node_id,
-                attempt_to_migrate = 0
-            }
-        )
+        if not restrictions_helper:call("storage/is_node_restricted", tonumber(node_id)) then
+            table.insert(
+                migration_table,
+                {
+                    node_id = node_id,
+                    attempt_to_migrate = 0
+                }
+            )
+        end
     end
 
     storage_helper:call("set_table", "migration_table", migration_table)

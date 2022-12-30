@@ -26,6 +26,7 @@ class DeviceInfoBuilder(BaseDeviceInfoBuilder):
             "device_info"
         )
         self.base_devices_dir = path.join(script_folder, "scripts", "model", "devices")
+        self.custom_settings_dir = path.join(script_folder, "scripts", "model", "devices", "custom_settings")
 
     def process_device(self, _device):
         device_type = _device["variables"]["deviceType"]
@@ -45,6 +46,12 @@ class DeviceInfoBuilder(BaseDeviceInfoBuilder):
 
         yield self.create_entry("device_type_id", "{manufacturer}-{model}".format(**self.generate_device_info(_device)))
 
+        if _device["variables"].get("useCustomSettings") is True:
+            if self.has_custom_settings(_device):
+                yield '{0}.{1} = {2}'.format(self.handler_name, "settings", "loadfile(\"{}\")()".format(self.generate_custom_settings_file_path(_device)))
+            else:
+                print(f"Warning: no file with custom settings ({_device['model']})")
+
         child_devices = _device["variables"].get("childDevices", {})
         for idx, device_info in enumerate(child_devices, start=1):
             for name, value in self.base_device_info_items(device_info):
@@ -60,6 +67,9 @@ class DeviceInfoBuilder(BaseDeviceInfoBuilder):
     def generate_device_file_path(self, _device):
         return path.join(self.devices_dir, "{manufacturer}-{model}.lua".format(**self.generate_device_info(_device)))
 
+    def generate_custom_settings_file_path(self, _device):
+        return path.join("HUB:2gig/scripts/model/devices/custom_settings/", "{manufacturer}-{model}".format(**self.generate_device_info(_device)))
+
     def get_file_skeleton_template(self):
         return template_skeleton
 
@@ -71,4 +81,8 @@ class DeviceInfoBuilder(BaseDeviceInfoBuilder):
 
     def is_supported_device_type(self, device_type):
         file_path = path.join(self.base_devices_dir, f"{device_type}.lua")
+        return os.path.isfile(file_path)
+
+    def has_custom_settings(self, _device):
+        file_path = path.join(self.custom_settings_dir, "{manufacturer}-{model}.lua".format(**self.generate_device_info(_device)))
         return os.path.isfile(file_path)
