@@ -18,6 +18,12 @@ public:
                                         const std::string& deviceId,
                                         int codeLine,
                                         std::chrono::seconds timeoutSeconds = progressBroadcastTimeout );
+    void testHouseModeAlarmedPhaseStatusBroadcast( const std::string& mode,
+                                                   const std::string& deviceId,
+                                                   const std::string& phase,
+                                                   const std::string& status,
+                                                   int codeLine,
+                                                   std::chrono::seconds timeoutSeconds = progressBroadcastTimeout );
     void testHouseModesSwitchedBroadcast( const std::string& mode,
                                           const std::string& status,
                                           int codeLine,
@@ -158,6 +164,8 @@ public:
                                                                   int codeLine );
 
     DeviceWithOneItemData addDeviceWithSecurityThreatItem( int codeLine );
+
+    DeviceWithOneItemData addDeviceWithSmokeSensorItem( int codeLine );
 
     void setItemValue( CoreDRemoteInterface::CoreDInterface& coreRemoteInterface,
                        const std::string& itemId,

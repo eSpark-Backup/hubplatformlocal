@@ -1580,5 +1580,459 @@
                 "value": 0
             }
         }
+    ],
+    "634_40960_40970": [
+        {
+            "name": "On Off Status Aer Power Failure",
+            "description": "Set the on off status for the relays after power failure",
+            "type": "token",
+            "enum": {
+                "force_off": {
+                    "value": 0,
+                    "text": "ALL relays forced to OFF"
+                },
+                "restore": {
+                    "value": 1,
+                    "text": "ALL relays remember and restore on/off status after power failure"
+                },
+                "force_on": {
+                    "value": 2,
+                    "text": "ALL forced to ON (regardless of state prior to power outage)"
+                },
+                "first_second_restore_third_off": {
+                    "value": 3,
+                    "text": "Relay 1 and Relay 2 remember and restore on/off status after power failure, Relay 3 forced to OFF"
+                },
+                "first_second_restore_third_on": {
+                    "value": 4,
+                    "text": "Relay 1 and Relay 2 remember and restore on/off status after power failure, Relay 3 forced to ON"
+                }
+            },
+            "configuration": {
+                "number": 1,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Switch Type for Relay 1 (Sw1)",
+            "description": "Choose the wall switch type you want to connect to the Sw1 terminal",
+            "type": "token",
+            "enum": {
+                "momentary": {
+                    "value": 0,
+                    "text": "Momentary for lights only"
+                },
+                "toggle_switch_up_down": {
+                    "value": 1,
+                    "text": "Toggle switch (light on when the switch is toggled up, light off when the switch is toggled down)"
+                },
+                "toggle_switch": {
+                    "value": 2,
+                    "text": "Toggle switch (state changes whenever the switch is toggled)"
+                },
+                "garage_door": {
+                    "value": 3,
+                    "text": "Garage door (momentary mode for Z-Wave control)"
+                }
+            },
+            "configuration": {
+                "number": 2,
+                "size": 1,
+                "value": 2
+            }
+        },
+        {
+            "name": "Switch Type for Relay 2 (Sw2)",
+            "description": "Choose the wall switch type you want to connect to the Sw1 terminal",
+            "type": "token",
+            "enum": {
+                "momentary": {
+                    "value": 0,
+                    "text": "Momentary for lights only"
+                },
+                "toggle_switch_up_down": {
+                    "value": 1,
+                    "text": "Toggle switch (light on when the switch is toggled up, light off when the switch is toggled down)"
+                },
+                "toggle_switch": {
+                    "value": 2,
+                    "text": "Toggle switch (state changes whenever the switch is toggled)"
+                },
+                "garage_door": {
+                    "value": 3,
+                    "text": "Garage door (momentary mode for Z-Wave control)"
+                }
+            },
+            "configuration": {
+                "number": 3,
+                "size": 1,
+                "value": 2
+            }
+        },
+        {
+            "name": "Switch Type for Relay 3 (Sw3)",
+            "description": "Choose the wall switch type you want to connect to the Sw1 terminal",
+            "type": "token",
+            "enum": {
+                "momentary": {
+                    "value": 0,
+                    "text": "Momentary for lights only"
+                },
+                "toggle_switch_up_down": {
+                    "value": 1,
+                    "text": "Toggle switch (light on when the switch is toggled up, light off when the switch is toggled down)"
+                },
+                "toggle_switch": {
+                    "value": 2,
+                    "text": "Toggle switch (state changes whenever the switch is toggled)"
+                },
+                "garage_door": {
+                    "value": 3,
+                    "text": "Garage door (momentary mode for Z-Wave control)"
+                }
+            },
+            "configuration": {
+                "number": 4,
+                "size": 1,
+                "value": 2
+            }
+        },
+        {
+            "name": "LED Indicator Control",
+            "description": " Choose if you want the LED indicator to turn on when any of the relays are on or if all of them are off, or if you want it to remain on or off at all times",
+            "type": "token",
+            "enum": {
+                "led_on_when_all_off": {
+                    "value": 0,
+                    "text": "LED indicator is on when ALL of the relays are off, LED indicator is off when any of the relays is on"
+                },
+                "led_on_when_any_on": {
+                    "value": 1,
+                    "text": "LED indicator is on when any of the relays is on, LED indicator is off when ALL of the relays are off"
+                },
+                "always_off": {
+                    "value": 2,
+                    "text": "LED indicator is always off"
+                },
+                "always_on": {
+                    "value": 3,
+                    "text": "LED indicator is always on"
+                }
+            },
+            "configuration": {
+                "number": 5,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer for Relay 1",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 1 to automatically turn off once it has been turned on. The number entered as value corresponds to the number of minutes, seconds, or hourss (set the unit in Par. 15).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 6,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer for Relay 1",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 1 to automatically turn on once it has been turned off. The number entered as value corresponds to the number of minutes, seconds, or hours (set the unit in Par. 16).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 7,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer for Relay 2",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 2 to automatically turn off once it has been turned on. The number entered as value corresponds to the number of minutes, seconds, or hourss (set the unit in Par. 17).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 8,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer for Relay 2",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 2 to automatically turn on once it has been turned off. The number entered as value corresponds to the number of minutes, seconds, or hours (set the unit in Par. 18).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 9,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer for Relay 3",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 3 to automatically turn off once it has been turned on. The number entered as value corresponds to the number of minutes, seconds, or hourss (set the unit in Par. 19).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 10,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer for Relay 3",
+            "description": "Use this parameter to set the time after which you want the device connected to Relay 3 to automatically turn on once it has been turned off. The number entered as value corresponds to the number of minutes, seconds, or hours (set the unit in Par. 20).",
+            "type": "int",
+            "value_min": 0,
+            "value_max": 65535,
+            "configuration": {
+                "number": 11,
+                "size": 4,
+                "value": 0
+            }
+        },
+        {
+            "name": "Enable/Disable Manual Control for Sw1",
+            "description": "Enable or disable physical on/off control of Relay 1 from the wall switch connected to Sw1 terminal. If disabled, you'll only be able to control the connected device via Z-Wave",
+            "type": "token",
+            "enum": {
+                "disabled": {
+                    "value": 0,
+                    "text": "Local control disabled"
+                },
+                "enabled": {
+                    "value": 1,
+                    "text": "Local control enabled"
+                },
+                "disabled_with_reports_enabled": {
+                    "value": 2,
+                    "text": "Local control disabled with enabled on/off reports (connected switch won't control the relay but it will send on/off reports to the hub when triggered)."
+                }
+            },
+            "configuration": {
+                "number": 12,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Enable/Disable Manual Control for Sw2",
+            "description": "Enable or disable physical on/off control of Relay 2 from the wall switch connected to Sw2 terminal. If disabled, you'll only be able to control the connected device via Z-Wave",
+            "type": "token",
+            "enum": {
+                "disabled": {
+                    "value": 0,
+                    "text": "Local control disabled"
+                },
+                "enabled": {
+                    "value": 1,
+                    "text": "Local control enabled"
+                },
+                "disabled_with_reports_enabled": {
+                    "value": 2,
+                    "text": "Local control disabled with enabled on/off reports (connected switch won't control the relay but it will send on/off reports to the hub when triggered)."
+                }
+            },
+            "configuration": {
+                "number": 13,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Enable/Disable Manual Control for Sw3",
+            "description": "Enable or disable physical on/off control of Relay 3 from the wall switch connected to Sw3 terminal. If disabled, you'll only be able to control the connected device via Z-Wave",
+            "type": "token",
+            "enum": {
+                "disabled": {
+                    "value": 0,
+                    "text": "Local control disabled"
+                },
+                "enabled": {
+                    "value": 1,
+                    "text": "Local control enabled"
+                },
+                "disabled_with_reports_enabled": {
+                    "value": 2,
+                    "text": "Local control disabled with enabled on/off reports (connected switch won't control the relay but it will send on/off reports to the hub when triggered)."
+                }
+            },
+            "configuration": {
+                "number": 14,
+                "size": 1,
+                "value": 1
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer Unit for Relay 1",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-off timer for Relay 1",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 15,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer Unit for Relay 1",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-on timer for Relay 1",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 16,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer Unit for Relay 2",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-off timer for Relay 2",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 17,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer Unit for Relay 2",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-on timer for Relay 2",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 18,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-Off Timer Unit for Relay 3",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-off timer for Relay 3",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 19,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "Auto Turn-On Timer Unit for Relay 3",
+            "description": "Choose between seconds, minutes, and hours as the unit for the auto turn-on timer for Relay 3",
+            "type": "token",
+            "enum": {
+                "minutes": {
+                    "value": 0,
+                    "text": "Minutes"
+                },
+                "seconds": {
+                    "value": 1,
+                    "text": "Seconds"
+                },
+                "hours": {
+                    "value": 2,
+                    "text": "Hours"
+                }
+            },
+            "configuration": {
+                "number": 20,
+                "size": 1,
+                "value": 0
+            }
+        },
+        {
+            "name": "DC Motor Mode",
+            "description": "Sync R1 and R2 together to prevent them from being activated at the same time",
+            "type": "token",
+            "enum": {
+                "disabled": {
+                    "value": 0,
+                    "text": "DC motor mode disabled"
+                },
+                "enabled": {
+                    "value": 1,
+                    "text": "DC motor mode enabled"
+                }
+            },
+            "configuration": {
+                "number": 24,
+                "size": 1,
+                "value": 0
+            }
+        }
     ]
 }

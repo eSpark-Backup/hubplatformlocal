@@ -213,7 +213,21 @@
                 "required_cluster_in_node_test",
                 "leave_old_value_for_user_codes",
                 "same_version_no_device_mapping_test",
-                "same_version_no_device_test"
+                "same_version_no_device_test",
+                "dont_add_restricted_device_test"
+            ]
+        },
+        {
+            "name": "include_restrictions_test_suite",
+            "directory": "include_restrictions_test_suite",
+            "setup_script": "setup",
+            "test_cases": [
+                "inclusion_start_test",
+                "inclusion_stop_test",
+                "insert_restrictions_test",
+                "node_added_test",
+                "node_not_added_test",
+                "on_node_removed_test"
             ]
         }
     ]

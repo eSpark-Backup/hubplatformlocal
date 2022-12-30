@@ -17,7 +17,7 @@ utils.for_each_device = function(filter, callback)
                     local device_info = require("HUB:2gig/scripts/model/devices/generated/" .. device.device_type_id)
                     device_type = device_info.device_type
                 end
-    
+
                 if filter[device_type] ~= nil then
                     callback(device)
                 end
@@ -36,6 +36,14 @@ utils.add_item = function(device_id, item)
     item.device_id = device_id
     local core_item_id = core.add_item(item)
     storage_utils.register_item(device_id, core_item_id, item.name)
+end
+
+utils.add_setting = function(device_id, setting)
+    setting.device_id = device_id
+    local tag = setting.info.tag
+
+    local core_setting_id = core.add_setting(setting)
+    storage_utils.register_setting(device_id, core_setting_id, tag)
 end
 
 return utils

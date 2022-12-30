@@ -2,7 +2,7 @@ define Package/firmware-addons-lua
 	$(call Package/hub-platform/Default)
 	TITLE=firmware-addons-lua
 	VERSION=1.0
-	EXTRA_DEPENDS += hub-platform-firmware (=2.0.35),
+	EXTRA_DEPENDS += hub-platform-firmware (=2.0.38),
 	EXTRA_DEPENDS += libc (=1.1.23-2),
 	EXTRA_DEPENDS += libcurl (=7.58.0-1),
 	EXTRA_DEPENDS += libgcc (=7.4.0-2),

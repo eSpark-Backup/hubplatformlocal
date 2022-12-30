@@ -109,6 +109,13 @@ void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
                                     const std::string& modeId,
                                     const std::string& deviceId );
 
+void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
+                                    const std::string& modeId,
+                                    const std::string& status,
+                                    const std::string& phase,
+                                    const std::string& deviceId,
+                                    int pendingDelay = 0 );
+
 bool addAlarmsOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
 bool removeAlarmsOffDevice( IDbClient& dbClient, const std::string& modeId, const std::string& deviceId );
 
@@ -136,6 +143,7 @@ size_t getSecurityDeviceItemPairs( const IDbClient& dbClient,
 
 JsonArray findHouseModesArrayField( IDbClient& dbClient, const std::string& modeId, const char* fieldName );
 
+JsonObject getHouseModesAlarmDevicesEvent( IDbClient& dbClient, const std::string& id );
 JsonObject getHouseModesAlarmDevicesEvents( IDbClient& dbClient );
 void deleteDeviceFromHouseModesAlarmedList( IDbClient& dbClient, const std::string& id );
 void addDeviceToHouseModesAlarmedList( IDbClient& dbClient, const std::string& id, unsigned long timestamp, int delay );

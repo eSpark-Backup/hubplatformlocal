@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <chrono>
 
 namespace HubPlatform {
 namespace Tests {
@@ -831,7 +832,7 @@ TEST_F( ExternalControllersTest, setItemValue ) {  // 4.1
     Json actualResponse;
 
     setCredentials( 410, "&0000410", "&0000410-uuid", { "&0000410-key-1", "&0000410-key-2" }, FwCertsType::Broken );
-
+    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
     externalControllers().setItemValue( "&0000410",
                                         JSON( "_id"
                                               << "item-1.1.2"
@@ -875,7 +876,7 @@ TEST_F( ExternalControllersTest, setDeviceArmed ) {  // 4.2
                                  "}";
 
     setCredentials( 420, "&0000420", "&0000420-uuid", { "&0000420-key-1", "&0000420-key-2" }, FwCertsType::Broken );
-
+    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
     nma().setCloudMethod( "cloud.controller_raw_command", [&]( rpc::Message& rpcMessage ) {
         JsonObject& request = rpcMessage.getMessage();
         EXPECT_EQ( json_get_str( request, "method" ), "cloud.controller_raw_command" );

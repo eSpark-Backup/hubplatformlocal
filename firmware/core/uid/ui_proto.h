@@ -78,6 +78,7 @@ private:
     void invokeHouseModeGetCurrentHandler( rpc::Message& rpcMessage );
     void invokeHouseModeSet( rpc::Message& rpcMessage );
     void invokeHouseModeCancelSwitching( rpc::Message& rpcMessage );
+    void invokeHouseModeCancelEntryDelay( rpc::Message& rpcMessage );
     void invokeHouseModeSetSwitchDelay( rpc::Message& rpcMessage );
     void invokeHouseModeSetAlarmDelay( rpc::Message& rpcMessage );
     void invokeSetDisarmedDefaultForHouseMode( rpc::Message& rpcMessage );

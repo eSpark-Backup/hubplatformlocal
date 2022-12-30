@@ -46,6 +46,10 @@ const char* const DisarmedDeviceFieldName = "disarmedDevice";
 const char* const CamerasOffDeviceFieldName = "camerasOffDevice";
 const char* const DeviceIdsFieldName = "deviceIds";
 const char* const DeviceIdFieldName = "deviceId";
+const char* const DevicePhaseFieldName = "phase";
+const char* const DeviceStatusFieldName = "status";
+const char* const DeviceTimestampFieldName = "timestamp";
+const char* const DevicePendingDelay = "pendingDelay";
 }  // namespace BroadcastFields
 
 namespace ScriptEvents {

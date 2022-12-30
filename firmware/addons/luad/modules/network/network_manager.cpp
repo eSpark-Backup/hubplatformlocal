@@ -308,6 +308,20 @@ void NetworkManager::setOption( const std::string& groupName,
             throw AsyncSocketError( "fail to set option: " + std::to_string( errno ) );
         }
     }
+    else if( option == "ip-add-membership" ) {
+        auto& asyncSocket = asyncSocketsClient.getAsyncSocket( connectionHandle );
+        auto res = asyncSocket->setopt( IPPROTO_IP, IP_ADD_MEMBERSHIP, value );
+        if( res != 0 ) {
+            throw AsyncSocketError( "fail to set option: " + std::to_string( errno ) );
+        }
+    }
+    else if( option == "ip-drop-membership" ) {
+        auto& asyncSocket = asyncSocketsClient.getAsyncSocket( connectionHandle );
+        auto res = asyncSocket->setopt( IPPROTO_IP, IP_DROP_MEMBERSHIP, value );
+        if( res != 0 ) {
+            throw AsyncSocketError( "fail to set option: " + std::to_string( errno ) );
+        }
+    }
     else {
         throw AsyncSocketError( "unknown option" );
     }

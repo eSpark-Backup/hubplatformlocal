@@ -283,25 +283,28 @@ public:
     GeoPositionState getGeoPosition() const override {
         return {};
     }
-    JsonObject getAllRooms() {
+    JsonObject getAllRooms() override {
         return {};
     };
-    JsonObject createRoom( const std::string& name ) {
+    JsonObject createRoom( const std::string& name ) override {
         return {};
     };
-    JsonObject setRoomName( const RoomId& roomId, const std::string& newName ) {
+    JsonObject setRoomName( const RoomId& roomId, const std::string& newName ) override {
         return {};
     };
-    JsonObject setRoomsOrder( const std::vector< RoomId >& orderedRooms ) {
+    JsonObject setRoomsOrder( const std::vector< RoomId >& orderedRooms ) override {
         return {};
     };
-    JsonObject getRoom( const RoomId& roomId ) {
+    JsonObject getRoom( const RoomId& roomId ) override {
         return {};
     };
-    JsonObject deleteRoom( const RoomId& roomId ) {
+    JsonObject deleteRoom( const RoomId& roomId ) override {
         return {};
     };
-    JsonObject deleteAllRooms() {
+    JsonObject deleteAllRooms() override {
+        return {};
+    };
+    JsonObject cancelEntryDelay() override {
         return {};
     };
 };

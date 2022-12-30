@@ -1,0 +1,3 @@
+local self, restrictions = ...
+
+self:call("storage/set_table", "include_restrictions", restrictions)

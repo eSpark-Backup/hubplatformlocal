@@ -1,0 +1,3 @@
+local self, node_id = ...
+
+self:call("storage/remove_restricted_node_id", node_id)

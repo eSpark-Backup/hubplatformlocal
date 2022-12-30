@@ -410,6 +410,12 @@ extern const char* const DeviceData;
 extern const char* const SourceField;
 extern const char* const SeparateChildDevices;
 extern const char* const ParentRoom;
+extern const char* const Begin;
+extern const char* const Done;
+extern const char* const Main;
+extern const char* const Canceled;
+extern const char* const EntryDelay;
+extern const char* const Bypass;
 }  // namespace RPCParams
 
 namespace ItemSource {

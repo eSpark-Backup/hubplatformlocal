@@ -23,11 +23,31 @@ void CoreNmaTest::testHouseModeAlarmedBroadcast( const std::string& mode,
     EXPECT_EQ( json_get_str( result, "deviceId" ), deviceId ) << codeLineStr;
 }
 
+void CoreNmaTest::testHouseModeAlarmedPhaseStatusBroadcast( const std::string& mode,
+                                                            const std::string& deviceId,
+                                                            const std::string& phase,
+                                                            const std::string& status,
+                                                            int codeLine,
+                                                            std::chrono::seconds timeoutSeconds ) {
+    const std::string codeLineStr = getCodeLineString( codeLine );
+
+    const Json broadcast = waitForBroadcast( codeLineStr, timeoutSeconds );
+    EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.alarmed" );
+
+    const Json& result = broadcast[ "result" ];
+    ASSERT_NE( result, nullptr );
+    EXPECT_EQ( json_get_str( result, "modeId" ), mode ) << codeLineStr;
+    EXPECT_EQ( json_get_str( result, "deviceId" ), deviceId ) << codeLineStr;
+    EXPECT_EQ( json_get_str( result, "phase" ), phase ) << codeLineStr;
+    EXPECT_EQ( json_get_str( result, "status" ), status ) << codeLineStr;
+}
+
 void CoreNmaTest::testHouseModesSwitchedBroadcast( const std::string& mode,
                                                    const std::string& status,
                                                    int codeLine,
                                                    std::chrono::seconds timeoutSeconds ) {
-    std::string codeLineStr = "code line: " + std::to_string( codeLine );
+    const std::string codeLineStr = getCodeLineString( codeLine );
+
     JsonObject broadcast = waitForBroadcast(
         "testHouseModesSwitchedBroadcast mode: " + mode + ", status: " + status + ", " + codeLineStr, timeoutSeconds );
     testHouseModesSwitchedBroadcast( broadcast, mode, status, codeLine );
@@ -236,7 +256,6 @@ CoreDRemoteInterface::CoreDInterface::ItemID CoreNmaTest::addItem(
     const CoreD::Model::Item::Enum& enumList,
     int codeLine ) {
     JsonObject broadcast;
-    std::string codeLineStr = "code line: " + std::to_string( codeLine );
     CoreD::Model::Item item( deviceId,
                              name,
                              valueType,
@@ -255,7 +274,7 @@ CoreDRemoteInterface::CoreDInterface::ItemID CoreNmaTest::addItem(
     BroadcastAssert assertPred ) {
     //
     JsonObject broadcast;
-    std::string codeLineStr = "code line: " + std::to_string( codeLine );
+    const std::string codeLineStr = getCodeLineString( codeLine );
 
     auto itemAddingResult = coreRemoteInterface.addItem( item );
     assertTrue( itemAddingResult.second, codeLineStr );
@@ -274,7 +293,7 @@ CoreDRemoteInterface::CoreDInterface::DeviceSettingId CoreNmaTest::addDeviceSett
     CoreD::Model::ValueType valueType,
     int codeLine ) {
     JsonObject broadcast;
-    std::string codeLineStr = "code line: " + std::to_string( codeLine );
+    const std::string codeLineStr = getCodeLineString( codeLine );
 
     CoreD::Model::DeviceSetting setting(
         deviceId, valueType, CoreD::Model::ValueFactory::createDefaultItemValue( valueType ) );
@@ -332,6 +351,25 @@ CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithOneItem( CoreD::Mod
 }
 
 CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithSecurityThreatItem( int codeLine ) {
+    CoreDRemoteInterface::CoreDInterface& coreRemoteInterface = makeRemote( nma() );
+    const std::string deviceCategory = "security_sensor";
+    const std::string deviceSubcategory = "smoke";
+    const std::string testItemName = "security_threat";
+    auto deviceId = addDevice( coreRemoteInterface,
+                               "Controller device-item group device",
+                               deviceCategory,
+                               deviceCategory,
+                               deviceCategory,
+                               deviceSubcategory,
+                               false,
+                               __LINE__ );
+    auto itemId = addItem(
+        coreRemoteInterface, deviceId, testItemName, CoreD::Model::ValueType::Enum::Bool, true, true, codeLine );
+    checkDeviceUpdateBroadcast( deviceId, { { "armed", true } }, __LINE__ );
+    return { deviceId, itemId };
+}
+
+CoreNmaTest::DeviceWithOneItemData CoreNmaTest::addDeviceWithSmokeSensorItem( int codeLine ) {
     CoreDRemoteInterface::CoreDInterface& coreRemoteInterface = makeRemote( nma() );
     const std::string deviceCategory = "security_sensor";
     const std::string deviceSubcategory = "smoke";
@@ -585,7 +623,7 @@ void CoreNmaTest::compareTemperatureValues( const Json& itemInfo,
 }
 
 void CoreNmaTest::checkResult( const Json& request, const std::string& expectedValue, int line ) {
-    std::string codeLineStr = "code line: " + std::to_string( line );
+    const std::string codeLineStr = getCodeLineString( line );
     auto answer = nma().sendtoHubAndGetAnswer( request );
     auto error = answer[ "error" ];
     ASSERT_TRUE( error.empty() ) << error.dump( 4 ) << " " << codeLineStr;
@@ -597,7 +635,7 @@ void CoreNmaTest::checkResult( const Json& request, const std::string& expectedV
 }
 
 void CoreNmaTest::checkFailure( const Json& request, const std::string& errorMessage, int line ) {
-    std::string codeLineStr = "code line: " + std::to_string( line );
+    const std::string codeLineStr = getCodeLineString( line );
     auto answer = nma().sendtoHubAndGetAnswer( request );
     auto error = answer[ "error" ];
     ASSERT_TRUE( error.empty() ) << error.dump( 4 ) << " " << codeLineStr;
@@ -616,7 +654,7 @@ void CoreNmaTest::checkFailure( const Json& request, const std::string& errorMes
 }
 
 void CoreNmaTest::checkUiBroadcast( const std::string& expectedValue, int line ) {
-    std::string codeLineStr = "code line: " + std::to_string( line );
+    const std::string codeLineStr = getCodeLineString( line );
     auto broadcast = waitForBroadcast( std::string( "hub.extensions.plugin.ui_broadcast: " ) + codeLineStr );
     ASSERT_FALSE( broadcast.empty() ) << codeLineStr;
     JsonObject params;

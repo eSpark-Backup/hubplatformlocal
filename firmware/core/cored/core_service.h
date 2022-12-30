@@ -47,6 +47,7 @@ class GatewaySettingDbModifier;
 class DeviceSettingDbModifier;
 class RoomDbModifier;
 class IFeaturesManager;
+class HouseModeAlarms;
 
 class CoreService : public Services::Service, public Messenger {
     friend class UT::DeviceManagerTestSuite;
@@ -149,6 +150,7 @@ protected:
     JsonObject handleSetHubCoordinates( const JsonObject& json );
     JsonObject handleSetHubTimeZone( const JsonObject& params );
     JsonObject handleCancelSwitchHouseMode( const JsonObject& params );
+    JsonObject handleCancelEntryDelay( const JsonObject& params );
     JsonObject handleAddDisarmedDevice( const JsonObject& params );
     JsonObject handleRemoveDisarmedDevice( const JsonObject& params );
     JsonObject handleSetNotificationsForHouseMode( const JsonObject& params );
@@ -239,9 +241,6 @@ private:
 
     bool setHubTimeZone( const std::string& zoneName );
 
-    void checkSecurityThreat( const std::string& itemId );
-    bool getDeviceArmedStatusByItem( const JsonObject& item );
-
     DbModifier::Dictionary getDictionaryOperation( const std::string& key,
                                                    const JsonObject& oldValue,
                                                    const JsonObject& newValue ) const;
@@ -279,14 +278,6 @@ private:
 
     bool handleSetSingleItemValue( const JsonObject& json, const std::string& operationId, const Json& source );
 
-    void runSecurityThreatNotifications( const JsonObject& json, const DeviceID& deviceId );
-    void notifyAllAlarms( const std::vector< std::string >& alarmItemNames,
-                          const std::unique_ptr< CoreDHouseModes::HouseModeEntry >& currentHouseModePtr );
-    void notifyAllCameras( const std::vector< std::string >& cameraItemNames,
-                           const std::unique_ptr< CoreDHouseModes::HouseModeEntry >& currentHouseModePtr );
-    void turnOffAlarms( const std::vector< std::string >& alarmItemNames );
-    void houseModeSwitchFromArmedToDisarmedMode( const JsonObject& message );
-
     JsonObject handleBackupVeraRequest( const Json& request );
     Json readVeraNodesInformation( const std::string& pathToFile ) const;
     std::string findEzloDeviceId( int veraDeviceId ) const;
@@ -295,8 +286,6 @@ private:
     void sendCloudVideoforwardRequest( MessageSubClasses subClass, const Json& json );
     static Json createCloudVideoforwardRequestData( const std::string& identity );
     JsonObject handlePlaceDevice( const JsonObject& request );
-    void addDeviceToHouseModesAlarmedList( const JsonObject& json, const std::string& deviceId, int delay );
-    void deleteDeviceFromHouseModesAlarmedList( const std::string& id );
 
 private:
     std::unique_ptr< RoomManager > m_roomManager;
@@ -317,6 +306,8 @@ private:
     std::unique_ptr< BusDbManager > m_busDBManager;
 
     const std::string& serviceName = getQualifiedName();
+
+    std::unique_ptr< HouseModeAlarms > m_houseModeAlarms;
 };
 
 }  // namespace CoreD

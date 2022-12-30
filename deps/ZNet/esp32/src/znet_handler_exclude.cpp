@@ -92,13 +92,11 @@ void ExcludeHandler::onNodeNoOperation( znet_node_id_t nodeId, znet_error_t erro
 }
 
 void ExcludeHandler::onNodeRem(::znet_error_t err, const ::znet_nodeinfo_t* nodeInfo ) {
-    if( err == ZNET_ERR_OK || nodeInfo ) {
-        if( nodeInfo->node_id == 0 && m_nodeId > 0 ) {
-            znet_nodeinfo_t nodeInfoStart;
-            nodeInfoStart.node_id = m_nodeId;  // it needs only node_id then
-            MonitoringBaseHandler::onNodeRem( err, &nodeInfoStart );
-            return;
-        }
+    if( ( !nodeInfo || nodeInfo->node_id == 0 ) && m_nodeId > 0 ) {
+        znet_nodeinfo_t nodeInfoStart;
+        nodeInfoStart.node_id = m_nodeId;  // it needs only node_id then
+        MonitoringBaseHandler::onNodeRem( err, &nodeInfoStart );
+        return;
     }
     MonitoringBaseHandler::onNodeRem( err, nodeInfo );
 }

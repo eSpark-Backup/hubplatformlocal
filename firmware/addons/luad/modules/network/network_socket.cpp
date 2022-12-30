@@ -103,7 +103,15 @@ int NetworkSocket::bind( const sockaddr* addr, socklen_t len ) {
 
 int NetworkSocket::setopt( int level, int name, bool value ) {
     int optval = value;
-    return ::setsockopt( m_socket, level, name, reinterpret_cast< char* >( &optval ), sizeof( optval ) );
+    struct ip_mreq imr;
+    imr.imr_interface.s_addr = htonl( INADDR_ANY );
+    imr.imr_multiaddr.s_addr = htonl( INADDR_MAX_LOCAL_GROUP );
+    if( name == SO_BROADCAST ) {
+        return ::setsockopt( m_socket, level, name, reinterpret_cast< char* >( &optval ), sizeof( optval ) );
+    }
+    else {
+        return ::setsockopt( m_socket, level, name, reinterpret_cast< char* >( &imr ), sizeof( struct ip_mreq ) );
+    }
 }
 
 ssize_t NetworkSocket::send( const void* buf, size_t n, int flags ) {

@@ -308,6 +308,8 @@ void ExternalControllersTest::setCredentials( int version,
                          << "cloud.access_keys_controller_sync" );
     message[ "result" ] = result;
 
+    LOGGER_ERROR( "message: " + cc::j( message ) );
+
     nma().assignMessageId( message );
     nma().sendtoHub( message, ComponentTestApplication::ConnectionType::NMA );
 }

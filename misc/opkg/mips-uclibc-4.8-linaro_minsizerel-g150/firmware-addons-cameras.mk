@@ -2,7 +2,7 @@ define Package/firmware-addons-cameras
 	$(call Package/hub-platform/Default)
 	TITLE=firmware-addons-cameras
 	VERSION=1.0
-	EXTRA_DEPENDS += hub-platform-firmware (=2.0.35),
+	EXTRA_DEPENDS += hub-platform-firmware (=2.0.38),
 	EXTRA_DEPENDS += libatomic (=4.8-linaro-1),
 	EXTRA_DEPENDS += libc (=0.9.33.2-1),
 	EXTRA_DEPENDS += libcurl (=7.58.0-1),

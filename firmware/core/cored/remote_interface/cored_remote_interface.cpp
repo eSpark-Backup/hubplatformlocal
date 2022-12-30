@@ -1594,6 +1594,14 @@ CoreDInterface::HouseModeId CoreDRemoteInterface::cancelHouseModeSwitching() {
     return json_get_str( response, "modeId" );
 }
 
+JsonObject CoreDRemoteInterface::cancelEntryDelay() {
+    const MessageSubClasses subclass = HOUSE_MODE_CANCEL_ENTRY_DELAY;
+    LOGGER_DEBUG_RAW( "RemoteInterface::cancelEntryDelay, send request with subclass " +
+                      std::to_string( static_cast< int >( subclass ) ) );
+
+    return m_hostService.sendRequest( GroupsNames::CORED, JSON_EMPTY_OBJ, subclass );
+}
+
 CoreDInterface::HouseModesGetResult CoreDRemoteInterface::getHouseModes() const {
     return CoreDHouseModes::getHouseModesList( getDBClient() );
 }

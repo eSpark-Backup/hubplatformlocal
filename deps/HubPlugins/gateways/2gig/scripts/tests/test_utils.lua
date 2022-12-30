@@ -32,7 +32,7 @@ local function check_item(device_idx, device_id, item_idx, item_id, actual, expe
 end
 
 local function check_setting(device_idx, device_id, setting_idx, setting_id, actual, expected)
-    local keys = { "info", "value", "value_default", "value_min", "value_max" }
+    local keys = { "info", "value", "value_default", "value_min", "value_max", "enum" }
 
     for _, key in ipairs(keys) do
         tests.assert_eq(actual[key], expected[key], ('[#%d %s][#%d %s] %s'):format(device_idx, device_id, setting_idx, setting_id, key))
@@ -41,12 +41,12 @@ end
 
 function test_utils.check_devices(expected_devices)
     local devices = core.get_devices()
-    
+
     if devices == nil then
         tests.assert_eq(expected_devices, nil, "devices count = 0")
         return
     end
-    
+
     tests.assert_eq(#devices, #expected_devices, "devices count")
 
     table.sort(devices, compare_ids)
@@ -128,10 +128,15 @@ function test_utils.test_device_adding(manufacturer, model, device_type, base_de
     expected_device_from_model.device_type_id = full_device_model
     expected_device_from_model.info = { manufacturer = manufacturer, model = model }
     expected_device_from_model.battery_powered = true
+    expected_device_from_model.name_for_type_device = nil
 
     local expected_device_from_device_type = tests.deep_copy(base_device)
     expected_device_from_device_type.device_type_id = device_type
     expected_device_from_device_type.battery_powered = true
+    if expected_device_from_device_type.name_for_type_device then
+        expected_device_from_device_type.name = expected_device_from_device_type.name_for_type_device
+        expected_device_from_device_type.name_for_type_device = nil
+    end
 
     test_utils.check_devices({
         expected_device_from_model,

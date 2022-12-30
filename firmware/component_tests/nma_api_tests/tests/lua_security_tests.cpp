@@ -281,7 +281,7 @@ TEST_F( LuadSecurityModuleTests, getAllDigestNames ) {  // 1.7
 TEST_F( LuadSecurityModuleTests, fromHexString ) {  // 1.8
     {                                               // check ok
         auto hexMessage = "DEADbeaf0123456789";
-        const auto expectedValue = "5be09093850be17e72f4824018dcff21";
+        const auto expectedValue = "22ab77d07e45cb0ba02e42f45f922657";
         hashRequest( "from_hex_string", "md5", hexMessage, __LINE__ );
 
         checkUiBroadcast( expectedValue, __LINE__ );
@@ -297,6 +297,25 @@ TEST_F( LuadSecurityModuleTests, fromHexString ) {  // 1.8
         // input data couldn't be transformed to binary
         checkExtensionsPluginRunProgressBroadcast( "failed", __LINE__ );
     }
+}
+
+TEST_F( LuadSecurityModuleTests, fromHexStringToBase64 ) {  // 1.8.1
+    auto hexMessage = "mXOdcs1plinT1EPDFfI7_ffIY4oCredkCmQ6AEOzjQ4";
+    const auto expectedSha256Value = "c393db3f0f5a680ffd1d2a38373b525ad5e4e0702c2ba9720502a9c0f0761f8c";
+    hashRequest( "", "sha256", hexMessage, __LINE__ );
+
+    checkUiBroadcast( expectedSha256Value, __LINE__ );
+
+    checkExtensionsPluginRunProgressBroadcast( "started", __LINE__ );
+    checkExtensionsPluginRunProgressBroadcast( "finished", __LINE__ );
+
+    hashRequest( "from_hex_string", "base64", expectedSha256Value, __LINE__ );
+
+    auto expectedBase64 = "w5PbPw9aaA/9HSo4NztSWtXk4HAsK6lyBQKpwPB2H4w=";
+    checkUiBroadcast( expectedBase64, __LINE__ );
+
+    checkExtensionsPluginRunProgressBroadcast( "started", __LINE__ );
+    checkExtensionsPluginRunProgressBroadcast( "finished", __LINE__ );
 }
 
 TEST_F( LuadSecurityModuleTests, fromHexStringFails ) {  // 1.8.2

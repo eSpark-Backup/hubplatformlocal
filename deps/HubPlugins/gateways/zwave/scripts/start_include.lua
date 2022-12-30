@@ -1,3 +1,5 @@
+local params = ...
+
 local zwave = require "zwave"
 if not zwave then
     print( "Fail to load the zwave functionality" )
@@ -13,10 +15,15 @@ if storage:call("should_check_extensions") then
 end
 
 if hubplugins.weak_loadfile("HUB:zwave/scripts/helpers/is_device_adding_enabled")() then
+    if params and params.restrictedDeviceCategories then
+        local restrictions_helper = hubplugins.object("include_restrictions_helper", "HUB:zwave/scripts/helpers")
+        restrictions_helper:call("restriction_added", params.restrictedDeviceCategories)
+    end
+
     zwave.start_include( "HUB:zwave/configs/device_setting.json" )
 else
     print( "Controller has no permissions to start include" )
-    
+
     local core = assert(require("core"), "Fail to load the 'core' functionality")
     core.send_ui_broadcast({ event = "include_finished_error", error = { code = -42, data = "hub.gateway.zwave.err.include.perm" } })
 end
