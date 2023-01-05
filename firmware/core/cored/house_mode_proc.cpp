@@ -49,9 +49,11 @@ void HouseModeProcessor::switchThreadFunction( const std::string& houseModeId,
         JSON( "$set" << JSON( CoreDHouseModes::HOUSE_MODE_SWITCH_ENTRY
                               << newHouseMode.m_id << CoreDHouseModes::HOUSE_MODE_TIME_TO_SWITCH << delay ) ) );
 
-    auto infoSwitchStarted = JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
-                                          << "begin"
-                                          << "switchToDelay" << delay );
+    using namespace CoreDHouseModes::Resources::BroadcastFields;
+    auto infoSwitchStarted =
+        JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
+                     << "begin"
+                     << "switchToDelay" << delay << DeviceTimestampFieldName << CoreDHouseModes::now() );
     m_hostService.sendBroadcast( HOUSE_MODE_SWITCHED, infoSwitchStarted );
     m_hostService.emit( HouseModeSwitched( houseModeId, newHouseMode.m_id, "begin", delay ) );
 
@@ -75,9 +77,10 @@ void HouseModeProcessor::switchThreadFunction( const std::string& houseModeId,
 
     if( m_isSwitchingNow ) {
         setHouseMode( newHouseMode.m_id );
-        auto infoSwitchDone = JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
-                                           << "done"
-                                           << "switchToDelay" << 0 );
+        auto infoSwitchDone =
+            JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
+                         << "done"
+                         << "switchToDelay" << 0 << DeviceTimestampFieldName << CoreDHouseModes::now() );
         m_hostService.sendBroadcast( HOUSE_MODE_SWITCHED, infoSwitchDone );
         m_hostService.emit( HouseModeSwitched( houseModeId, newHouseMode.m_id, "done", 0 ) );
 
@@ -86,9 +89,10 @@ void HouseModeProcessor::switchThreadFunction( const std::string& houseModeId,
         m_hostService.handleHouseModeSwitched( infoSwitchDone );
     }
     else {
-        auto infoSwitchCancel = JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
-                                             << "cancel"
-                                             << "switchToDelay" << 0 );
+        auto infoSwitchCancel =
+            JSON( "from" << houseModeId << "to" << newHouseMode.m_id << "status"
+                         << "cancel"
+                         << "switchToDelay" << 0 << DeviceTimestampFieldName << CoreDHouseModes::now() );
         m_hostService.sendBroadcast( HOUSE_MODE_SWITCHED, infoSwitchCancel );
         m_hostService.emit( HouseModeSwitched( houseModeId, newHouseMode.m_id, "cancel", 0 ) );
     }

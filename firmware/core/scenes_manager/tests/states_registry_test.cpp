@@ -183,7 +183,7 @@ TEST_F( StatesRegistryTest, corruptedOperatorStateInDb ) {  // 7.
     setClockTime( time );
     storeBlockState( blockId, OperatorState::True );
 
-    const int64_t timestamp = StatesRegistry::TimePoint( time ).time_since_epoch().count();
+    int64_t timestamp = StatesRegistry::TimePoint( time ).time_since_epoch().count();
     const Json dbRecord =
         JSON( Id << blockId << SceneId << m_testSceneId << State << "corrupted" << LastChangeTime << timestamp );
     dbClient().insert( HaTempSceneBlockStatesDBName, dbRecord );

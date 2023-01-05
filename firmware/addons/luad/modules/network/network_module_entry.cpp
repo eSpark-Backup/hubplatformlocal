@@ -745,6 +745,24 @@ int getSockets( lua_State* luaState ) {
     }
 }
 
+int setTimeout( lua_State* luaState ) {
+    CHECK_LUA_INPUT_OPTIONAL_PARAMETERS( __func__, 2 );
+
+    const auto connectionHandle = GET_LUA_INPUT_PARAMETERS( NativeInteger, 1, __func__ );
+    const auto timeout = GET_LUA_INPUT_PARAMETERS( NativeInteger, 2, __func__ );
+    auto timeoutMs = std::chrono::milliseconds( timeout );
+    try {
+        getNetworkManager( luaState ).setTimeout( getPluginId( luaState ), connectionHandle, timeoutMs );
+    }
+    catch( const std::exception& exception ) {
+        return luaL_error( luaState, "failed to set timeout: %s", exception.what() );
+    }
+
+    return 0;
+}
+
+}  // namespace
+
 const char moduleName[] = "network";
 const luaL_Reg module[] = { { "subscribe", subscribe },
                             { "connect", connect },
@@ -768,9 +786,9 @@ const luaL_Reg module[] = { { "subscribe", subscribe },
                             { "sendto", sendto },
                             { "getsockname", getsockname },
                             { "get_sockets", getSockets },
+                            { "set_timeout", setTimeout },
                             { nullptr, nullptr } };
 
-}  // namespace
 }  // namespace HubPlatform
 
 HUB_BASE_MODULE_ENTRY_DEFINITION( network, HubPlatform::module, HubPlatform::moduleName );

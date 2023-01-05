@@ -46,7 +46,7 @@ void NmaApiTestsApplication::setUpAdditionalApplications() {
 }
 
 void NmaApiTestsApplication::afterApplicationsStartup() {
-    m_gatewaysChecker->checkGatewayReady( { "model_factory", "item_control" } );
+    m_gatewaysChecker->checkGatewayReady( { "model_factory", "item_control", "network_socket" } );
     m_gatewaysChecker.reset();
     resetBroadcastsProcessFunction();
     ComponentTestApplication::afterApplicationsStartup();

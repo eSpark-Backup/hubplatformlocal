@@ -109,6 +109,8 @@ TEST_F( TestsHouseMode, setDisarmedDefault /*1*/ ) {
         broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
         EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.changed" );
         EXPECT_FALSE( json_get_bool( broadcast[ "result" ], "disarmedDefault" ) );
+        int64_t timestamp;
+        EXPECT_TRUE( json_get( broadcast[ "result" ], "timestamp", timestamp ) );
         broadcast = NMA_TEST_WAIT_FOR_BROADCAST();
         EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.disarmed_devices.added" );
 
