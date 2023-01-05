@@ -233,6 +233,10 @@ int AsyncSocket::setopt( int level, int name, bool value ) {
     return m_socket->setopt( level, name, value );
 }
 
+int AsyncSocket::setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) {
+    return m_socket->setTimeout( socketLevel, option, timeoutMs );
+}
+
 void AsyncSocket::setEventsHandler( const std::string& eventsHandler ) {
     std::lock_guard< std::mutex > lock( m_mtx );
 

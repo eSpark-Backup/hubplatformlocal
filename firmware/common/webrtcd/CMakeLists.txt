@@ -11,7 +11,7 @@ if ( NOT ${WITH_WEBRTC} )
 endif()
 
 # Change a version here to download another version of webrtcd
-set( WEBRTCD_VERSION "0.4.0" CACHE STRING "webrtcd version bound to firmware" FORCE )
+set( WEBRTCD_VERSION "0.4.2" CACHE STRING "webrtcd version bound to firmware" FORCE )
 
 message( STATUS "${COLOR_VAR_NAME}WEBRTCD_VERSION${COLOR_DOTS}..........................${COLOR_VAR_DESC}webrtcd version${COLOR_DOTS}...........................${COLOR_VAR_VAL}${WEBRTCD_VERSION}${COLOR_RESET}" )
 

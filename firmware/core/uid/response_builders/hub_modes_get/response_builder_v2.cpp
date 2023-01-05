@@ -25,8 +25,8 @@ JsonArray createAlarmedObject( IDbClient& dbClient ) {
     for( const auto event : allArmedEvents ) {
         int alarmDelay = json_get_int( event, "alarmDelay" );
         entryDelay = alarmDelay;
-        unsigned long timestamp = json_get_number( event, "timestamp", timestamp );
-        unsigned long now =
+        auto timestamp = json_get_number< std::int64_t >( event, "timestamp" );
+        auto now =
             std::chrono::duration_cast< std::chrono::seconds >( std::chrono::system_clock::now().time_since_epoch() )
                 .count();
 

@@ -153,6 +153,8 @@ void LuaHouseModesTests::switchDisarmedDefault( const std::string& modeId, bool 
     makeRemote().setDisarmedDefault( modeId, disarmedDefault );
     auto broadcast = waitForBroadcast( __FILE__, codeLine );
     EXPECT_EQ( json_get_str( broadcast, "msg_subclass" ), "hub.modes.changed" );
+    int64_t timestamp;
+    EXPECT_TRUE( json_get( broadcast[ "result" ], "timestamp", timestamp ) );
 }
 
 Json LuaHouseModesTests::makeExpectedHouseMode( Json disarmedDevices,

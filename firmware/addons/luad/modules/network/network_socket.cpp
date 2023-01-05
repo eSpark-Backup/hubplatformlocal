@@ -12,6 +12,7 @@
 #include <sys/ioctl.h>
 #include <cstring>
 #include <fcntl.h>
+#include <netinet/tcp.h>
 
 namespace HubPlatform {
 namespace LuaNetwork {
@@ -46,6 +47,7 @@ public:
     int getsockname( sockaddr* addr, socklen_t addrLen ) override;
     int close() override;
     int shutdown( unsigned flags ) override;
+    int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) override;
 };
 
 NetworkSocket::NetworkSocket() {
@@ -112,6 +114,14 @@ int NetworkSocket::setopt( int level, int name, bool value ) {
     else {
         return ::setsockopt( m_socket, level, name, reinterpret_cast< char* >( &imr ), sizeof( struct ip_mreq ) );
     }
+}
+
+int NetworkSocket::setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) {
+    struct timeval time;
+    time.tv_sec = ( timeoutMs.count() / 1000 );
+    time.tv_usec = ( timeoutMs.count() % 1000 ) * 1000;
+
+    return ::setsockopt( m_socket, socketLevel, option, &time, sizeof( time ) );
 }
 
 ssize_t NetworkSocket::send( const void* buf, size_t n, int flags ) {
