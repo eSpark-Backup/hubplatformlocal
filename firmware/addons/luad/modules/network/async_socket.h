@@ -60,7 +60,7 @@ public:
     virtual void requestFrom( std::string callback, std::string userData, std::size_t amount ) = 0;
     virtual std::string inspectData( std::size_t amount = IBuffer::MaxCapacity ) = 0;
     virtual std::size_t inspectDataSize() = 0;
-    virtual int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) = 0;
+    virtual int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) = 0; //<EFWR-3881>
     virtual void close() = 0;
 };
 
@@ -100,7 +100,7 @@ public:
     std::string inspectData( std::size_t amount = IBuffer::MaxCapacity ) override;
     std::size_t inspectDataSize() override;
     void close() override;
-    int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) override;
+    int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) override; //<EFWR-3881>
 
     void onIncommingData();
     void onConnectionStateChanged( const std::weak_ptr< IAsyncSocket >& weakAsyncSocket );

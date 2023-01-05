@@ -745,6 +745,7 @@ int getSockets( lua_State* luaState ) {
     }
 }
 
+// <EFWR-3881
 int setTimeout( lua_State* luaState ) {
     CHECK_LUA_INPUT_OPTIONAL_PARAMETERS( __func__, 2 );
 
@@ -759,7 +760,7 @@ int setTimeout( lua_State* luaState ) {
     }
 
     return 0;
-}
+} // EFWR-3881>
 
 }  // namespace
 
@@ -786,7 +787,7 @@ const luaL_Reg module[] = { { "subscribe", subscribe },
                             { "sendto", sendto },
                             { "getsockname", getsockname },
                             { "get_sockets", getSockets },
-                            { "set_timeout", setTimeout },
+                            { "set_timeout", setTimeout }, // <EFWR-3881>
                             { nullptr, nullptr } };
 
 }  // namespace HubPlatform

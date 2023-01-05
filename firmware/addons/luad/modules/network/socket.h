@@ -27,7 +27,7 @@ public:
     virtual int getsockname( sockaddr* addr, socklen_t addrLen ) = 0;
     virtual int close() = 0;
     virtual int shutdown( unsigned flags ) = 0;
-    virtual int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) = 0;
+    virtual int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) = 0; // <EFWR-3881>
 
     virtual bool valid() const;
     int getSocket() const;

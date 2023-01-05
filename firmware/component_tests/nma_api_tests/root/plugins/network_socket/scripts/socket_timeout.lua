@@ -1,3 +1,4 @@
+-- <EFWR-3881
 local params = ...
 if not params then
     print("Parameters are empty. Expected: command: [subscribe | unsubscribe], data: { path: string, operations: undefined | string[]} | sessionId: number")
@@ -27,4 +28,4 @@ elseif (params.command == 'setoption') then
 end
 
 params.value = value
-core.send_ui_broadcast( params )
+core.send_ui_broadcast( params ) -- EFWR-3881>

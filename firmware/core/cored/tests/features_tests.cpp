@@ -1,4 +1,5 @@
 
+//<EFWR-3883
 #include "cored/core_service.h"
 #include "cored/model/resources/cored_resources.h"
 #include "cored/remote_interface/cored_remote_interface.h"
@@ -117,4 +118,4 @@ TEST_F( FeatureManagerTestSuite, checkExtraFeatures ) {
 }
 
 }  // namespace UT
-}  // namespace HubPlatform
+}  // namespace HubPlatform - EFWR-3883>

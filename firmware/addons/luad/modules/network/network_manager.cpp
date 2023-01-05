@@ -308,6 +308,7 @@ void NetworkManager::setOption( const std::string& groupName,
             throw AsyncSocketError( "fail to set option: " + std::to_string( errno ) );
         }
     }
+//<EFWR-3880
     else if( option == "ip-add-membership" ) {
         auto& asyncSocket = asyncSocketsClient.getAsyncSocket( connectionHandle );
         auto res = asyncSocket->setopt( IPPROTO_IP, IP_ADD_MEMBERSHIP, value );
@@ -321,12 +322,13 @@ void NetworkManager::setOption( const std::string& groupName,
         if( res != 0 ) {
             throw AsyncSocketError( "fail to set option: " + std::to_string( errno ) );
         }
-    }
+    } //EFWR_3880>
     else {
         throw AsyncSocketError( "unknown option" );
     }
 }
 
+// <EFWR-3881
 void NetworkManager::setTimeout( const std::string& groupName,
                                  int connectionHandle,
                                  std::chrono::milliseconds timeoutMs ) {
@@ -342,7 +344,7 @@ void NetworkManager::setTimeout( const std::string& groupName,
     else if( recvTimeoutHandler != 0 ) {
         throw AsyncSocketError( "fail to set socket receiving timeout: " + std::to_string( errno ) );
     }
-}
+} // EFWR-3881>
 
 void NetworkManager::reset( const std::string& groupName ) {
     std::lock_guard< std::mutex > lock( m_asyncSocketsManagerMtx );

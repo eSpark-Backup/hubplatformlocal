@@ -72,7 +72,7 @@ public:
     MOCK_METHOD2( getsockname, int( sockaddr* addr, socklen_t addrLen ) );
     MOCK_METHOD0( close, int() );
     MOCK_METHOD1( shutdown, int( unsigned flags ) );
-    MOCK_METHOD3( setTimeout, int( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) );
+    MOCK_METHOD3( setTimeout, int( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) ); // <EFWR-3881>
 
     MOCK_METHOD0( valid, bool() );
 };
