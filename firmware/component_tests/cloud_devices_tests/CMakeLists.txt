@@ -40,4 +40,4 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TE
         LINK_FLAGS "--enable-new-dtags -Wl,-rpath,${TESTS_DIR}" )
 
 add_test( NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME} )
-
+set_tests_properties ( ${PROJECT_NAME} PROPERTIES COST 1000 )

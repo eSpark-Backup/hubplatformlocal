@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string>
+#include <tiny/tiny_consolecolors.h>
 
 namespace HubPlatform {
 namespace LuaNetwork {
@@ -26,6 +27,7 @@ public:
     virtual int getsockname( sockaddr* addr, socklen_t addrLen ) = 0;
     virtual int close() = 0;
     virtual int shutdown( unsigned flags ) = 0;
+    virtual int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) = 0;
 
     virtual bool valid() const;
     int getSocket() const;

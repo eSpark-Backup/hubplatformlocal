@@ -94,6 +94,7 @@ public:
     void setPeerName( const std::string& groupName, int connectionHandle, const Host& address, const Port& port );
     void setSockName( const std::string& groupName, int connectionHandle, const Host& address, const Port& port );
     void setOption( const std::string& groupName, int connectionHandle, const std::string& option, bool value );
+    void setTimeout( const std::string& groupName, int connectionHandle, std::chrono::milliseconds timeoutMs );
 
     void reset( const std::string& groupName );
 

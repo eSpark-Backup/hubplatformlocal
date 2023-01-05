@@ -605,7 +605,9 @@ bool setDisarmedDefault( Services::Service& broadcaster,
     }
 
     if( oldDisarmedDefault ^ disarmedDefault ) {
-        auto info = JSON( "modeId" << modeId << "disarmedDefault" << disarmedDefault );
+        using namespace Resources::BroadcastFields;
+        auto info =
+            JSON( "modeId" << modeId << "disarmedDefault" << disarmedDefault << DeviceTimestampFieldName << now() );
         broadcaster.sendBroadcast( HOUSE_MODE_CHANGED, info );
     }
 
@@ -788,7 +790,7 @@ void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
                                     const std::string& modeId,
                                     const std::string& deviceId ) {
     using namespace Resources::BroadcastFields;
-    Json data = JSON( ModeIdFieldName << modeId << DeviceIdFieldName << deviceId );
+    Json data = JSON( ModeIdFieldName << modeId << DeviceIdFieldName << deviceId << DeviceTimestampFieldName << now() );
     broadcaster.sendBroadcast( HOUSE_MODE_ALARMED, data );
 }
 
@@ -799,9 +801,8 @@ void sendHouseModeAlarmedBroadcast( Services::Service& broadcaster,
                                     const std::string& deviceId,
                                     int pendingDelay ) {
     using namespace Resources::BroadcastFields;
-    auto timestamp = std::chrono::steady_clock::now().time_since_epoch().count();
-    Json data = JSON( ModeIdFieldName << modeId << DeviceTimestampFieldName << timestamp << DeviceStatusFieldName
-                                      << status << DevicePhaseFieldName << phase );
+    Json data = JSON( ModeIdFieldName << modeId << DeviceTimestampFieldName << now() << DeviceStatusFieldName << status
+                                      << DevicePhaseFieldName << phase );
 
     if( !deviceId.empty() ) {
         data[ DeviceIdFieldName ] = deviceId;
@@ -823,10 +824,13 @@ bool setProtect( Services::Service& broadcaster, IDbModifier& dBModifier, const 
     }
 
     if( houseMode->m_protect != protect ) {
+        using namespace Resources::BroadcastFields;
         dbClient.update( DBNames::HouseModesDB,
                          JSON( HouseModeFields::IdFieldName << modeId ),
                          JSON( "$set" << JSON( HouseModeFields::ProtectFieldName << protect ) ) );
-        broadcaster.sendBroadcast( HOUSE_MODE_CHANGED, JSON( "modeId" << modeId << "protect" << protect ) );
+        broadcaster.sendBroadcast(
+            HOUSE_MODE_CHANGED,
+            JSON( "modeId" << modeId << "protect" << protect << DeviceTimestampFieldName << now() ) );
     }
 
     return true;
@@ -1234,6 +1238,10 @@ void addDeviceToHouseModesAlarmedList( IDbClient& dbClient,
 void clearDeviceFromHouseModesAlarmedList( IDbClient& dbClient ) {
     dbClient.clear( HaTempHouseModesAlarmDevicesDBName );
 }
+
+int64_t now() {
+    return std::chrono::system_clock::now().time_since_epoch().count();
+};
 
 }  // namespace CoreDHouseModes
 }  // namespace HubPlatform

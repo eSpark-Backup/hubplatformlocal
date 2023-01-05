@@ -21,6 +21,8 @@ void CoreNmaTest::testHouseModeAlarmedBroadcast( const std::string& mode,
     ASSERT_NE( result, nullptr );
     EXPECT_EQ( json_get_str( result, "modeId" ), mode ) << codeLineStr;
     EXPECT_EQ( json_get_str( result, "deviceId" ), deviceId ) << codeLineStr;
+    int64_t timestamp;
+    EXPECT_TRUE( json_get( result, "timestamp", timestamp ) ) << codeLineStr;
 }
 
 void CoreNmaTest::testHouseModeAlarmedPhaseStatusBroadcast( const std::string& mode,
@@ -40,6 +42,8 @@ void CoreNmaTest::testHouseModeAlarmedPhaseStatusBroadcast( const std::string& m
     EXPECT_EQ( json_get_str( result, "deviceId" ), deviceId ) << codeLineStr;
     EXPECT_EQ( json_get_str( result, "phase" ), phase ) << codeLineStr;
     EXPECT_EQ( json_get_str( result, "status" ), status ) << codeLineStr;
+    int64_t timestamp;
+    EXPECT_TRUE( json_get( result, "timestamp", timestamp ) ) << codeLineStr;
 }
 
 void CoreNmaTest::testHouseModesSwitchedBroadcast( const std::string& mode,
@@ -64,6 +68,8 @@ void CoreNmaTest::testHouseModesSwitchedBroadcast( const JsonObject& broadcast,
     EXPECT_TRUE( json_get_obj( broadcast, "result", result ) ) << codeLineStr;
     EXPECT_EQ( json_get_str( result, "to" ), mode ) << codeLineStr;
     EXPECT_EQ( json_get_str( result, "status" ), status ) << codeLineStr;
+    int64_t timestamp;
+    EXPECT_TRUE( json_get( result, "timestamp", timestamp ) ) << codeLineStr;
 }
 
 CoreDRemoteInterface::CoreDInterface::DeviceID CoreNmaTest::addDevice(

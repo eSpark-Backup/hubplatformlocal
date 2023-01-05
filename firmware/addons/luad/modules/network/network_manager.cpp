@@ -327,6 +327,23 @@ void NetworkManager::setOption( const std::string& groupName,
     }
 }
 
+void NetworkManager::setTimeout( const std::string& groupName,
+                                 int connectionHandle,
+                                 std::chrono::milliseconds timeoutMs ) {
+    std::lock_guard< std::mutex > lock( m_asyncSocketsManagerMtx );
+
+    auto& asyncSocketsClient = m_asyncSocketsManager.makeAsyncSocketsClient( groupName );
+    auto& asyncSocket = asyncSocketsClient.getAsyncSocket( connectionHandle );
+    auto sndTimeoutHandler = asyncSocket->setTimeout( SOL_SOCKET, SO_SNDTIMEO, timeoutMs );
+    auto recvTimeoutHandler = asyncSocket->setTimeout( SOL_SOCKET, SO_RCVTIMEO, timeoutMs );
+    if( sndTimeoutHandler != 0 ) {
+        throw AsyncSocketError( "fail to set socket sending timeout: " + std::to_string( errno ) );
+    }
+    else if( recvTimeoutHandler != 0 ) {
+        throw AsyncSocketError( "fail to set socket receiving timeout: " + std::to_string( errno ) );
+    }
+}
+
 void NetworkManager::reset( const std::string& groupName ) {
     std::lock_guard< std::mutex > lock( m_asyncSocketsManagerMtx );
     m_asyncSocketsManager.removeAsyncSocketsClient( groupName );
