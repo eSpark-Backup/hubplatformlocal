@@ -49,8 +49,17 @@ private:
     void handleCloudUnregistered();
 
     void forgetExistingAsyncRequests();
+// < EFWR-3896
+    void startDelayedSubscirptionRequest();
+    void cancelDelayedSubscriptionRequest();
 
-    void handleGatewayCommandRequest( const JsonObject& params );
+    void checkDeviceCategory( const Services::Message& message );
+    void checkItemCategory( const Services::Message& message );
+
+    void handleAbstractDeviceAdded( const Services::Message& message );
+    void handleAbstractItemUpdated( const Services::Message& message );
+
+    void handleGatewayCommandRequest( const JsonObject& params ); // EFWR-3896
 
 #if defined( __WITH_CLOUD_DEVICES_LEGACY_CODE__ )
     void handleSendCommandRequest( const JsonObject& params );
@@ -95,6 +104,9 @@ private:
     std::chrono::seconds m_reaskOnErrorDelay;
     bool m_pendingControllerAbstractsList;
     bool m_updateControllerAbstractsList;
+// < EFWR-3896    
+    HubPlatform::Services::PostponedTaskPtr m_subscriptionDelayingTask;
+    const std::chrono::seconds SubscriptionDelayInterval = std::chrono::seconds( 5 ); // EFWR-3896
 };
 
 }  // namespace CloudDevices

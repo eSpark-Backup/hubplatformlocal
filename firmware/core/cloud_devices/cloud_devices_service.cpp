@@ -20,6 +20,8 @@
 #include "json_utils/json_wrapper.h"
 #include "jsonrpc/jsonrpc.h"
 
+#include "cored/model/resources/cored_resources.h" //< EFWR-3896>
+
 #include <string>
 
 namespace HubPlatform {
@@ -78,6 +80,7 @@ void CloudDevicesService::setUp() {
 void CloudDevicesService::tearDown() {
     m_subscriptionHelper->tearDown();
     Services::Service::tearDown();
+    cancelDelayedSubscriptionRequest(); //< EFWR-3896 >
 }
 
 void CloudDevicesService::handleMessageFromBus( const Services::Message& message, const std::string& sender ) {
@@ -177,6 +180,22 @@ bool CloudDevicesService::handleEventFromBus( const Services::Message& message )
     case CLOUD_MESSAGE:
         handleCloudEventFromBus( message );
         return true;
+// < EFWR-3896        
+    case HUB_DEVICE_ADDED:
+        handleAbstractDeviceAdded( message );
+        return true;
+    case HUB_DEVICE_UPDATED:
+        checkDeviceCategory( message );
+        return true;
+    case HUB_ITEM_ADDED:
+        checkItemCategory( message );
+        return true;
+    case HUB_ITEM_UPDATED:
+        handleAbstractItemUpdated( message );
+        return true;
+    case HUB_ITEM_REMOVED:
+        checkItemCategory( message );
+        return true; // EFWR-3896 >
     default:
         return false;
     }
@@ -384,19 +403,19 @@ void CloudDevicesService::handleCloudAbstractsDeleted( const JsonObject& result 
 
 JsonObject CloudDevicesService::handleCloudSubscriptionCreate( const JsonObject& request ) {
     auto result = m_subscriptionManager->addSubscription( request );
-    addTask( [this]() { m_subscriptionManager->sendSubscriptionList(); } );
+    startDelayedSubscirptionRequest(); // < EFWR-3896 >
     return result;
 }
 
 JsonObject CloudDevicesService::handleCloudSubscriptionUpdate( const JsonObject& request ) {
     auto result = m_subscriptionManager->updateSubscription( request );
-    addTask( [this]() { m_subscriptionManager->sendSubscriptionList(); } );
+    startDelayedSubscirptionRequest(); // < EFWR-3896 >
     return result;
 }
 
 JsonObject CloudDevicesService::handleCloudSubscriptionDelete( const JsonObject& request ) {
     auto result = m_subscriptionManager->deleteSubscription( request );
-    addTask( [this]() { m_subscriptionManager->sendSubscriptionList(); } );
+    startDelayedSubscirptionRequest(); // < EFWR-3896 >
     return result;
 }
 
@@ -623,6 +642,71 @@ void CloudDevicesService::forgetExistingAsyncRequests() {
     m_pendingControllerAbstractsList = false;
     m_updateControllerAbstractsList = false;
 }
+
+// <EFWR-3896
+void CloudDevicesService::startDelayedSubscirptionRequest() {
+    if( m_subscriptionDelayingTask ) {
+        m_subscriptionDelayingTask->stop();
+    }
+    m_subscriptionDelayingTask =
+        createPostponedTask( [this]( Services::PostponedTask& ) { m_subscriptionManager->sendSubscriptionList(); } );
+    m_subscriptionDelayingTask->start( std::chrono::seconds( SubscriptionDelayInterval ), false );
+}
+
+void CloudDevicesService::cancelDelayedSubscriptionRequest() {
+    if( m_subscriptionDelayingTask ) {
+        m_subscriptionDelayingTask->stop();
+    }
+}
+
+void CloudDevicesService::checkDeviceCategory( const Services::Message& message ) {
+    Json eventResult;
+    json_get( message.data, "result", eventResult );
+    auto id = json_get_str( eventResult, "_id" );
+    auto deviceInfo = m_core->getSingleDevice( id );
+    auto category = json_get_str( deviceInfo, CoreD::Model::Resources::DeviceFields::CategoryFieldName );
+    if( category == "abstract" ) {
+        cancelDelayedSubscriptionRequest();
+        startDelayedSubscirptionRequest();
+    }
+}
+
+void CloudDevicesService::checkItemCategory( const Services::Message& message ) {
+    Json eventResult;
+    json_get( message.data, "result", eventResult );
+    auto id = json_get_str( eventResult, "deviceId" );
+    auto deviceInfo = m_core->getSingleDevice( id );
+    if( !deviceInfo.empty() ) {
+        auto category = json_get_str( deviceInfo, CoreD::Model::Resources::DeviceFields::CategoryFieldName );
+        if( category == "abstract" ) {
+            cancelDelayedSubscriptionRequest();
+            startDelayedSubscirptionRequest();
+        }
+    }
+}
+
+void CloudDevicesService::handleAbstractDeviceAdded( const Services::Message& message ) {
+    Json eventResult;
+    json_get( message.data, "result", eventResult );
+    auto category = json_get_str( eventResult, "category" );
+    if( category == "abstract" ) {
+        cancelDelayedSubscriptionRequest();
+        startDelayedSubscirptionRequest();
+    }
+}
+
+void CloudDevicesService::handleAbstractItemUpdated( const Services::Message& message ) {
+    Json eventResult;
+    json_get( message.data, "result", eventResult );
+    auto category = json_get_str( eventResult, "deviceCategory" );
+    auto syncNotification = json_get_bool( eventResult, "syncNotification" );
+    if( category == "abstract" ) {
+        if( syncNotification ) {
+            cancelDelayedSubscriptionRequest();
+            startDelayedSubscirptionRequest();
+        }
+    }
+}  // EFWR-3896 >
 
 }  // namespace CloudDevices
 }  // namespace HubPlatform
