@@ -42,11 +42,12 @@ FeaturesManager::FeaturesManager( IDbClient& dbClient )
         { "backups", { 1, 0 }, false, false },
         { "webrtc", { 1, 0 }, WITH_WEBRTC, true },
 #if defined( __HUB_TYPE_H2_SECURE__ ) || defined( __HUB_TYPE_LOCAL__ )
+//<EFWR-3862        
         { "protect", { 2, 0 }, true, true },
-        { "protect_delayed", { 1, 0 }, true, false },
+        { "protect_delayed", { 1, 0 }, true, false }, 
 #elif defined( __HUB_TYPE_H2__ )
         { "protect", { 2, 0 }, false, true },
-        { "protect_delayed", { 1, 0 }, true, false },
+        { "protect_delayed", { 1, 0 }, true, false }, // EFWR-3862>>
 #elif defined( __HUB_TYPE_VHUB__ )
     // "protect" is not available
 #elif defined( __HUB_TYPE_BEEWAVE__ )
@@ -59,6 +60,7 @@ FeaturesManager::FeaturesManager( IDbClient& dbClient )
     };
 
     for( auto& feature : ControllerFeatures ) {
+// <EFWR-3883
         auto featurePresent = m_dbClient.has( DBNames::FeaturesDB, JSON( db::ID_FIELD_NAME << feature.name ) );
         if( !featurePresent ) {
             m_dbClient.insert(
@@ -88,7 +90,7 @@ FeaturesManager::FeaturesManager( IDbClient& dbClient )
             m_dbClient.remove( DBNames::FeaturesDB,
                                JSON( db::ID_FIELD_NAME << featuresArray[ i ][ db::ID_FIELD_NAME ] ) );
         }
-    }
+    } // EFWR-3883>
 }
 
 void FeaturesManager::setFeatureStatus( const std::string& feature, bool status ) {

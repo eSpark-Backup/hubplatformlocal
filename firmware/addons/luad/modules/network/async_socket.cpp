@@ -232,10 +232,10 @@ void AsyncSocket::bind( const Host& address, const Port& port, std::weak_ptr< IA
 int AsyncSocket::setopt( int level, int name, bool value ) {
     return m_socket->setopt( level, name, value );
 }
-
+// <EFWR-3881
 int AsyncSocket::setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) {
     return m_socket->setTimeout( socketLevel, option, timeoutMs );
-}
+} // EFWR-3881>
 
 void AsyncSocket::setEventsHandler( const std::string& eventsHandler ) {
     std::lock_guard< std::mutex > lock( m_mtx );

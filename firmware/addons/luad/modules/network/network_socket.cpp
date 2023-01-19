@@ -47,7 +47,7 @@ public:
     int getsockname( sockaddr* addr, socklen_t addrLen ) override;
     int close() override;
     int shutdown( unsigned flags ) override;
-    int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) override;
+    int setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) override; // <EFWR-3881>
 };
 
 NetworkSocket::NetworkSocket() {
@@ -104,6 +104,7 @@ int NetworkSocket::bind( const sockaddr* addr, socklen_t len ) {
 }
 
 int NetworkSocket::setopt( int level, int name, bool value ) {
+//<EFWR-3880   
     int optval = value;
     struct ip_mreq imr;
     imr.imr_interface.s_addr = htonl( INADDR_ANY );
@@ -113,16 +114,16 @@ int NetworkSocket::setopt( int level, int name, bool value ) {
     }
     else {
         return ::setsockopt( m_socket, level, name, reinterpret_cast< char* >( &imr ), sizeof( struct ip_mreq ) );
-    }
+    } //EFWR-3880>
 }
-
+// <EFWR-3881
 int NetworkSocket::setTimeout( int socketLevel, int option, std::chrono::milliseconds timeoutMs ) {
     struct timeval time;
     time.tv_sec = ( timeoutMs.count() / 1000 );
     time.tv_usec = ( timeoutMs.count() % 1000 ) * 1000;
 
     return ::setsockopt( m_socket, socketLevel, option, &time, sizeof( time ) );
-}
+} // EFWR-3881>
 
 ssize_t NetworkSocket::send( const void* buf, size_t n, int flags ) {
     return ::send( m_socket, buf, n, flags );

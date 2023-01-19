@@ -28,7 +28,7 @@ class ItemDbModifierTest;
 class GatewaySettingsTest;
 class DeviceSettingsTest;
 class SettingsManagerTest;
-class FeatureManagerTestSuite;
+class FeatureManagerTestSuite; //<EFWR-3883>
 }  // namespace UT
 
 namespace Hub {

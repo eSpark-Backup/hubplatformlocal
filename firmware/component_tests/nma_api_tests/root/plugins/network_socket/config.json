@@ -1,3 +1,4 @@
+// <EFWR-3881
 {
     "id": "network_socket",
     "version": "1.0",
@@ -27,5 +28,5 @@
       "setItemValueCommand": "HUB:network_socket/scripts/set_item_value"
   }
 }
-
+// EFWR-3881>
   

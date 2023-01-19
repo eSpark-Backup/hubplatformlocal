@@ -46,7 +46,7 @@ void NmaApiTestsApplication::setUpAdditionalApplications() {
 }
 
 void NmaApiTestsApplication::afterApplicationsStartup() {
-    m_gatewaysChecker->checkGatewayReady( { "model_factory", "item_control", "network_socket" } );
+    m_gatewaysChecker->checkGatewayReady( { "model_factory", "item_control", "network_socket" } ); // <EFWR-3881> only add network_socket
     m_gatewaysChecker.reset();
     resetBroadcastsProcessFunction();
     ComponentTestApplication::afterApplicationsStartup();
