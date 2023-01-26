@@ -33,6 +33,8 @@ target_link_libraries(${PROJECT_NAME}
     tiny
     fake_db
     external_controllers_interface
+    common_test_resources 
+    cored_interface
 )
 
 target_include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_REQUIRED_INCLUDES} )

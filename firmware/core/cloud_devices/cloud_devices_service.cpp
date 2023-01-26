@@ -32,6 +32,7 @@ namespace {
 const auto CurrentApiVersion = "1";
 const auto DefaultCloudRequestTimeout = std::chrono::seconds( 30 );
 const auto DefaultReaskOnErrorDelay = std::chrono::minutes( 10 );
+const auto SubscriptionDelayInterval = std::chrono::seconds( 5 );
 }  // namespace
 
 CloudDevicesService::CloudDevicesService()
@@ -188,13 +189,13 @@ bool CloudDevicesService::handleEventFromBus( const Services::Message& message )
         checkDeviceCategory( message );
         return true;
     case HUB_ITEM_ADDED:
-        checkItemCategory( message );
+        checkItemByDeviceCategory( message );
         return true;
     case HUB_ITEM_UPDATED:
         handleAbstractItemUpdated( message );
         return true;
     case HUB_ITEM_REMOVED:
-        checkItemCategory( message );
+        checkItemByDeviceCategory( message );
         return true; // EFWR-3896 >
     default:
         return false;
@@ -671,7 +672,7 @@ void CloudDevicesService::checkDeviceCategory( const Services::Message& message 
     }
 }
 
-void CloudDevicesService::checkItemCategory( const Services::Message& message ) {
+void CloudDevicesService::checkItemByDeviceCategory( const Services::Message& message ) {
     Json eventResult;
     json_get( message.data, "result", eventResult );
     auto id = json_get_str( eventResult, "deviceId" );

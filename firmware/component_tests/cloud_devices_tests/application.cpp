@@ -4,6 +4,7 @@
 
 #include "json_utils/json_utils.h"
 #include "jsonrpc/message.h"
+#include "common_utils/cpp14.h" //< EFWR-3896 >
 
 namespace HubPlatform {
 namespace Tests {
@@ -22,10 +23,17 @@ void CloudDevicesTestsApplication::beforeApplicationsStartup() {
         lock.unlock();
         m_requestsCondVar.notify_all();
     } );
+    // < EFWR-3896
+    m_gatewaysChecker = std::make_unique< GatewaysChecker >( getDBClient() );
+    setBroadcastsProcessFunction( [this]( rpc::Message& message ) { m_gatewaysChecker->handleMessage( message ); } ); // EFWR-3896 >
 }
 
 void CloudDevicesTestsApplication::setUpAdditionalApplications() {
     createLinkToAddonInTestFolder( "ha-luad" );
+    //< EFWR-3896
+    executeCoreService( "ha-backupd", "backupd" );
+    executeCoreService( "ha-cored", "cored" );
+    std::this_thread::sleep_for( std::chrono::seconds( 3 ) );  // cored should be startuped before extensions_manager. EFWR-3896>
 
     executeCoreService( "ha-extensions_manager", "extensions_manager" );
     executeCoreService( "ha-external_controllers", "external_controllers" );
@@ -53,6 +61,10 @@ void CloudDevicesTestsApplication::afterApplicationsStartup() {
     }
     auto& request = *it;
     sendResponseToHub( request, parseJson( R"({ "version": -1, "not_modified": 1 })" ) );
+    // < EFWR-3896
+    m_gatewaysChecker->checkGatewayReady( { "model_factory" } );
+    m_gatewaysChecker.reset();
+    resetBroadcastsProcessFunction(); // EFWR-3896 >
 
     resetRequestsProcessFunction();
 
