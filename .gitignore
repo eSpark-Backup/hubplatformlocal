@@ -17,7 +17,7 @@ build.log
 # CMake build tree
 build/
 firmware_tests/
-
+cmake-build-debug/
 # Visual Studio Code directory
 .vscode/
 

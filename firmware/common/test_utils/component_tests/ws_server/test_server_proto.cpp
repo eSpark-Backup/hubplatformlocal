@@ -12,6 +12,9 @@ TestServerProto::TestServerProto()
           { "ping", std::bind( &TestServerProto::ping, this, std::placeholders::_1 ) },
           { "register", std::bind( &TestServerProto::registerHub, this, std::placeholders::_1 ) },
           { "cloud.access_keys_controller_sync", std::bind( &TestServerProto::ignore, this, std::placeholders::_1 ) },
+          //< EFWR-3896
+          { "cloud.controller_subscribe_abstracts",
+            std::bind( &TestServerProto::ignore, this, std::placeholders::_1 ) }, // EFWR-3896 >
       },
       std::bind( &TestServerProto::unknown, this, std::placeholders::_1 ) ) {}
 
