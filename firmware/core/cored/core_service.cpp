@@ -907,7 +907,7 @@ JsonObject CoreService::handleSkipEntryDelay( const JsonObject& params ) {
     catch( const std::exception& ex ) {
         LOGGER_DEBUG( cc::debug( "unexpected error :" ) + cc::note( ex.what() ) );
         JsonObject result;
-        setError( result, Errors::INTERNAL_OPERATION_ERROR );
+        setError( result, Errors::HOUSE_MODES_INVALID_PHASE );
         return result;
     }
 }

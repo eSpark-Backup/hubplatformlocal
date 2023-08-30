@@ -22,6 +22,8 @@ const AllErrors& getAllErrors() {
           {
               // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
               // //
+              { Errors::HOUSE_MODES_INVALID_PHASE,
+                { "House modes aren't in the entry delay state", "ezlo.house_mode.alarmed.phase.invalid" } },
               { Errors::USER_DOESNT_HAVE_PERMISSION,
                 { "User does not have permission", "user.permission.doesnothave" } },
               { Errors::CLOSED_FOR_ALL, { "Closed for all", "user.permission.doesnothave.all" } },
