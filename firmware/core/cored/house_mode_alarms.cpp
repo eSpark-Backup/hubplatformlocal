@@ -180,6 +180,12 @@ void HouseModeAlarms::sendMainDoneBroadcast( const std::string& deviceId ) {
         m_service, modeId, RPCParams::Done, RPCParams::Main, deviceId, delay );
 }
 
+void HouseModeAlarms::sendMainBeginBroadcast( const std::string& deviceId ) {
+    const auto modeId = CoreDHouseModes::getCurrentHouseModeId( m_service.getDBClient() );
+    CoreDHouseModes::sendHouseModeAlarmedBroadcast(
+            m_service, modeId, RPCParams::Begin, RPCParams::Main, deviceId, 0 );
+}
+
 void HouseModeAlarms::sendBypassDoneBroadcast( const std::string& deviceId ) {
     const auto modeId = CoreDHouseModes::getCurrentHouseModeId( m_service.getDBClient() );
     auto delay = CoreDHouseModes::getAlarmDelay( m_service.getDBClient() );
@@ -366,10 +372,8 @@ void HouseModeAlarms::cancelEntryDelay() {
 
 void HouseModeAlarms::skipEntryDelay(const JsonObject& json) {
     if( !m_postponedTasks.empty() ) {
-        const auto deviceIdIt = json.find( ItemFields::DeviceIdFieldName );
-        const std::string deviceId = deviceIdIt.value().get< std::string >();
         runSecurityThreatNotificationsWithBroadcast(
-                json, deviceId, [this, deviceId]() { sendMainDoneBroadcast( deviceId ); } );
+                json, "", [&]() { sendMainBeginBroadcast( "" ); } );
 
         clearPostponedTasks();
     }

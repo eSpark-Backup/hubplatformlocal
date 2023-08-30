@@ -38,6 +38,7 @@ private:
     void sendEntryDelayCanceledBroadcast();
     void sendMainDoneBroadcast( const std::string& deviceId );
     void sendBypassDoneBroadcast( const std::string& deviceId );
+    void sendMainBeginBroadcast( const std::string& deviceId );
 
     void turnOffAlarms( const std::vector< std::string >& alarmItemNames );
     void notifyAllCameras( const std::vector< std::string >& cameraItemNames,
