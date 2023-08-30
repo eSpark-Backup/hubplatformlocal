@@ -151,6 +151,7 @@ protected:
     JsonObject handleSetHubTimeZone( const JsonObject& params );
     JsonObject handleCancelSwitchHouseMode( const JsonObject& params );
     JsonObject handleCancelEntryDelay( const JsonObject& params );
+    JsonObject handleSkipEntryDelay( const JsonObject& params );
     JsonObject handleAddDisarmedDevice( const JsonObject& params );
     JsonObject handleRemoveDisarmedDevice( const JsonObject& params );
     JsonObject handleSetNotificationsForHouseMode( const JsonObject& params );

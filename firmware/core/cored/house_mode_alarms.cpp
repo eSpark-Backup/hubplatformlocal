@@ -364,5 +364,16 @@ void HouseModeAlarms::cancelEntryDelay() {
     clearAllPendingSecurityEventsAndCountdown();
 }
 
+void HouseModeAlarms::skipEntryDelay(const JsonObject& json) {
+    if( !m_postponedTasks.empty() ) {
+        const auto deviceIdIt = json.find( ItemFields::DeviceIdFieldName );
+        const std::string deviceId = deviceIdIt.value().get< std::string >();
+        runSecurityThreatNotificationsWithBroadcast(
+                json, deviceId, [this, deviceId]() { sendMainDoneBroadcast( deviceId ); } );
+
+        clearPostponedTasks();
+    }
+}
+
 }  // namespace CoreD
 }  // namespace HubPlatform

@@ -1002,6 +1002,7 @@ void Service::handleEventFromBus( const Services::Message& message ) {
     case UPDATING_SOFTWARE:
     case HOUSE_MODE_ALARMED:
     case HOUSE_MODE_CANCEL_ENTRY_DELAY:
+    case HOUSE_MODE_SKIP_ENTRY_DELAY:
     case HOUSE_MODE_SWITCHED:
     case HOUSE_MODE_NOTIFICATIONS_ADDED:
     case HOUSE_MODE_NOTIFICATIONS_REMOVED:

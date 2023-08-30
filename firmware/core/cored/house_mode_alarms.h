@@ -22,6 +22,7 @@ public:
     void houseModeSwitchFromArmedToDisarmedMode( const JsonObject& message );
     void checkSecurityThreat( const std::string& itemId );
     void cancelEntryDelay();
+    void skipEntryDelay( const JsonObject& json );
 
 private:
     using TaskItem = std::pair< Services::PostponedTaskPtr, Timestamp >;
