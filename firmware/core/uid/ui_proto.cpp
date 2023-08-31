@@ -1596,6 +1596,8 @@ void UiProto::invokeHouseModeHandler( const std::string& houseModeMethod, rpc::M
           []( UiProto& owner, rpc::Message& message ) { owner.invokeHouseModeCancelSwitching( message ); } },
         { "entry_delay.cancel",
           []( UiProto& owner, rpc::Message& message ) { owner.invokeHouseModeCancelEntryDelay( message ); } },
+        { "entry_delay.skip",
+          []( UiProto& owner, rpc::Message& message ) { owner.invokeHouseModeSkipEntryDelay( message ); } },
         { "switch_to_delay.set",
           []( UiProto& owner, rpc::Message& message ) { owner.invokeHouseModeSetSwitchDelay( message ); } },
         { "alarm_delay.set",
@@ -1811,6 +1813,21 @@ void UiProto::invokeHouseModeCancelEntryDelay( rpc::Message& rpcMessage ) {
     CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( getService() );
 
     auto result = remoteInterface.cancelEntryDelay();
+    if( hasError( result ) ) {
+        auto& answer = rpcMessage.getAnswer();
+        setErrorIfHas( answer, result );
+        return;
+    }
+
+    rpcMessage.setResult( result );
+}
+
+void UiProto::invokeHouseModeSkipEntryDelay( rpc::Message& rpcMessage ) {
+    using namespace HubPlatform;
+
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface( getService() );
+
+    auto result = remoteInterface.skipEntryDelay();
     if( hasError( result ) ) {
         auto& answer = rpcMessage.getAnswer();
         setErrorIfHas( answer, result );

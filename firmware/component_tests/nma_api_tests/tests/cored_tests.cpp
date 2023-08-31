@@ -2222,5 +2222,26 @@ TEST_F( CoredServiceTests, checkHouseModeAlarmWithCancelEntryDalay ) {
     EXPECT_TRUE( answer[ "result" ][ "alarmed" ].empty() );
 }
 
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithSkipEntryDalay ) {
+    auto &dbClient = nma().getDBClient();
+    const auto AlarmDelay = 1;
+    CoreDHouseModes::setAlarmDelay(dbClient, AlarmDelay);
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface(nma());
+    auto device = addDeviceWithSecurityThreatItem(__LINE__);
+    setItemValue(remoteInterface, device.m_itemId, true, __LINE__);
+    const auto CurrentModeId = "1";
+    testHouseModeAlarmedPhaseStatusBroadcast(CurrentModeId, device.m_deviceId, "entryDelay", "begin", __LINE__);
+    auto answer = nma().sendtoHubAndGetAnswer({{"method", "hub.modes.entry_delay.skip"}});
+    EXPECT_TRUE(answer["result"].empty());
+    testHouseModeAlarmedPhaseStatusBroadcast( CurrentModeId, "", "main", "begin", __LINE__ );
+}
+
+TEST_F( CoredServiceTests, checkHouseModeAlarmWithSkipEntryDalayNoArmedDevices ) {
+    auto &dbClient = nma().getDBClient();
+    CoreDRemoteInterface::CoreDRemoteInterface remoteInterface(nma());
+    auto answer = nma().sendtoHubAndGetAnswer({{"method", "hub.modes.entry_delay.skip"}});
+    EXPECT_TRUE(!answer["error"].empty());
+}
+
 }  // namespace Tests
 }  // namespace HubPlatform

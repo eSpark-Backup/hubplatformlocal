@@ -377,6 +377,9 @@ void HouseModeAlarms::skipEntryDelay(const JsonObject& json) {
 
         clearPostponedTasks();
     }
+    else {
+        throw std::exception();
+    }
 }
 
 }  // namespace CoreD
