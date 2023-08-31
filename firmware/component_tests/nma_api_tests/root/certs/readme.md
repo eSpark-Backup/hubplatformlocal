@@ -2,7 +2,7 @@
 
 ## Local mode certificates for tests update
 
-Updated certificates are valid till: 2023-04-12.
+Updated certificates are valid till: 2023-06-20.
 
 ## Update local mode certificates for tests
 

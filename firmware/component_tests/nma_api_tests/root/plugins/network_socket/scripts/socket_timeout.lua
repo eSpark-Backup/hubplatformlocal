@@ -1,4 +1,3 @@
--- <EFWR-3881
 local params = ...
 if not params then
     print("Parameters are empty. Expected: command: [subscribe | unsubscribe], data: { path: string, operations: undefined | string[]} | sessionId: number")
@@ -22,10 +21,10 @@ if (params.command == 'set_timeout') then
     print('network.set_timeout: -> ')
     print(value)
 elseif (params.command == 'setoption') then 
-    value = network.setoption(handle, params.option)
+    value = network.setoption(handle, params.option, params.jsonData)
     print('network.setoption: -> ')
     print(value)
 end
 
 params.value = value
-core.send_ui_broadcast( params ) -- EFWR-3881>
+core.send_ui_broadcast( params )
