@@ -1602,6 +1602,14 @@ JsonObject CoreDRemoteInterface::cancelEntryDelay() {
     return m_hostService.sendRequest( GroupsNames::CORED, JSON_EMPTY_OBJ, subclass );
 }
 
+JsonObject CoreDRemoteInterface::skipEntryDelay() {
+    const MessageSubClasses subclass = HOUSE_MODE_SKIP_ENTRY_DELAY;
+    LOGGER_DEBUG_RAW( "RemoteInterface::skipEntryDelay, send request with subclass " +
+                      std::to_string( static_cast< int >( subclass ) ) );
+
+    return m_hostService.sendRequest( GroupsNames::CORED, JSON_EMPTY_OBJ, subclass );
+}
+
 CoreDInterface::HouseModesGetResult CoreDRemoteInterface::getHouseModes() const {
     return CoreDHouseModes::getHouseModesList( getDBClient() );
 }

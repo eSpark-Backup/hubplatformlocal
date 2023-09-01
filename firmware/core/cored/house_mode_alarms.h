@@ -22,6 +22,7 @@ public:
     void houseModeSwitchFromArmedToDisarmedMode( const JsonObject& message );
     void checkSecurityThreat( const std::string& itemId );
     void cancelEntryDelay();
+    void skipEntryDelay( const JsonObject& json );
 
 private:
     using TaskItem = std::pair< Services::PostponedTaskPtr, Timestamp >;
@@ -37,6 +38,7 @@ private:
     void sendEntryDelayCanceledBroadcast();
     void sendMainDoneBroadcast( const std::string& deviceId );
     void sendBypassDoneBroadcast( const std::string& deviceId );
+    void sendMainBeginBroadcast( const std::string& deviceId );
 
     void turnOffAlarms( const std::vector< std::string >& alarmItemNames );
     void notifyAllCameras( const std::vector< std::string >& cameraItemNames,

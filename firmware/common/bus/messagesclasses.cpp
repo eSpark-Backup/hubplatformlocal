@@ -343,6 +343,7 @@ const EnumToStrMap& getSubclassToStrMap() {
         { SET_HOUSE_MODE, "hub.modes.switch" },
         { CANCEL_SWITCHING_HOUSE_MODE, "hub.modes.cancel_switch" },
         { HOUSE_MODE_CANCEL_ENTRY_DELAY, "hub.modes.entry_delay.cancel" },
+        { HOUSE_MODE_SKIP_ENTRY_DELAY, "hub.modes.entry_delay.skip" },
         { HOUSE_MODE_ALARMED, "hub.modes.alarmed" },
         { HOUSE_MODE_SWITCHED, "hub.modes.switched" },
         { HOUSE_MODE_NOTIFICATIONS_ADDED, "hub.modes.notifications.added" },

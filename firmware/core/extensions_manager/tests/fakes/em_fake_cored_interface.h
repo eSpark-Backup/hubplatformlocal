@@ -307,6 +307,9 @@ public:
     JsonObject cancelEntryDelay() override {
         return {};
     };
+    JsonObject skipEntryDelay() override {
+        return {};
+    };
 };
 
 }  // namespace UT

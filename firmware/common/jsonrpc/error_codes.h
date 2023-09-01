@@ -23,6 +23,7 @@ public:
 
     enum Error {
         OK,
+        HOUSE_MODES_INVALID_PHASE,
         USER_DOESNT_HAVE_PERMISSION,
         CLOSED_FOR_ALL,
         DEVICES_LOCKED,

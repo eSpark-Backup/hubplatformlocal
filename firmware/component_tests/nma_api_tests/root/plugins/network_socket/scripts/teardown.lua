@@ -1,1 +1,1 @@
-print( "Stop" ) -- <EFWR-3881>
+print( "Stop" )

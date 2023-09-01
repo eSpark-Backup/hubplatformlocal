@@ -180,6 +180,12 @@ void HouseModeAlarms::sendMainDoneBroadcast( const std::string& deviceId ) {
         m_service, modeId, RPCParams::Done, RPCParams::Main, deviceId, delay );
 }
 
+void HouseModeAlarms::sendMainBeginBroadcast( const std::string& deviceId ) {
+    const auto modeId = CoreDHouseModes::getCurrentHouseModeId( m_service.getDBClient() );
+    CoreDHouseModes::sendHouseModeAlarmedBroadcast(
+            m_service, modeId, RPCParams::Begin, RPCParams::Main, deviceId, 0 );
+}
+
 void HouseModeAlarms::sendBypassDoneBroadcast( const std::string& deviceId ) {
     const auto modeId = CoreDHouseModes::getCurrentHouseModeId( m_service.getDBClient() );
     auto delay = CoreDHouseModes::getAlarmDelay( m_service.getDBClient() );
@@ -362,6 +368,18 @@ void HouseModeAlarms::clearAllPendingSecurityEventsAndCountdown() {
 
 void HouseModeAlarms::cancelEntryDelay() {
     clearAllPendingSecurityEventsAndCountdown();
+}
+
+void HouseModeAlarms::skipEntryDelay(const JsonObject& json) {
+    if( !m_postponedTasks.empty() ) {
+        runSecurityThreatNotificationsWithBroadcast(
+                json, "", [&]() { sendMainBeginBroadcast( "" ); } );
+
+        clearPostponedTasks();
+    }
+    else {
+        throw std::exception();
+    }
 }
 
 }  // namespace CoreD

@@ -420,6 +420,9 @@ JsonObject CoreService::handleRequestFromBus( const JsonObject& request, Message
         case HOUSE_MODE_CANCEL_ENTRY_DELAY:
             return handleCancelEntryDelay( request );
 
+        case HOUSE_MODE_SKIP_ENTRY_DELAY:
+            return handleSkipEntryDelay( request );
+
         case HOUSE_MODE_ADD_DISARMED_DEVICE:
             return handleAddDisarmedDevice( request );
 
@@ -892,6 +895,19 @@ JsonObject CoreService::handleCancelEntryDelay( const JsonObject& /*params*/ ) {
         LOGGER_DEBUG( cc::debug( "unexpected error :" ) + cc::note( ex.what() ) );
         JsonObject result;
         setError( result, Errors::INTERNAL_OPERATION_ERROR );
+        return result;
+    }
+}
+
+JsonObject CoreService::handleSkipEntryDelay( const JsonObject& params ) {
+    try {
+        m_houseModeAlarms->skipEntryDelay(params);
+        return JSON_EMPTY_OBJ;
+    }
+    catch( const std::exception& ex ) {
+        LOGGER_DEBUG( cc::debug( "unexpected error :" ) + cc::note( ex.what() ) );
+        JsonObject result;
+        setError( result, Errors::HOUSE_MODES_INVALID_PHASE );
         return result;
     }
 }
