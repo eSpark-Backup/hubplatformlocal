@@ -54,6 +54,7 @@ void PermanentDBWriteScheduler::worker() {
 
     updateItems();
     updateDevices();
+    updateProtectSetTimestamp();
 
     Log::debug( "Done writing temporary data to permanent db" );
 }
@@ -114,6 +115,14 @@ void PermanentDBWriteScheduler::updateDevices() {
     }
 
     m_deviceDbModifier.setChangedStatus( false );
+}
+
+void PermanentDBWriteScheduler::updateProtectSetTimestamp() {
+    auto& dbClient = m_deviceDbModifier.getDBClient();
+    using namespace Model::Resources;
+    const auto timeStampData = dbClient.findOne( DBNames::TempProtectSetTimestampDBName, JSON("apiName" << "hub.modes.protect.set"),
+                                                 nullptr );
+    dbClient.update(DBNames::ProtectSetTimestampDBName, JSON("apiName" << "hub.modes.protect.set"), timeStampData );
 }
 
 }  // namespace CoreD

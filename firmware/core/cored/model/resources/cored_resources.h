@@ -28,6 +28,8 @@ extern const char* const RoomsOrderDB;
 extern const char* const FeaturesDB;
 extern const char* const SettingsDB;
 extern const char* const DeviceGroupDB;
+extern const char* const ProtectSetTimestampDBName;
+extern const char* const TempProtectSetTimestampDBName;
 
 }  // namespace DBNames
 

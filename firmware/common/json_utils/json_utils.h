@@ -159,6 +159,12 @@ static inline bool json_get( const Json& vals, const char* key, bool& res ) {
     }
 }
 
+static inline int64_t json_get_int64(const Json& obj, const std::string& key) {
+    int64_t value = 0; // Default value if key is not found or not an int64_t
+    json_get(obj, key, value); // Attempt to get the int64_t value
+    return value;
+}
+
 static inline std::string json_get_str( const Json& obj, const std::string& key ) {
     std::string ret;
     if( json_get( obj, key, ret ) )

@@ -27,6 +27,7 @@ private:
     void worker();
     void updateItems();
     void updateDevices();
+    void updateProtectSetTimestamp();
 
 private:
     ItemDbModifier& m_itemDbModifier;

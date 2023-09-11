@@ -44,6 +44,8 @@ const char* const RoomsOrderDB = HaRoomsOrderDBName;
 const char* const FeaturesDB = CoreFeaturesDBName;
 const char* const SettingsDB = CoreSettingsDBName;
 const char* const DeviceGroupDB = HaScenesDeviceGroupsDBName;
+const char* const ProtectSetTimestampDBName = HaHouseModesCommandTimestampDBName;
+const char* const TempProtectSetTimestampDBName = HaTempHouseModesCommandTimestampDBName;
 
 }  // namespace DBNames
 

@@ -24,6 +24,7 @@ public:
     enum Error {
         OK,
         HOUSE_MODES_INVALID_PHASE,
+        HOUSE_MODE_COMMAND_IS_OUTDATED,
         USER_DOESNT_HAVE_PERMISSION,
         CLOSED_FOR_ALL,
         DEVICES_LOCKED,
