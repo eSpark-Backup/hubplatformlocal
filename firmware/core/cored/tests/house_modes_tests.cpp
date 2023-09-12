@@ -641,6 +641,21 @@ TEST_F( HouseModesProcessorTest, handleSetProtect ) /* 1.12 */ {
         EXPECT_TRUE( response.empty() );
         houseModePtr = CoreDHouseModes::getHouseMode( getDBClient(), "1" );
         EXPECT_FALSE( houseModePtr->m_protect );
+
+        // TimeStampCheck
+        response = m_houseModeProcessor->handleSetProtect( "1", false , std::chrono::milliseconds(5000));
+        EXPECT_TRUE( response.empty() );
+
+        response = m_houseModeProcessor->handleSetProtect( "1", false , std::chrono::milliseconds(5000));
+        auto dataField = response["error"]["data"];
+        EXPECT_EQ( dataField, "ezlo.house_mode.command.outdated");
+
+        response = m_houseModeProcessor->handleSetProtect( "1", false , std::chrono::milliseconds(6000));
+        EXPECT_TRUE( response.empty() );
+
+        response = m_houseModeProcessor->handleSetProtect( "1", false , std::chrono::milliseconds(3000));
+        dataField = response["error"]["data"];
+        EXPECT_EQ( dataField, "ezlo.house_mode.command.outdated");
     }
 
     {
