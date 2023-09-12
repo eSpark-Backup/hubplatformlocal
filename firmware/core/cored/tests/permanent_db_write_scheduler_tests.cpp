@@ -151,5 +151,51 @@ TEST_F( DbWriterTest, writeToPermanentDb ) {
     }
 }
 
+TEST_F( DbWriterTest, timestampTemptoPerm ) {
+    // Steps:
+    // Create 1 device and 1 item.
+    // Update value of item and reachable state of device via db modifieres.
+    // Check that values are updated only in temp db.
+    // Call 'doNow()' for writer
+    // Check that values are updated in the permanent db.
+    auto& dbClient = getDBClient();
+
+    const auto objectToWrite1 = JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << 2 << DeviceFields::TimestampFieldName << 5000);
+    const auto objectToWrite2 = JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << 4 << DeviceFields::TimestampFieldName << 6000);
+    dbClient.insert(DBNames::ProtectSetTimestampDBName,
+                    objectToWrite1);
+    dbClient.insert(DBNames::TempProtectSetTimestampDBName,
+                        objectToWrite1);
+    dbClient.insert(DBNames::ProtectSetTimestampDBName,
+                    objectToWrite2);
+    dbClient.insert(DBNames::TempProtectSetTimestampDBName,
+                    objectToWrite2);
+
+
+    EXPECT_EQ(dbClient.count(DBNames::ProtectSetTimestampDBName, JSON_EMPTY_OBJ), 2);
+    EXPECT_EQ(dbClient.count(DBNames::TempProtectSetTimestampDBName, JSON_EMPTY_OBJ), 2);
+
+    const auto fieldsToReturn = JSON (DeviceFields::APINameFieldName << 1 << DeviceFields::ModeIdFieldName << 1 << DeviceFields::TimestampFieldName << 1);
+    auto table = dbClient.findOne(DBNames::ProtectSetTimestampDBName,
+                                        JSON_EMPTY_OBJ,
+                                        &fieldsToReturn);
+    EXPECT_EQ(table, objectToWrite1);
+
+    dbClient.update(DBNames::TempProtectSetTimestampDBName,
+                    JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << 2),
+                    JSON("$set" << JSON(DeviceFields::TimestampFieldName << 7000) ) );
+
+    table = dbClient.findOne(DBNames::ProtectSetTimestampDBName,
+                             JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << 2),
+                             nullptr);
+
+    EXPECT_NE(7000, table[ DeviceFields::TimestampFieldName ]);
+    getWriter().doNow();
+    table = dbClient.findOne(DBNames::ProtectSetTimestampDBName,
+                     JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << 2),
+                     nullptr);
+    EXPECT_EQ(7000, table[ DeviceFields::TimestampFieldName ]);
+}
+
 }  // namespace UT
 }  // namespace HubPlatform

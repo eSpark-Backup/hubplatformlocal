@@ -519,7 +519,7 @@ bool HouseModeProcessor::updateProtectSetTimestampValue( const std::string& hous
     const auto timeStampPrev = json_get_int64(timeStampJson, DeviceFields::TimestampFieldName);
     if ( timestamp.count() > timeStampPrev ) {
         m_dbClient.update(HaTempHouseModesCommandTimestampDBName,
-                          JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId << DeviceFields::TimestampFieldName << JSON( "$ne" << timestamp.count() )),
+                          JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId ),
                           JSON( "$set" << JSON( DeviceFields::TimestampFieldName << timestamp.count() ) ) );
         return true;
     }

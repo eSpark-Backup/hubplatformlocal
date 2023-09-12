@@ -134,8 +134,8 @@ void PermanentDBWriteScheduler::updateProtectSetTimestamp() {
         dbClient.update( DBNames::ProtectSetTimestampDBName,
                          timeStampTable,
                          timestampData );
-        Log::trace( "Processed value of mode id " +
-                            timestampData[ DeviceFields::ModeIdFieldName ].get< std::string >() );
+
+        Log::trace( "Processed value of mode id %d" + std::to_string((int)timestampData[ DeviceFields::ModeIdFieldName ]));
     }
 }
 
