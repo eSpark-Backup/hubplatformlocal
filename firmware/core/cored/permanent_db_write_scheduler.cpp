@@ -120,9 +120,26 @@ void PermanentDBWriteScheduler::updateDevices() {
 void PermanentDBWriteScheduler::updateProtectSetTimestamp() {
     auto& dbClient = m_deviceDbModifier.getDBClient();
     using namespace Model::Resources;
-    const auto timeStampData = dbClient.findOne( DBNames::TempProtectSetTimestampDBName, JSON("apiName" << "hub.modes.protect.set"),
+    const JsonObject fieldsToReturn = JSON( DeviceFields::ModeIdFieldName << 1 );
+    const auto allModeId = dbClient.findAll( DBNames::ProtectSetTimestampDBName, JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set"),
                                                  nullptr );
-    dbClient.update(DBNames::ProtectSetTimestampDBName, JSON("apiName" << "hub.modes.protect.set"), timeStampData );
+    for( const auto& modeId : allModeId ) {
+        const JsonObject fieldsToReturn = JSON( DeviceFields::TimestampFieldName << 1 );  // dynamic fields
+        const auto timestampData = dbClient.findOne( DBNames::TempProtectSetTimestampDBName,
+                                                     JSON( DeviceFields::APINameFieldName << "hub.modes.protect.set" << modeId ),
+                                                     &fieldsToReturn );
+
+        if( timestampData.empty() )
+            continue;
+
+        // Update dynamic fields in permanent DB.
+        const JsonObject& newValue = timestampData[ DeviceFields::TimestampFieldName ];
+        dbClient.update( DBNames::ProtectSetTimestampDBName,
+                         JSON( DeviceFields::APINameFieldName << "hub.modes.protect.set" << modeId << DeviceFields::TimestampFieldName << JSON( "$ne" << newValue ) ),
+                         JSON( "$set" << JSON( DeviceFields::TimestampFieldName << newValue ) ) );
+        Log::trace( "Processed value of mode id " +
+                            modeId[ DeviceFields::ModeIdFieldName ].get< std::string >() );
+    }
 }
 
 }  // namespace CoreD

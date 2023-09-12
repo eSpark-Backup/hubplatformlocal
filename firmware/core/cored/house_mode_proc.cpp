@@ -493,8 +493,50 @@ JsonObject HouseModeProcessor::handleSetDisarmedDefault( const std::string& hous
     return result;
 }
 
-JsonObject HouseModeProcessor::handleSetProtect( const std::string& houseModeId, bool protect ) {
+void HouseModeProcessor::createProtectSetTimestampDB(){
+    const char* dbNames[] = {HaHouseModesCommandTimestampDBName, HaTempHouseModesCommandTimestampDBName};
+    for (const char* dbName : dbNames) {
+        if ( !m_dbClient.exist( dbName ) )
+        {
+            m_dbClient.create( dbName );
+        }
+    }
+}
+
+bool HouseModeProcessor::updateProtectSetTimestampValue( const std::string& houseModeId, std::chrono::milliseconds timestamp ){
+    const auto timeStampJson = m_dbClient.findOne(HaTempHouseModesCommandTimestampDBName,
+                                                  JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId),
+                                                  nullptr);
+
+    if (timeStampJson.empty()) {
+        m_dbClient.insert(HaTempHouseModesCommandTimestampDBName,
+                          JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId << DeviceFields::TimestampFieldName << timestamp.count()) );
+        m_dbClient.insert(HaHouseModesCommandTimestampDBName,
+                          JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId << DeviceFields::TimestampFieldName << timestamp.count()) );
+        return true;
+    }
+
+    const auto timeStampPrev = json_get_int64(timeStampJson, DeviceFields::TimestampFieldName);
+    if ( timestamp.count() > timeStampPrev ) {
+        m_dbClient.update(HaTempHouseModesCommandTimestampDBName,
+                          JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set" << DeviceFields::ModeIdFieldName << houseModeId << DeviceFields::TimestampFieldName << JSON( "$ne" << timestamp.count() )),
+                          JSON( "$set" << JSON( DeviceFields::TimestampFieldName << timestamp.count() ) ) );
+        return true;
+    }
+
+    return false;
+}
+
+JsonObject HouseModeProcessor::handleSetProtect( const std::string& houseModeId, bool protect, std::chrono::milliseconds timestamp ) {
     JsonObject result = JSON_EMPTY_OBJ;
+    if (timestamp.count())
+    {
+        createProtectSetTimestampDB();
+        if (!updateProtectSetTimestampValue(houseModeId, timestamp)) {
+            setError( result, Errors::HOUSE_MODE_COMMAND_IS_OUTDATED );
+            return result;
+        }
+    }
 
     if( !CoreDHouseModes::setProtect( m_hostService, m_hostService.getDevicesDbModifier(), houseModeId, protect ) ) {
         setError( result, Errors::INTERNAL_OPERATION_ERROR );

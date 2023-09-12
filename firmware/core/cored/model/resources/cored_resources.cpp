@@ -102,6 +102,9 @@ const char* const Wizard = "wizard";
 
 namespace DeviceFields {
 const char* const IdFieldName = db::ID_FIELD_NAME.c_str();
+const char* const APINameFieldName = "apiName";
+const char* const TimestampFieldName = "timestamp";
+const char* const ModeIdFieldName = "modeId";
 const char* const GatewayIdFieldName = "gatewayId";
 const char* const TypeFieldName = "type";
 const char* const DeviceTypeIdFieldName = "deviceTypeId";

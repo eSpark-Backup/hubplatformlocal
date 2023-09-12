@@ -85,6 +85,9 @@ extern const char* const Wizard;
 }  // namespace ManualDeviceAdding
 
 namespace DeviceFields {
+extern const char* const APINameFieldName;
+extern const char* const TimestampFieldName;
+extern const char* const ModeIdFieldName;
 extern const char* const IdFieldName;
 extern const char* const GatewayIdFieldName;
 extern const char* const TypeFieldName;

@@ -49,7 +49,7 @@ public:
     JsonObject handleRemoveBypassDevices( const std::string& modeId, const std::vector< std::string >& deviceIds );
 
     JsonObject handleSetDisarmedDefault( const std::string& houseModeId, bool disarmedDefault );
-    JsonObject handleSetProtect( const std::string& houseModeId, bool protect );
+    JsonObject handleSetProtect( const std::string& houseModeId, bool protect, std::chrono::milliseconds timestamp = std::chrono::milliseconds(0));
     JsonObject handleProtectButtonsSet( const std::string& deviceId, CoreDHouseModes::ProtectServiceEnum service );
     JsonObject handleAddProtectDevices( const std::vector< std::string >& deviceIds );
     JsonObject handleRemoveProtectDevices( const std::vector< std::string >& deviceIds );
@@ -101,6 +101,9 @@ private:
 
     std::thread m_switchingThread;
     std::atomic_bool m_isSwitchingNow;
+
+    void createProtectSetTimestampDB();
+    bool updateProtectSetTimestampValue( const std::string& houseModeId, std::chrono::milliseconds timestamp );
 };
 
 }  // namespace CoreD

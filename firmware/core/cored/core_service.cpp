@@ -1153,35 +1153,6 @@ JsonObject CoreService::handleHouseModeProtectSet( const JsonObject& params ) {
     if (json_contains(params, "timestamps"))
     {
         const auto timeStampNew = json_get_int64( params, "timestamp" );
-        IDbClient& dbClient = getDBClient();
-        if ( !dbClient.exist(HaHouseModesCommandTimestampDBName) )
-        {
-            dbClient.create( HaHouseModesCommandTimestampDBName );
-        }
-        if ( !dbClient.exist(HaTempHouseModesCommandTimestampDBName) )
-        {
-            dbClient.create( HaTempHouseModesCommandTimestampDBName );
-        }
-
-        const auto timeStampJson = dbClient.findOne(HaHouseModesCommandTimestampDBName,
-                                                    JSON("apiName" << "hub.modes.protect.set" << "modeId" << modeId), nullptr);
-
-        if (!timeStampJson.empty()) {
-            const auto timeStampPrev = json_get_int64(timeStampJson, "timestamp");
-            if ( timeStampNew > timeStampPrev )
-            {
-                dbClient.insert(HaHouseModesCommandTimestampDBName, JSON("apiName" << "hub.modes.protect.set" << "modeId" << modeId << "timestamp" << timeStampNew) );
-            }
-            else {
-                JsonObject result;
-                setError( result, Errors::HOUSE_MODE_COMMAND_IS_OUTDATED );
-                return result;
-            }
-        }
-        else {
-            dbClient.insert(HaTempHouseModesCommandTimestampDBName, JSON("apiName" << "hub.modes.protect.set" << "modeId" << modeId << "timestamp" << timeStampNew) );
-            dbClient.insert(HaHouseModesCommandTimestampDBName, JSON("apiName" << "hub.modes.protect.set" << "modeId" << modeId << "timestamp" << timeStampNew) );
-        }
     }
 
     try {
