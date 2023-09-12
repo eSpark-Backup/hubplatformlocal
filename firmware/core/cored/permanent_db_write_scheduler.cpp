@@ -120,25 +120,22 @@ void PermanentDBWriteScheduler::updateDevices() {
 void PermanentDBWriteScheduler::updateProtectSetTimestamp() {
     auto& dbClient = m_deviceDbModifier.getDBClient();
     using namespace Model::Resources;
-    const JsonObject fieldsToReturn = JSON( DeviceFields::ModeIdFieldName << 1 );
-    const auto allModeId = dbClient.findAll( DBNames::ProtectSetTimestampDBName, JSON(DeviceFields::APINameFieldName << "hub.modes.protect.set"),
-                                                 nullptr );
-    for( const auto& modeId : allModeId ) {
-        const JsonObject fieldsToReturn = JSON( DeviceFields::TimestampFieldName << 1 );  // dynamic fields
+    const JsonObject fieldsToReturn = JSON( DeviceFields::APINameFieldName << 1 << DeviceFields::ModeIdFieldName << 1 );
+    const auto timeStampTables = dbClient.findAll(DBNames::ProtectSetTimestampDBName, JSON_EMPTY_OBJ,
+                                            &fieldsToReturn );
+    for( const auto& timeStampTable : timeStampTables ) {
         const auto timestampData = dbClient.findOne( DBNames::TempProtectSetTimestampDBName,
-                                                     JSON( DeviceFields::APINameFieldName << "hub.modes.protect.set" << modeId ),
-                                                     &fieldsToReturn );
+                                                     timeStampTable,
+                                                     nullptr );
 
         if( timestampData.empty() )
             continue;
 
-        // Update dynamic fields in permanent DB.
-        const JsonObject& newValue = timestampData[ DeviceFields::TimestampFieldName ];
         dbClient.update( DBNames::ProtectSetTimestampDBName,
-                         JSON( DeviceFields::APINameFieldName << "hub.modes.protect.set" << modeId << DeviceFields::TimestampFieldName << JSON( "$ne" << newValue ) ),
-                         JSON( "$set" << JSON( DeviceFields::TimestampFieldName << newValue ) ) );
+                         timeStampTable,
+                         timestampData );
         Log::trace( "Processed value of mode id " +
-                            modeId[ DeviceFields::ModeIdFieldName ].get< std::string >() );
+                            timestampData[ DeviceFields::ModeIdFieldName ].get< std::string >() );
     }
 }
 

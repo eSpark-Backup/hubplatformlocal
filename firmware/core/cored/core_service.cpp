@@ -1149,14 +1149,14 @@ JsonObject CoreService::handleSetDisarmedDefault( const JsonObject& params ) {
 JsonObject CoreService::handleHouseModeProtectSet( const JsonObject& params ) {
     const auto modeId = json_get_str( params, "modeId" );
     const auto protect = json_get_bool( params, "protect" );
-
+    int64_t timeStampNew;
     if (json_contains(params, "timestamps"))
     {
-        const auto timeStampNew = json_get_int64( params, "timestamp" );
+        timeStampNew = json_get_int64( params, "timestamp" );
     }
 
     try {
-        return m_houseModeProcessor->handleSetProtect( modeId, protect);
+        return m_houseModeProcessor->handleSetProtect( modeId, protect, std::chrono::milliseconds (timeStampNew));
     }
     catch( const std::exception& ex ) {
         LOGGER_ERROR_RAW( cc::error( "Failed to turn " ) + cc::note( protect ? "on" : "off" ) +
